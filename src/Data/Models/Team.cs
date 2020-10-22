@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Data.Models.Users;
+using Data.Models.Users;
 
-namespace Web.Data.Models
+namespace Data.Models
 {
     public class Team : BaseModel
     {

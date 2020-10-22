@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Data.Models;
+using Data.Models.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Web.Data.Models;
-using Web.Data.Models.Users;
 
-namespace Web.Data
+namespace Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, string>
     {

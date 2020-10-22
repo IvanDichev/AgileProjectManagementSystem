@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Web.Data.Models
+namespace Data.Models
 {
     public class BaseModel
     {

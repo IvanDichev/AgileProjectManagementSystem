@@ -1,7 +1,7 @@
 ﻿using Shared.Enums;
 using System.Collections.Generic;
 
-namespace Web.Data.Models
+namespace Data.Models
 {
     public class UserStory : BaseModel
     {

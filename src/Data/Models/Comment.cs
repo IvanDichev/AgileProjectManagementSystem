@@ -1,13 +1,11 @@
 ﻿using System;
-using Web.Data.Models.Users;
+using Data.Models.Users;
 
-namespace Web.Data.Models
+namespace Data.Models
 {
     public class Comment : BaseModel
     {
         public string Description { get; set; }
-
-        public DateTime AddedOn { get; set; }
 
         public DateTime ModifedOn { get; set; }
 

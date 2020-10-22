@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Web.Data.Models.Users;
+using Data.Models.Users;
 
-namespace Web.Data.Models
+namespace Data.Models
 {
     public class Task : BaseModel
     {

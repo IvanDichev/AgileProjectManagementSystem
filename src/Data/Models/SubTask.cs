@@ -1,4 +1,4 @@
-﻿namespace Web.Data.Models
+﻿namespace Data.Models
 {
     public class SubTask : BaseModel
     {

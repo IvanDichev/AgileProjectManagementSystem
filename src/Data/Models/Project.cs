@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Web.Data.Models
+namespace Data.Models
 {
     public class Project : BaseModel
     {
