@@ -3,7 +3,7 @@ using Web.Data.Models.Users;
 
 namespace Web.Data.Models
 {
-    public class Ticket
+    public class Ticket : BaseModel
     {
         public string ProjectId { get; set; }
         public virtual Project Project { get; set; }

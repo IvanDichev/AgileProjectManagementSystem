@@ -1,5 +1,4 @@
 ﻿using System;
-using Web.Data.Models.Users;
 
 namespace Web.Data.Models
 {
