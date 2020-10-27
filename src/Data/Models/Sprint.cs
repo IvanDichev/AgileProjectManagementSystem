@@ -1,10 +1,11 @@
-﻿using Shared.Enums;
+﻿using Data.Models.Base;
+using Shared.Enums;
 using System;
 using System.Collections.Generic;
 
 namespace Data.Models
 {
-    public class Sprint : BaseModel
+    public class Sprint : BaseModel<int>
     {
         public Sprint()
         {

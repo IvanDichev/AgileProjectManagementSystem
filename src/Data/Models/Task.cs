@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Data.Models.Base;
 using Data.Models.Users;
 
 namespace Data.Models
 {
-    public class Task : BaseModel
+    public class Task : BaseModel<int>
     {
         public Task()
         {
@@ -18,13 +19,13 @@ namespace Data.Models
 
         public ICollection<SubTask> SubTasks { get; set; }
 
-        public string SprintId { get; set; }
+        public int SprintId { get; set; }
         public virtual Sprint Sprint { get; set; }
 
-        public string BacklogId { get; set; }
-        public virtual UserStory Backlog { get; set; }
+        public int UserStoryId { get; set; }
+        public virtual UserStory UserStory { get; set; }
 
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public virtual User CreatedBy { get; set; }
     }
 }

@@ -2,10 +2,11 @@
 using Data.Models.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
 
 namespace Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, Role, string>
+    public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -21,6 +22,11 @@ namespace Data
         public DbSet<Task> Tasks { get; set; }
         public DbSet<SubTask> SubTasks { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
+        public DbSet<TeamRole> TeamRoles { get; set; }
+        public DbSet<BacklogPriority> BacklogPriorities { get; set; }
+        public DbSet<TicketSeverity> TicketSeverities { get; set; }
+        public DbSet<SprintStatus> SprintStatuses { get; set; }
+        public DbSet<MockupAttachment> MockupAttachments { get; set; }
 
     }
 }

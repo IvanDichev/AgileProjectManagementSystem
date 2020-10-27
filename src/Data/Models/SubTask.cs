@@ -1,10 +1,12 @@
-﻿namespace Data.Models
+﻿using Data.Models.Base;
+
+namespace Data.Models
 {
-    public class SubTask : BaseModel
+    public class SubTask : BaseModel<int>
     {
         public string Description { get; set; }
 
-        public string TaskId { get; set; }
+        public int TaskId { get; set; }
         public virtual Task Task { get; set; }
     }
 }

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Data.Models.Base;
+using System;
 using System.Collections.Generic;
 
 namespace Data.Models
 {
-    public class Project : BaseModel
+    public class Project : BaseModel<int>
     {
         public Project()
         {
@@ -22,7 +23,7 @@ namespace Data.Models
 
         public ICollection<Sprint> Sprints { get; set; }
 
-        public string UserStoryId { get; set; }
+        public int UserStoryId { get; set; }
         public virtual UserStory UserStories { get; set; }
 
         public Team Team { get; set; }

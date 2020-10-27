@@ -1,9 +1,9 @@
-﻿using Shared.Enums;
+﻿using Data.Models.Base;
 using System.Collections.Generic;
 
 namespace Data.Models
 {
-    public class UserStory : BaseModel
+    public class UserStory : BaseModel<int>
     {
         public UserStory()
         {
@@ -15,8 +15,10 @@ namespace Data.Models
         public string Name { get; set; }
 
         public int StoryPoints { get; set; }
+        
+        public int BacklogPriorityId { get; set; }
 
-        public BacklogPriority PriorityLevel { get; set; }
+        public virtual BacklogPriority BacklogPriority { get; set; }
 
         public string Description { get; set; }
 

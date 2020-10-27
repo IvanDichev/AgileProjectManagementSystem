@@ -1,13 +1,10 @@
-﻿using Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Data.Models.Base;
 using Data.Models.Users;
+using System.Collections.Generic;
 
 namespace Data.Models
 {
-    public class Team : BaseModel
+    public class Team : BaseModel<int>
     {
         public Team()
         {
@@ -16,9 +13,7 @@ namespace Data.Models
 
         public ICollection<User> Users { get; set; }
 
-        public TeamRoles TeamRole { get; set; }
-
-        public string ProjectId { get; set; }
+        public int ProjectId { get; set; }
         public Project Project { get; set; }
     }
 }

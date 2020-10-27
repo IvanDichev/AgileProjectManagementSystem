@@ -25,8 +25,8 @@ namespace Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => {
-                options.SignIn.RequireConfirmedAccount = true;
+            services.AddDefaultIdentity<IdentityUser<int>>(options => {
+                options.SignIn.RequireConfirmedAccount = false;
 
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireLowercase = false;
