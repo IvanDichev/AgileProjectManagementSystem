@@ -21,18 +21,26 @@ namespace Web.Middlewares
         {
             await this.SeedRoles(roleManager);
             await this.SeedAdmin(userManager, config);
-            await this.AddAdminToRoles(userManager, roleManager, config);
+            await this.AddAdminToRoles(userManager, config);
 
             await next(httpContext);
         }
 
-        private async Task AddAdminToRoles(UserManager<User> userManager, RoleManager<Role> roleManager, IConfiguration config)
+        private async Task AddAdminToRoles(UserManager<User> userManager, IConfiguration config)
         {
             var user = await userManager.FindByEmailAsync(config["AdminAccountIformation:Email"]);
-            await userManager.AddToRoleAsync(user, RolesConstatnts.ADMIN);
-            await userManager.AddToRoleAsync(user, RolesConstatnts.MODERATOR);
-            await userManager.AddToRoleAsync(user, RolesConstatnts.USER);
-
+            if (!await userManager.IsInRoleAsync(user, RolesConstatnts.ADMIN))
+            {
+                await userManager.AddToRoleAsync(user, RolesConstatnts.ADMIN);
+            }
+            if (!await userManager.IsInRoleAsync(user, RolesConstatnts.MODERATOR))
+            {
+                await userManager.AddToRoleAsync(user, RolesConstatnts.MODERATOR);
+            }
+            if (!await userManager.IsInRoleAsync(user, RolesConstatnts.USER))
+            {
+                await userManager.AddToRoleAsync(user, RolesConstatnts.USER);
+            }
         }
 
         private async Task SeedAdmin(UserManager<User> userManager, IConfiguration config)
@@ -42,7 +50,7 @@ namespace Web.Middlewares
                 Email = config["AdminAccountIformation:Email"],
                 FirstName = config["AdminAccountIformation:Name"],
                 LastName = config["AdminAccountIformation:Name"],
-                UserName = config["AdminAccountIformation:Name"],
+                UserName = config["AdminAccountIformation:Email"],
                 LockoutEnabled = false,
                 EmailConfirmed = true,
             };
