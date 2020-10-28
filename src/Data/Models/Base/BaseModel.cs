@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models.Base
 {
-    public class BaseModel<T> : IEditInfo
+    public class BaseModel<T> : IEditInfo, IBaseModel
     {
         [Key]
         public T Id { get; set; }
