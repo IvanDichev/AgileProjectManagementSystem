@@ -39,8 +39,8 @@ namespace Web
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddUserManager<UserManager<User>>()
-                .AddUserStore<UserStore<User, Role, ApplicationDbContext, int>>()
+                //.AddUserManager<UserManager<User>>()
+                //.AddUserStore<UserStore<User, Role, ApplicationDbContext, int>>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();

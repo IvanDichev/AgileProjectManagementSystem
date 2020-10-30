@@ -1,11 +1,9 @@
 ﻿using MimeKit;
 
-namespace Helper.Mailing
+namespace Utilities.Mailing
 {
     public interface IEmail
     {
-        string Subject { get; set; }
-        string To { get; set; }
-        TextPart Body { get; set; }
+        public MimeMessage Message { get; set; }
     }
 }
