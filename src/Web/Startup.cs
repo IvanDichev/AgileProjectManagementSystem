@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Utilities.Mailing;
 using Web.Middlewares;
 
 namespace Web
@@ -29,7 +31,7 @@ namespace Web
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, Role>(options => {
-                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedAccount = true;
 
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireLowercase = false;
@@ -45,6 +47,8 @@ namespace Web
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

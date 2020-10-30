@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Data.Models.Users;
+using Utilities.Mailing;
+using Microsoft.Extensions.Configuration;
+using Shared;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -14,12 +17,15 @@ namespace Web.Areas.Identity.Pages.Account
     public class RegisterConfirmationModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly IEmailSender _sender;
+        private readonly Utilities.Mailing.IEmailSender _sender;
+        private readonly IConfiguration _config;
 
-        public RegisterConfirmationModel(UserManager<User> userManager, IEmailSender sender)
+        public RegisterConfirmationModel(UserManager<User> userManager, Utilities.Mailing.IEmailSender sender,
+            IConfiguration config)
         {
             _userManager = userManager;
             _sender = sender;
+            _config = config;
         }
 
         public string Email { get; set; }
@@ -43,7 +49,7 @@ namespace Web.Areas.Identity.Pages.Account
 
             Email = email;
             // Once you add a real email sender, you should remove this code that lets you confirm the account
-            DisplayConfirmAccountLink = true;
+            DisplayConfirmAccountLink = false;
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
@@ -55,6 +61,10 @@ namespace Web.Areas.Identity.Pages.Account
                     values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
             }
+
+            //var emailToSend = new Email(_config["EmailSenderInformation:Email"], email, EmailConfirmationUrl, Constants.CONFIRMATOINEMAILSUBJECT);
+            //await _sender.SendAsync(emailToSend, _config["EmailSenderInformation:Password"],
+            //    _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
 
             return Page();
         }

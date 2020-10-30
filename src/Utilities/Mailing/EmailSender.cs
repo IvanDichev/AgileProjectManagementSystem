@@ -1,10 +1,5 @@
 ﻿using MailKit.Net.Smtp;
-using MimeKit;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
-using System.IO;
-using System;
 
 namespace Utilities.Mailing
 {
