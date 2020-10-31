@@ -5,6 +5,18 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-<p>
-    We have sent you a confirmation link. Please visit the link to login.
-</p>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Reset</button>
+        </form>
+    </div>
+</div>

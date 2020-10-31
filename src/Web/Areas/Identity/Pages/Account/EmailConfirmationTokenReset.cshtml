@@ -1,0 +1,15 @@
+﻿@page
+@model EmailConfirmationTokenReset
+@{
+    ViewData["Title"] = "Successfully reset email confirmation";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <p class="text-success">Token successfully reset.</p>
+        <a class="btn d-block bg-success" asp-controller="Home" asp-action="Index">Go to home page</a>
+    </div>
+</div>
