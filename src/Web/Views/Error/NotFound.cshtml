@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"]= "Not found";
+}
+
+<div class="container">
+    <h5 class="text-center mt-5 error-msg">@ViewData["ErrorMessage"]</h5>
+    <hr />
+    <img src="~/img/Error/404.png" alt="404 image" class="img-fluid img-404" />
+    <br />
+    <hr />
+    <a asp-action="index" asp-controller="home" style="width: 225px" class="btn btn-outline-info d-inline-block">
+        Home page
+    </a>
+    <hr />
+</div>

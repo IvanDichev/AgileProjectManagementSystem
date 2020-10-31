@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shared;
+using Shared.Constants;
 using Utilities.Mailing;
 
 namespace Web.Areas.Identity.Pages.Account

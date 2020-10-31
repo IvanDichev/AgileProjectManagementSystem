@@ -62,7 +62,7 @@ namespace Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error/ErrorHandler");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -73,7 +73,9 @@ namespace Web
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
+            app.UseStatusCodePagesWithRedirects("/Error/HttpStatusCodeHandler/{0}");
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
