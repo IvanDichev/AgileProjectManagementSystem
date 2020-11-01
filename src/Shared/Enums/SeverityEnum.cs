@@ -1,6 +1,6 @@
 ﻿namespace Shared.Enums
 {
-    public enum Severity
+    public enum SeverityEnum
     {
         Default = 0,
         Low = 1,

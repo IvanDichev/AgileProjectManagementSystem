@@ -4,6 +4,6 @@ namespace Data.Models
 {
     public class TeamRole : BaseModel<int>
     {
-        public string Rolse { get; set; }
+        public string Role { get; set; }
     }
 }

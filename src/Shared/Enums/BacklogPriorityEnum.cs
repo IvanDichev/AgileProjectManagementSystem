@@ -1,6 +1,6 @@
 ﻿namespace Shared.Enums
 {
-    public enum BacklogPriority
+    public enum BacklogPriorityEnum
     {
         Default = 0,
         LevelOne = 1,

@@ -21,7 +21,7 @@ namespace Web.Controllers
 			switch (statusCode)
 			{
 				case "404":
-					ViewData["ErrorMessage"] = ErrorConstants.NOTFOUNDMESSAGE;
+					ViewData["ErrorMessage"] = ErrorConstants.NotFoundMessage;
 					return View("NotFound");
 			}
 

@@ -11,9 +11,12 @@ namespace Data.Models
             this.Users = new HashSet<User>();
         }
 
+        // Should team have names?
+        //public string Name { get; set; }
+
         public ICollection<User> Users { get; set; }
 
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
         public Project Project { get; set; }
     }
 }

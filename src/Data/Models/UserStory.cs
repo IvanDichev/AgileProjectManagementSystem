@@ -7,7 +7,7 @@ namespace Data.Models
     {
         public UserStory()
         {
-            this.Tasks = new HashSet<Task>();
+            this.Tasks = new HashSet<Assignment>();
             this.Mockups = new HashSet<Mockup>();
             this.Comments = new HashSet<Comment>();
         }
@@ -24,7 +24,7 @@ namespace Data.Models
 
         public string AcceptanceCriteria { get; set; }
 
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<Assignment> Tasks { get; set; }
 
         public ICollection<Mockup> Mockups { get; set; }
 

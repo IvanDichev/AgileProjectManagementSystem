@@ -1,15 +1,14 @@
-﻿namespace Shared.Enums
+﻿namespace Shared.Constants
 {
-    public enum SprintStatus
+    public class SprintStatusConstants
     {
-        Default = 0,
-        Planning = 1,
             // if sprint start and end date is in future
-        Active = 2,
+        public const string Planning = "Planning";
             //  If current date is between sprint start and end date
-        Accepted = 3,
+        public const string Active = "Active";
             // If Product Owner accepts the sprint results or Sprint date is past.
-        Closed = 4
+        public const string Accepted = "Accepted";
             // Sprint End Date is in the past.
+        public const string Closed = "Closed";
     }
 }

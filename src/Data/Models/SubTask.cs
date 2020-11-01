@@ -7,6 +7,6 @@ namespace Data.Models
         public string Description { get; set; }
 
         public int TaskId { get; set; }
-        public virtual Task Task { get; set; }
+        public virtual Assignment Task { get; set; }
     }
 }

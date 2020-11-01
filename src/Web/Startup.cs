@@ -1,14 +1,15 @@
+using AutoMapper;
 using Data;
 using Data.Models.Users;
+using Data.Seeding;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Services.TeamsServices;
 using Utilities.Mailing;
 using Web.Middlewares;
 
@@ -41,21 +42,29 @@ namespace Web
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                //.AddUserManager<UserManager<User>>()
-                //.AddUserStore<UserStore<User, Role, ApplicationDbContext, int>>()
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
+            services.AddScoped<ITeamsService, TeamsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
+                using (var serviceScope = app.ApplicationServices.CreateScope())
+                {
+                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    dbContext.Database.Migrate();
+                    new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+                }
+
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseSeedAdminAndRolesMiddleware();

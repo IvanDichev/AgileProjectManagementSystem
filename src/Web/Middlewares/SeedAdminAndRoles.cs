@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Shared;
+using Shared.Constants;
 using System.Threading.Tasks;
 
 namespace Web.Middlewares
@@ -29,17 +29,17 @@ namespace Web.Middlewares
         private async Task AddAdminToRoles(UserManager<User> userManager, IConfiguration config)
         {
             var user = await userManager.FindByEmailAsync(config["AdminAccountIformation:Email"]);
-            if (!await userManager.IsInRoleAsync(user, RolesConstatnts.ADMIN))
+            if (!await userManager.IsInRoleAsync(user, ApplicationRolesConstatnts.ADMIN))
             {
-                await userManager.AddToRoleAsync(user, RolesConstatnts.ADMIN);
+                await userManager.AddToRoleAsync(user, ApplicationRolesConstatnts.ADMIN);
             }
-            if (!await userManager.IsInRoleAsync(user, RolesConstatnts.MODERATOR))
+            if (!await userManager.IsInRoleAsync(user, ApplicationRolesConstatnts.MODERATOR))
             {
-                await userManager.AddToRoleAsync(user, RolesConstatnts.MODERATOR);
+                await userManager.AddToRoleAsync(user, ApplicationRolesConstatnts.MODERATOR);
             }
-            if (!await userManager.IsInRoleAsync(user, RolesConstatnts.USER))
+            if (!await userManager.IsInRoleAsync(user, ApplicationRolesConstatnts.USER))
             {
-                await userManager.AddToRoleAsync(user, RolesConstatnts.USER);
+                await userManager.AddToRoleAsync(user, ApplicationRolesConstatnts.USER);
             }
         }
 
@@ -64,21 +64,21 @@ namespace Web.Middlewares
 
         private async Task SeedRoles(RoleManager<Role> roleManager)
         {
-            var isAdminExists = await roleManager.RoleExistsAsync(RolesConstatnts.ADMIN);
-            var isMoredatorExists = await roleManager.RoleExistsAsync(RolesConstatnts.MODERATOR);
-            var isUserExists = await roleManager.RoleExistsAsync(RolesConstatnts.USER);
+            var isAdminExists = await roleManager.RoleExistsAsync(ApplicationRolesConstatnts.ADMIN);
+            var isMoredatorExists = await roleManager.RoleExistsAsync(ApplicationRolesConstatnts.MODERATOR);
+            var isUserExists = await roleManager.RoleExistsAsync(ApplicationRolesConstatnts.USER);
 
             if (!isAdminExists)
             {
-                await roleManager.CreateAsync(new Role { Name = RolesConstatnts.ADMIN });
+                await roleManager.CreateAsync(new Role { Name = ApplicationRolesConstatnts.ADMIN });
             }
             if (!isMoredatorExists)
             {
-                await roleManager.CreateAsync(new Role { Name = RolesConstatnts.MODERATOR });
+                await roleManager.CreateAsync(new Role { Name = ApplicationRolesConstatnts.MODERATOR });
             }
             if (!isUserExists)
             {
-                await roleManager.CreateAsync(new Role { Name = RolesConstatnts.USER });
+                await roleManager.CreateAsync(new Role { Name = ApplicationRolesConstatnts.USER });
             }
 
             //var isRoleExistsDict = new Dictionary<Role, bool>()

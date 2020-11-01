@@ -1,6 +1,6 @@
-﻿namespace Shared
+﻿namespace Shared.Constants
 {
-    public class RolesConstatnts
+    public class ApplicationRolesConstatnts
     {
         public const string ADMIN = "Admin";
         public const string MODERATOR = "Moderator";

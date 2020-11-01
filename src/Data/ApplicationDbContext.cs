@@ -15,13 +15,11 @@ namespace Data
             base.OnConfiguring(optionsBuilder);
         }
 
-        public override DbSet<User> Users { get; set; }
-        public override DbSet<Role> Roles { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserStory> UserStories { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Assignment> Tasks { get; set; }
         public DbSet<SubTask> SubTasks { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<TeamRole> TeamRoles { get; set; }

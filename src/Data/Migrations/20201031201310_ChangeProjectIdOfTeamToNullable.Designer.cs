@@ -4,59 +4,22 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201031201310_ChangeProjectIdOfTeamToNullable")]
+    partial class ChangeProjectIdOfTeamToNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Data.Models.Assignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Effort")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SprintId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserStoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SprintId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserStoryId");
-
-                    b.ToTable("Tasks");
-                });
 
             modelBuilder.Entity("Data.Models.BacklogPriority", b =>
                 {
@@ -269,6 +232,45 @@ namespace Data.Migrations
                     b.ToTable("SubTasks");
                 });
 
+            modelBuilder.Entity("Data.Models.Task", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Effort")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SprintId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserStoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SprintId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserStoryId");
+
+                    b.ToTable("Tasks");
+                });
+
             modelBuilder.Entity("Data.Models.Team", b =>
                 {
                     b.Property<int>("Id")
@@ -307,7 +309,7 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("Rolse")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -637,27 +639,6 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Data.Models.Assignment", b =>
-                {
-                    b.HasOne("Data.Models.Sprint", "Sprint")
-                        .WithMany()
-                        .HasForeignKey("SprintId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.UserStory", "UserStory")
-                        .WithMany("Tasks")
-                        .HasForeignKey("UserStoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Data.Models.Comment", b =>
                 {
                     b.HasOne("Data.Models.Users.User", "AddedBy")
@@ -713,9 +694,30 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.SubTask", b =>
                 {
-                    b.HasOne("Data.Models.Assignment", "Task")
+                    b.HasOne("Data.Models.Task", "Task")
                         .WithMany("SubTasks")
                         .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Task", b =>
+                {
+                    b.HasOne("Data.Models.Sprint", "Sprint")
+                        .WithMany()
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Users.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.UserStory", "UserStory")
+                        .WithMany("Tasks")
+                        .HasForeignKey("UserStoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

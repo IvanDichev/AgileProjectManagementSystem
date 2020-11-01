@@ -4,9 +4,9 @@ using Data.Models.Users;
 
 namespace Data.Models
 {
-    public class Task : BaseModel<int>
+    public class Assignment : BaseModel<int>
     {
-        public Task()
+        public Assignment()
         {
             //this.Requirements = new HashSet<Requirement>();
             this.SubTasks = new HashSet<SubTask>();

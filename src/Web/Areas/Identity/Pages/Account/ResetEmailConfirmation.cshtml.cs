@@ -70,7 +70,7 @@ namespace Web.Areas.Identity.Pages.Account
 
                     var emailToSend = new Email(_config["EmailSenderInformation:Email"], Input.Email,
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
-                        Constants.CONFIRMATOINEMAILSUBJECT);
+                        Constants.ConfirmationEmailSubject);
 
                     await _emailSender.SendAsync(emailToSend, _config["EmailSenderInformation:Password"],
                         _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));

@@ -1,80 +1,56 @@
 ﻿using Data;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repo
 {
-    public class Repository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        internal ApplicationDbContext context;
-        internal DbSet<TEntity> dbSet;
-
         public Repository(ApplicationDbContext context)
         {
-            this.context = context;
-            this.dbSet = context.Set<TEntity>();
+            this.Context = context ?? throw new ArgumentNullException(nameof(context));
+            this.DbSet = this.Context.Set<TEntity>();
         }
 
-        public virtual IEnumerable<TEntity> Get(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "")
-        {
-            IQueryable<TEntity> query = dbSet;
+        protected DbSet<TEntity> DbSet { get; set; }
 
-            if (filter != null)
+        protected ApplicationDbContext Context { get; set; }
+
+        public virtual IQueryable<TEntity> All() => this.DbSet;
+
+        public virtual IQueryable<TEntity> AllAsNoTracking() => this.DbSet.AsNoTracking();
+
+        public virtual Task AddAsync(TEntity entity) => this.DbSet.AddAsync(entity).AsTask();
+
+        public virtual void Update(TEntity entity)
+        {
+            var entry = this.Context.Entry(entity);
+            if (entry.State == EntityState.Detached)
             {
-                query = query.Where(filter);
+                this.DbSet.Attach(entity);
             }
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            entry.State = EntityState.Modified;
+        }
+
+        public virtual void Delete(TEntity entity) => this.DbSet.Remove(entity);
+
+        public Task<int> SaveChangesAsync() => this.Context.SaveChangesAsync();
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                query = query.Include(includeProperty);
+                this.Context?.Dispose();
             }
-
-            if (orderBy != null)
-            {
-                return orderBy(query).ToList();
-            }
-            else
-            {
-                return query.ToList();
-            }
-        }
-
-        public virtual TEntity GetByID(object id)
-        {
-            return dbSet.Find(id);
-        }
-
-        public virtual void Insert(TEntity entity)
-        {
-            dbSet.Add(entity);
-        }
-
-        public virtual void Delete(object id)
-        {
-            TEntity entityToDelete = dbSet.Find(id);
-            Delete(entityToDelete);
-        }
-
-        public virtual void Delete(TEntity entityToDelete)
-        {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
-            {
-                dbSet.Attach(entityToDelete);
-            }
-            dbSet.Remove(entityToDelete);
-        }
-
-        public virtual void Update(TEntity entityToUpdate)
-        {
-            dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
         }
     }
 }

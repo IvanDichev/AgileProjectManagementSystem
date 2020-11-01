@@ -41,7 +41,7 @@ namespace Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _config = config;
+            _config = config;;
         }
 
         [BindProperty]
@@ -86,6 +86,7 @@ namespace Web.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, ApplicationRolesConstatnts.USER);
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -96,13 +97,9 @@ namespace Web.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    // Base implementation.
-                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    //  $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
                     var emailToSend = new Email(_config["EmailSenderInformation:Email"], Input.Email,
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
-                        Constants.CONFIRMATOINEMAILSUBJECT);
+                        Constants.ConfirmationEmailSubject);
 
                     await _emailSender.SendAsync(emailToSend, _config["EmailSenderInformation:Password"],
                         _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
