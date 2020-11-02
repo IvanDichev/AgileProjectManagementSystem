@@ -1,7 +1,9 @@
 using AutoMapper;
 using Data;
+using Data.Models;
 using Data.Models.Users;
 using Data.Seeding;
+using DataModels.Dtos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Repo;
 using Services.TeamsServices;
 using Utilities.Mailing;
 using Web.Middlewares;
@@ -50,6 +53,7 @@ namespace Web
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
             services.AddScoped<ITeamsService, TeamsService>();
+            services.AddScoped<IRepository<Team>, Repository<Team>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

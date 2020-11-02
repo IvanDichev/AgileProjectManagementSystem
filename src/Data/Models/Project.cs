@@ -8,7 +8,6 @@ namespace Data.Models
     {
         public Project()
         {
-            //this.Users = new HashSet<UserProject>();
             this.Tickets = new HashSet<Ticket>();
             this.Sprints = new HashSet<Sprint>();
         }
@@ -17,13 +16,11 @@ namespace Data.Models
 
         public string Status { get; set; }
 
-        //public virtual ICollection<UserProject> Users { get; set; }
-
         public ICollection<Ticket> Tickets { get; set; }
 
         public ICollection<Sprint> Sprints { get; set; }
 
-        public int UserStoryId { get; set; }
+        public int? UserStoryId { get; set; }
         public virtual UserStory UserStories { get; set; }
 
         public Team Team { get; set; }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Web.Models.Team;
+﻿using AutoMapper;
+using Data.Models;
+using DataModels.Dtos.Teams;
+using DataModels.Models.Teams;
 
 namespace Web.Automapper
 {
@@ -11,7 +9,8 @@ namespace Web.Automapper
     {
         public AutomapperProfiles()
         {
-            //CreateMap<CreateTeamInputModel, TeamDto>().ReverseMap();
+            CreateMap<CreateTeamInputModel, TeamDto>().ReverseMap();
+            CreateMap<Team, TeamDto>().ReverseMap();
         }
     }
 }
