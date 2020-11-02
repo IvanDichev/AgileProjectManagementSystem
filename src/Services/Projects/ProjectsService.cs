@@ -3,6 +3,7 @@ using Data.Models;
 using DataModels.Dtos;
 using DataModels.Models.Project;
 using Repo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,9 +20,23 @@ namespace Services.Projects
             this.repo = repo;
             this.mapper = mapper;
         }
-        public Task Create(CreateProjectInputModel inputModel)
+
+        public async Task<int> CreateAsync(CreateProjectInputModel inputModel)
         {
-            throw new System.NotImplementedException();
+            await this.repo.AddAsync(new Project
+            {
+                AddedOn = DateTime.UtcNow,
+                Name = inputModel.Name,
+                Description = inputModel.Description
+            });
+            await repo.SaveChangesAsync();
+
+            return this.repo.AllAsNoTracking().Where(x => x.Name == inputModel.Name).FirstOrDefault().Id;
+        }
+
+        public bool IsNameTaken(string name)
+        {
+            return this.repo.AllAsNoTracking().Any(x => x.Name == name);
         }
 
         public IEnumerable<ProjectDto> GetAll()
@@ -29,9 +44,11 @@ namespace Services.Projects
             return mapper.Map<IEnumerable<ProjectDto>>(this.repo.All().ToList());
         }
 
-        public Task<ProjectDto> GetAsync(int id)
+        public async Task<ProjectDto> GetAsync(int id)
         {
-            throw new System.NotImplementedException();
+            return mapper.Map<ProjectDto>(this.repo .AllAsNoTracking().Where(x => x.Id == id).FirstOrDefault());
         }
+
+        
     }
 }

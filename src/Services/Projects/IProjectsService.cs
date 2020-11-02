@@ -7,9 +7,9 @@ namespace Services.Projects
 {
     public interface IProjectsService
     {
+        bool IsNameTaken(string name);
         Task<ProjectDto> GetAsync(int id);
-        //ICollection<ProjectDto> GetAll();
         IEnumerable<ProjectDto> GetAll();
-        Task Create(CreateProjectInputModel inputModel);
+        Task<int> CreateAsync(CreateProjectInputModel inputModel);
     }
 }

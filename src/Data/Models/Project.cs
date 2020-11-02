@@ -23,7 +23,7 @@ namespace Data.Models
         public int? UserStoryId { get; set; }
         public virtual UserStory UserStories { get; set; }
 
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
         public Team Team { get; set; }
     }
 }

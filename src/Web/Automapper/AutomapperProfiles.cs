@@ -11,6 +11,7 @@ namespace Web.Automapper
         {
             CreateMap<Project, ProjectDto>().ReverseMap();
             CreateMap<ProjectDto, CreateProjectInputModel>().ReverseMap();
+            CreateMap<ProjectDto, ProjectViewModel>().ReverseMap();
         }
     }
 }
