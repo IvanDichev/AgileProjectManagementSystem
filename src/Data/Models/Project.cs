@@ -12,9 +12,9 @@ namespace Data.Models
             this.Sprints = new HashSet<Sprint>();
         }
 
-        public DateTime DueDate { get; set; }
+        public string Name { get; set; }
 
-        public string Status { get; set; }
+        public string Description { get; set; }
 
         public ICollection<Ticket> Tickets { get; set; }
 
@@ -23,6 +23,7 @@ namespace Data.Models
         public int? UserStoryId { get; set; }
         public virtual UserStory UserStories { get; set; }
 
+        public int TeamId { get; set; }
         public Team Team { get; set; }
     }
 }

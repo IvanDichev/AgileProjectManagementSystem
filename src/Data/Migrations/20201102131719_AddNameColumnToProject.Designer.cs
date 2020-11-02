@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201102131719_AddNameColumnToProject")]
+    partial class AddNameColumnToProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +43,7 @@ namespace Data.Migrations
                     b.Property<int>("SprintId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserStoryId")
@@ -172,8 +174,8 @@ namespace Data.Migrations
                     b.Property<DateTime>("AddedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
@@ -181,15 +183,13 @@ namespace Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UserStoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("UserStoryId");
 
@@ -287,7 +287,14 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique()
+                        .HasFilter("[ProjectId] IS NOT NULL");
 
                     b.ToTable("Teams");
                 });
@@ -501,7 +508,10 @@ namespace Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamId")
+                    b.Property<string>("TeamId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TeamId1")
                         .HasColumnType("int");
 
                     b.Property<int?>("TeamRoleId")
@@ -524,7 +534,7 @@ namespace Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("TeamId");
+                    b.HasIndex("TeamId1");
 
                     b.HasIndex("TeamRoleId");
 
@@ -642,7 +652,9 @@ namespace Data.Migrations
 
                     b.HasOne("Data.Models.Users.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Data.Models.UserStory", "UserStory")
                         .WithMany("Tasks")
@@ -686,12 +698,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Project", b =>
                 {
-                    b.HasOne("Data.Models.Team", "Team")
-                        .WithMany("Projects")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Data.Models.UserStory", "UserStories")
                         .WithMany()
                         .HasForeignKey("UserStoryId");
@@ -715,6 +721,13 @@ namespace Data.Migrations
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Team", b =>
+                {
+                    b.HasOne("Data.Models.Project", "Project")
+                        .WithOne("Team")
+                        .HasForeignKey("Data.Models.Team", "ProjectId");
                 });
 
             modelBuilder.Entity("Data.Models.Ticket", b =>
@@ -755,7 +768,7 @@ namespace Data.Migrations
                 {
                     b.HasOne("Data.Models.Team", "Team")
                         .WithMany("Users")
-                        .HasForeignKey("TeamId");
+                        .HasForeignKey("TeamId1");
 
                     b.HasOne("Data.Models.TeamRole", "TeamRole")
                         .WithMany()

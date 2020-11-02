@@ -4,7 +4,7 @@ namespace Data.Models.Users
 {
     public class User : IdentityUser<int>
     {
-        public string TeamId { get; set; }
+        public int? TeamId { get; set; }
         public virtual Team Team { get; set; }
 
         public int? TeamRoleId { get; set; }

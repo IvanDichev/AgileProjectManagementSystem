@@ -9,7 +9,6 @@ namespace Data.Models
     {
         public Sprint()
         {
-            //this.SprintBacklog = new HashSet<SprintBacklog>();
             this.UserStories = new HashSet<UserStory>();
         }
 
@@ -17,7 +16,6 @@ namespace Data.Models
 
         public SprintStatus Status { get; set; }
 
-        //public virtual ICollection<SprintBacklog> SprintBacklog { get; set; }
         public virtual ICollection<UserStory> UserStories { get; set; }
 
     }

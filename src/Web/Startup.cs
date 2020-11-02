@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repo;
-using Services.TeamsServices;
+using Services.Projects;
 using Utilities.Mailing;
 using Web.Middlewares;
 
@@ -52,7 +52,8 @@ namespace Web
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
-            services.AddScoped<ITeamsService, TeamsService>();
+            services.AddScoped<IProjectsService, ProjectsService>();
+            services.AddScoped<IRepository<Project>, Repository<Project>>();
             services.AddScoped<IRepository<Team>, Repository<Team>>();
         }
 

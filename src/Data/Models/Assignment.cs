@@ -8,10 +8,8 @@ namespace Data.Models
     {
         public Assignment()
         {
-            //this.Requirements = new HashSet<Requirement>();
             this.SubTasks = new HashSet<SubTask>();
         }
-        //public virtual ICollection<Requirement> Requirements { get; set; }
 
         public string Name { get; set; }
 
@@ -25,7 +23,7 @@ namespace Data.Models
         public int UserStoryId { get; set; }
         public virtual UserStory UserStory { get; set; }
 
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public virtual User CreatedBy { get; set; }
     }
 }

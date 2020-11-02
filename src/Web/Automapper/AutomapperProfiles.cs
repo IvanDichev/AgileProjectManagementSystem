@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
-using DataModels.Dtos.Teams;
-using DataModels.Models.Teams;
+using DataModels.Dtos;
+using DataModels.Models.Project;
 
 namespace Web.Automapper
 {
@@ -9,8 +9,8 @@ namespace Web.Automapper
     {
         public AutomapperProfiles()
         {
-            CreateMap<CreateTeamInputModel, TeamDto>().ReverseMap();
-            CreateMap<Team, TeamDto>().ReverseMap();
+            CreateMap<Project, ProjectDto>().ReverseMap();
+            CreateMap<ProjectDto, CreateProjectInputModel>().ReverseMap();
         }
     }
 }

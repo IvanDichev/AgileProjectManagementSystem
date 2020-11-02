@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TeamDto>
+﻿@*
 
 @{
     ViewData["Title"] = "View";
@@ -29,11 +29,11 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectId)
-            </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.ModifiedOn)
-        </td>*@
+            </td>-->
             <td>
+            @Html.DisplayFor(modelItem => item.ModifiedOn)
+        </td>
+            <!--<td>
             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
             <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
             <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
@@ -41,4 +41,4 @@
         </tr>
 }
     </tbody>
-</table>
+</table>*@

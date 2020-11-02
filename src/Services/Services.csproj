@@ -12,6 +12,7 @@
     <ProjectReference Include="..\DataModels\DataModels.csproj" />
     <ProjectReference Include="..\Data\Data.csproj" />
     <ProjectReference Include="..\Repo\Repo.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
 </Project>

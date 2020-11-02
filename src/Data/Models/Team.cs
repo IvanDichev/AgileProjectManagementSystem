@@ -9,14 +9,11 @@ namespace Data.Models
         public Team()
         {
             this.Users = new HashSet<User>();
+            this.Projects = new HashSet<Project>();
         }
-
-        // Should team have names?
-        //public string Name { get; set; }
 
         public ICollection<User> Users { get; set; }
 
-        public int? ProjectId { get; set; }
-        public Project Project { get; set; }
+        public ICollection<Project> Projects { get; set; }
     }
 }
