@@ -1,9 +1,7 @@
 using AutoMapper;
 using Data;
-using Data.Models;
 using Data.Models.Users;
 using Data.Seeding;
-using DataModels.Dtos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -25,9 +23,8 @@ namespace Web
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -52,12 +49,11 @@ namespace Web
             services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
+            // Register for all type of repositories.
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProjectsService, ProjectsService>();
-            services.AddScoped<IRepository<Project>, Repository<Project>>();
-            services.AddScoped<IRepository<Team>, Repository<Team>>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             

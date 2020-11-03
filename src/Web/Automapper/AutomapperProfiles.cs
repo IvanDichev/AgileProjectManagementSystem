@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
-using DataModels.Dtos;
 using DataModels.Models.Project;
+using DataModels.Models.Project.Dtos;
 
 namespace Web.Automapper
 {

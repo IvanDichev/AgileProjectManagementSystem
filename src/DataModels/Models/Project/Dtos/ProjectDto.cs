@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DataModels.Dtos
+﻿namespace DataModels.Models.Project.Dtos
 {
     public class ProjectDto
     {

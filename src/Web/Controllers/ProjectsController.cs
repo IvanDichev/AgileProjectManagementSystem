@@ -2,6 +2,7 @@
 using DataModels.Models.Project;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,9 +20,9 @@ namespace Web.Controllers
         }
 
         [Route("Projects/{id}")]
-        public async Task<IActionResult> Get(int id)
+        public IActionResult Get(int id)
         {
-            var project = mapper.Map<ProjectViewModel>(await this.projectsService.GetAsync(id));
+            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
             return View(project);
         }
 
@@ -44,6 +45,14 @@ namespace Web.Controllers
                 }
             }
             return View(inputModel);
+        }
+
+        [Route("Projects")]
+        public IActionResult GetAll()
+        {
+            var model = mapper.Map<IEnumerable<ProjectViewModel>>(this.projectsService.GetAll());
+
+            return View(model);
         }
     }
 }

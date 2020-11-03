@@ -1,0 +1,45 @@
+﻿@model ICollection<DataModels.Models.Project.ProjectViewModel>
+@{
+    ViewData["Title"] = "List all projects.";
+}
+<style>
+    div.card {
+        background-color: white;
+        opacity: 0.8;
+    }
+
+        div.card:hover {
+            background-color: #f2f2f2;
+            opacity: 1;
+            transition: 0.3s;
+        }
+
+    a:hover {
+        text-decoration: none;
+    }
+</style>
+
+<div class="row">
+    <div class="col md-6 text-center">
+        <p>Projects</p>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="project col-md-6">
+                <a asp-action="Get" asp-controller="Projects" asp-route-id="@item.Id" class="m-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <b>@item.Name</b>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@item.Description</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

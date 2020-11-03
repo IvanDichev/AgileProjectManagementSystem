@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
-using DataModels.Dtos;
 using DataModels.Models.Project;
+using DataModels.Models.Project.Dtos;
 using Repo;
 using System;
 using System.Collections.Generic;
@@ -44,9 +44,9 @@ namespace Services.Projects
             return mapper.Map<IEnumerable<ProjectDto>>(this.repo.All().ToList());
         }
 
-        public async Task<ProjectDto> GetAsync(int id)
+        public ProjectDto Get(int id)
         {
-            return mapper.Map<ProjectDto>(this.repo .AllAsNoTracking().Where(x => x.Id == id).FirstOrDefault());
+            return mapper.Map<ProjectDto>(this.repo.AllAsNoTracking().Where(x => x.Id == id).FirstOrDefault());
         }
 
         
