@@ -7,5 +7,7 @@
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public string ShortDescription => this.Description?.Length > 150 ? this.Description.Substring(0, 150) + "..." : this.Description;
     }
 }

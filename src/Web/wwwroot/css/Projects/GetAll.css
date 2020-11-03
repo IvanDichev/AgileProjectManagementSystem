@@ -1,0 +1,14 @@
+﻿div.card {
+    background-color: white;
+    opacity: 0.8;
+}
+
+div.card:hover {
+    background-color: #f2f2f2;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+a:hover {
+    text-decoration: none;
+}
