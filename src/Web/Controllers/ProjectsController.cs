@@ -55,9 +55,10 @@ namespace Web.Controllers
             return View(model);
         }
 
-		private void AddErrorsToModelState(string errorMsg)
-		{
-			ModelState.AddModelError(string.Empty, errorMsg);
-		}
+        public async Task<IActionResult> Delete(int id)
+        {
+            await this.projectsService.Delete(id);
+            return RedirectToAction("GetAll", "Projects");
+        }
     }
 }

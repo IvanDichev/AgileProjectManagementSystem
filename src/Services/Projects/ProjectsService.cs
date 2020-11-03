@@ -49,6 +49,11 @@ namespace Services.Projects
             return mapper.Map<ProjectDto>(this.repo.AllAsNoTracking().Where(x => x.Id == id).FirstOrDefault());
         }
 
-        
+        public async Task Delete(int id)
+        {
+            var toRemove = this.repo.All().Where(x => x.Id == id).FirstOrDefault();
+            this.repo.Delete(toRemove);
+            await this.repo.SaveChangesAsync();
+        }
     }
 }

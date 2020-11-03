@@ -13,10 +13,10 @@ namespace Data.Models
             this.Sprints = new HashSet<Sprint>();
         }
 
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string Name { get; set; }
 
-        [MaxLength(350)]
+        [MaxLength(400)]
         public string Description { get; set; }
 
         public ICollection<Ticket> Tickets { get; set; }

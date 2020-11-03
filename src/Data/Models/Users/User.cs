@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models.Users
 {
@@ -10,10 +11,13 @@ namespace Data.Models.Users
         public int? TeamRoleId { get; set; }
         public virtual TeamRole TeamRole { get; set; }
 
+        [MaxLength(25)]
         public string FirstName { get; set; }
 
+        [MaxLength(25)]
         public string MiddleName { get; set; }
 
+        [MaxLength(25)]
         public string LastName { get; set; }
 
         public string Image { get; set; }

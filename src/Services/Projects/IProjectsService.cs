@@ -11,5 +11,6 @@ namespace Services.Projects
         ProjectDto Get(int id);
         IEnumerable<ProjectDto> GetAll();
         Task<int> CreateAsync(CreateProjectInputModel inputModel);
+        Task Delete(int id);
     }
 }
