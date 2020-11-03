@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Data.Models.Users;
+using Utilities.Mailing;
+using Microsoft.Extensions.Configuration;
+using Shared.Constants;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -18,12 +21,16 @@ namespace Web.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly Utilities.Mailing.IEmailSender _emailSender;
+        private readonly IConfiguration _config;
 
-        public ForgotPasswordModel(UserManager<User> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<User> userManager,
+            Utilities.Mailing.IEmailSender emailSender,
+            IConfiguration config)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _config = config;
         }
 
         [BindProperty]
@@ -57,10 +64,12 @@ namespace Web.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                var email = new Email(_config["EmailSenderInformation:Email"], user.Email,
+                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
+                    Constants.ResetPasswordSubject);
+
+                await _emailSender.SendAsync(email, _config["EmailSenderInformation:Password"],
+                        _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
