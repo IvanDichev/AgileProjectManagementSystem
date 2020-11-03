@@ -54,5 +54,10 @@ namespace Web.Controllers
 
             return View(model);
         }
+
+		private void AddErrorsToModelState(string errorMsg)
+		{
+			ModelState.AddModelError(string.Empty, errorMsg);
+		}
     }
 }

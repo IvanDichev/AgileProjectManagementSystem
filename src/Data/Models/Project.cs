@@ -1,6 +1,7 @@
 ﻿using Data.Models.Base;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
 {
@@ -12,8 +13,10 @@ namespace Data.Models
             this.Sprints = new HashSet<Sprint>();
         }
 
+        [MaxLength(25)]
         public string Name { get; set; }
 
+        [MaxLength(350)]
         public string Description { get; set; }
 
         public ICollection<Ticket> Tickets { get; set; }
