@@ -15,23 +15,21 @@ namespace Web.Controllers
             this.logger = logger;
         }
 
-		[Route("/Error/HttpStatusCodeHandler/{statusCode}")]
-		public IActionResult HttpStatusCodeHandler(string statusCode)
-		{
-			switch (statusCode)
-			{
-				case "404":
-					ViewData["ErrorMessage"] = ErrorConstants.NotFoundMessage;
-					return View("NotFound");
-			}
+        [Route("/Error/{statusCode}")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult ErrorHandler(int statusCode)
+        {
+            switch (statusCode)
+            {
+                case 404:
+                    ViewData["ErrorMessage"] = ErrorConstants.NotFoundMessage;
+                    return View("NotFound");
+                case 401:
+                    ViewData["ErrorMessage"] = ErrorConstants.UnauthorizedMessage;
+                    return View("Unauthorized");
+            }
 
-			return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult ErrorHandler()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }

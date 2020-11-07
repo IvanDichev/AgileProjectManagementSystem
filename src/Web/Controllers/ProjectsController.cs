@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DataModels.Models.Project;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class ProjectsController : BaseController
     {
         private readonly IProjectsService projectsService;

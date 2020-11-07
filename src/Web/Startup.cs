@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repo;
 using Services.Projects;
+using System;
 using Utilities.Mailing;
 using Web.Middlewares;
 
@@ -31,7 +32,8 @@ namespace Web
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, Role>(options => {
+            services.AddIdentity<User, Role>(options =>
+            {
                 options.SignIn.RequireConfirmedAccount = true;
 
                 options.Password.RequiredUniqueChars = 0;
@@ -45,8 +47,21 @@ namespace Web
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages(options => 
+            {
+                options.Conventions.AuthorizeFolder("/Account");
+                options.Conventions.AuthorizePage("/Account");
+                options.Conventions.AuthorizePage("/Login");
+                options.Conventions.AuthorizeAreaFolder("Identity", "/Account"); 
+            });
             services.AddAutoMapper(typeof(Startup));
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
             // Register for all type of repositories.
@@ -56,7 +71,6 @@ namespace Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
             if (env.IsDevelopment())
             {
                 using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -72,10 +86,12 @@ namespace Web
             }
             else
             {
-                app.UseExceptionHandler("/Error/ErrorHandler");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -84,7 +100,8 @@ namespace Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseStatusCodePagesWithRedirects("/Error/HttpStatusCodeHandler/{0}");
+
+
 
             app.UseEndpoints(endpoints =>
             {
@@ -93,6 +110,8 @@ namespace Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+
         }
     }
 }
