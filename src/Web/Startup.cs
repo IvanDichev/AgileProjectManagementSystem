@@ -47,13 +47,8 @@ namespace Web
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
-            services.AddRazorPages(options => 
-            {
-                options.Conventions.AuthorizeFolder("/Account");
-                options.Conventions.AuthorizePage("/Account");
-                options.Conventions.AuthorizePage("/Login");
-                options.Conventions.AuthorizeAreaFolder("Identity", "/Account"); 
-            });
+            services.AddRazorPages();
+
             services.AddAutoMapper(typeof(Startup));
 
             services.ConfigureApplicationCookie(options =>
@@ -99,9 +94,6 @@ namespace Web
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
-
 
             app.UseEndpoints(endpoints =>
             {

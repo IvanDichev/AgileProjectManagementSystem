@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public class ResetAuthenticatorModel : PageModel
     {
         UserManager<User> _userManager;

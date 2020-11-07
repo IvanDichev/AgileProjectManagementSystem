@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Data.Models.Users;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public class EnableAuthenticatorModel : PageModel
     {
         private readonly UserManager<User> _userManager;
