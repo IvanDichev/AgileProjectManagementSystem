@@ -2,12 +2,9 @@
 
 namespace DataModels.Models.Projects
 {
-    public class CreateProjectInputModel
+    public class EditProjectViewModel
     {
-        [MinLength(3)]
-        [MaxLength(50)]
-        [Required]
-        public string Name { get; set; }
+        public int Id { get; set; }
 
         [MaxLength(400)]
         public string Description { get; set; }

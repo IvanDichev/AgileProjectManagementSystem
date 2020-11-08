@@ -64,6 +64,21 @@ namespace Web.Controllers
             return View(inputModel);
         }
 
+        public IActionResult Edit(int id)
+        {
+            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
+
+            return View(project);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditProjectViewModel model)
+        {
+            await this.projectsService.Edit(model);
+
+            return RedirectToAction("GetAll");
+        }
+
         public async Task<IActionResult> Delete(int id)
         {
             await this.projectsService.Delete(id);

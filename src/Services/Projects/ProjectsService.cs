@@ -2,6 +2,7 @@
 using Data.Models;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using Repo;
 using System;
 using System.Collections.Generic;
@@ -51,9 +52,9 @@ namespace Services.Projects
 
         public IEnumerable<ProjectDto> GetAll(int userId)
         {
-            var all = this.repo.All().Where(x => x.Team.ProjectId == x.Id)
+            var all = mapper.Map<ICollection<ProjectDto>>(this.repo.All().Where(x => x.Team.ProjectId == x.Id)
                 .Where(x => x.Team.TeamsUsers.FirstOrDefault().TeamId == x.Team.Id &&
-                    x.Team.TeamsUsers.FirstOrDefault().UserId == userId);
+                    x.Team.TeamsUsers.FirstOrDefault().UserId == userId));
 
             return mapper.Map<IEnumerable<ProjectDto>>(all.ToList());
         }
@@ -67,6 +68,16 @@ namespace Services.Projects
         {
             var toRemove = this.repo.All().Where(x => x.Id == id).FirstOrDefault();
             this.repo.Delete(toRemove);
+            await this.repo.SaveChangesAsync();
+        }
+
+        public async Task Edit(EditProjectViewModel editModel)
+        {
+            var project = this.repo.All().Where(x => x.Id == editModel.Id).FirstOrDefault();
+            project.Description = editModel.Description;
+            project.ModifiedOn = DateTime.UtcNow;
+            var p = mapper.Map<Project>(project);
+            this.repo.Update(p);
             await this.repo.SaveChangesAsync();
         }
     }

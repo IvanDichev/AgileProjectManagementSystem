@@ -12,5 +12,6 @@ namespace Services.Projects
         IEnumerable<ProjectDto> GetAll(int userId);
         Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task Delete(int id);
+        Task Edit(EditProjectViewModel editModel);
     }
 }
