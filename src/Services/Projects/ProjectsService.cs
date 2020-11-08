@@ -51,14 +51,13 @@ namespace Services.Projects
             return this.repo.AllAsNoTracking().Any(x => x.Name == name);
         }
 
-        public IEnumerable<ProjectDto> GetAll()
+        public IEnumerable<ProjectDto> GetAll(int userId)
         {
-            return mapper.Map<IEnumerable<ProjectDto>>(this.repo.All().ToList());
-        }
+            var all = this.repo.All().Where(x => x.Team.ProjectId == x.Id)
+                .Where(x => x.Team.TeamsUsers.FirstOrDefault().TeamId == x.Team.Id &&
+                    x.Team.TeamsUsers.FirstOrDefault().UserId == userId);
 
-        public IEnumerable<ProjectDto> GetAllForUser(int userId)
-        {
-            return mapper.Map<IEnumerable<ProjectDto>>(this.repo.All().Where(x => x.Id == userId).ToList());
+            return mapper.Map<IEnumerable<ProjectDto>>(all.ToList());
         }
 
         public ProjectDto Get(int id)

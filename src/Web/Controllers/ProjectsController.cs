@@ -35,7 +35,7 @@ namespace Web.Controllers
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             var model = mapper.Map<IEnumerable<ProjectViewModel>>
-                (this.projectsService.GetAll());
+                (this.projectsService.GetAll(userId));
 
             return View(model);
         }
@@ -53,11 +53,12 @@ namespace Web.Controllers
                 if (!this.projectsService.IsNameTaken(inputModel.Name))
                 {
                     var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    await this.projectsService.CreateAsync(inputModel, userId);
+                    int id = await this.projectsService.CreateAsync(inputModel, userId);
 
-                    int id = projectsService.GetAll().Where(x => x.Name == inputModel.Name).FirstOrDefault().Id;
+                    //int id = projectsService.GetAll(userId).Where(x => x.Name == inputModel.Name).FirstOrDefault().Id;
                     return RedirectToAction("Get", new { id = id });
                 }
+                ModelState.AddModelError("", $"The project '{inputModel.Name}' already exists.");
             }
             return View(inputModel);
         }

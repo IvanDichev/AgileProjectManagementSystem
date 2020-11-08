@@ -9,8 +9,7 @@ namespace Services.Projects
     {
         bool IsNameTaken(string name);
         ProjectDto Get(int id);
-        IEnumerable<ProjectDto> GetAll();
-        IEnumerable<ProjectDto> GetAllForUser(int userId);
+        IEnumerable<ProjectDto> GetAll(int userId);
         Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task Delete(int id);
     }

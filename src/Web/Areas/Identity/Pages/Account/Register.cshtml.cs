@@ -85,15 +85,6 @@ namespace Web.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    // Create default team for user.
-                    var teamsUsers = new TeamsUsers()
-                    {
-                        Team = new Team { Name = user.Email, AddedOn = DateTime.UtcNow },
-                        User = user
-                    };
-
-                    user.TeamsUsers.Add(teamsUsers);
-
                     await _userManager.AddToRoleAsync(user, ApplicationRolesConstatnts.USER);
                     _logger.LogInformation("User created a new account with password.");
 
