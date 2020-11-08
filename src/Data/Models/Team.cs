@@ -1,6 +1,7 @@
 ﻿using Data.Models.Base;
-using Data.Models.Users;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models
 {
@@ -8,12 +9,15 @@ namespace Data.Models
     {
         public Team()
         {
-            this.Users = new HashSet<User>();
-            this.Projects = new HashSet<Project>();
+            this.TeamsUsers = new HashSet<TeamsUsers>();
         }
 
-        public ICollection<User> Users { get; set; }
+        [MaxLength(50)]
+        public string Name { get; set; }
 
-        public ICollection<Project> Projects { get; set; }
+        public ICollection<TeamsUsers> TeamsUsers { get; set; }
+
+        public int ProjectId { get; set; }
+        public virtual Project Project { get; set; }
     }
 }

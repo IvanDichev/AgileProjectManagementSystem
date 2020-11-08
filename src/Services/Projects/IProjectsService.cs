@@ -1,5 +1,5 @@
-﻿using DataModels.Models.Project;
-using DataModels.Models.Project.Dtos;
+﻿using DataModels.Models.Projects;
+using DataModels.Models.Projects.Dtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,7 +10,8 @@ namespace Services.Projects
         bool IsNameTaken(string name);
         ProjectDto Get(int id);
         IEnumerable<ProjectDto> GetAll();
-        Task<int> CreateAsync(CreateProjectInputModel inputModel);
+        IEnumerable<ProjectDto> GetAllForUser(int userId);
+        Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task Delete(int id);
     }
 }

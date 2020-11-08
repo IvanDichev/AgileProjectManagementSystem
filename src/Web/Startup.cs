@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repo;
 using Services.Projects;
-using System;
 using Utilities.Mailing;
 using Web.Middlewares;
 
@@ -62,6 +61,7 @@ namespace Web
             // Register for all type of repositories.
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProjectsService, ProjectsService>();
+            //services.AddScoped<ITeamsService, TeamsService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

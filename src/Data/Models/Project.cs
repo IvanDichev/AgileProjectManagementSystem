@@ -1,5 +1,5 @@
 ﻿using Data.Models.Base;
-using System;
+using Data.Models.Users;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -26,7 +26,6 @@ namespace Data.Models
         public int? UserStoryId { get; set; }
         public virtual UserStory UserStories { get; set; }
 
-        public int? TeamId { get; set; }
-        public Team Team { get; set; }
+        public virtual Team Team { get; set; }
     }
 }

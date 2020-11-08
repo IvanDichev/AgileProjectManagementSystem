@@ -1,4 +1,4 @@
-﻿namespace DataModels.Models.Project
+﻿namespace DataModels.Models.Projects
 {
     public class ProjectViewModel
     {

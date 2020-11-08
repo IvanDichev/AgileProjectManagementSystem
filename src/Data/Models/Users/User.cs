@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models.Users
 {
     public class User : IdentityUser<int>
     {
-        public int? TeamId { get; set; }
-        public virtual Team Team { get; set; }
-
-        public int? TeamRoleId { get; set; }
-        public virtual TeamRole TeamRole { get; set; }
+        public User()
+        {
+            this.TeamsUsers = new HashSet<TeamsUsers>();
+        }
 
         [MaxLength(25)]
         public string FirstName { get; set; }
@@ -21,6 +21,12 @@ namespace Data.Models.Users
         public string LastName { get; set; }
 
         public string Image { get; set; }
+
+        public ICollection<TeamsUsers> TeamsUsers { get; set; }
+
+        public int? TeamRoleId { get; set; }
+        public virtual TeamRole TeamRole { get; set; }
+
 
     }
 }

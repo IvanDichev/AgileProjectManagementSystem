@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20201022120458_RemoveUnneccessaryAddedOnFromCommentsTable.cs" />
-    <Compile Remove="Migrations\20201022120458_RemoveUnneccessaryAddedOnFromCommentsTable.Designer.cs" />
-    <Compile Remove="Migrations\20201101140240_Testmigration.cs" />
-    <Compile Remove="Migrations\20201101140240_Testmigration.Designer.cs" />
-    <Compile Remove="Migrations\20201101145333_ChangeTaskTableToAssignment.cs" />
-    <Compile Remove="Migrations\20201101145333_ChangeTaskTableToAssignment.Designer.cs" />
+    <Compile Remove="Migrations\20201108133553_InitialMigration.cs" />
+    <Compile Remove="Migrations\20201108133553_InitialMigration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿namespace DataModels.Models.Project.Dtos
+﻿namespace DataModels.Models.Projects.Dtos
 {
     public class ProjectDto
     {

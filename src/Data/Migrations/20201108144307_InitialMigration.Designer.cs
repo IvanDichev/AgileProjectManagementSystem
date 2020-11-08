@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201102140214_RemoveDuoDateFromProject")]
-    partial class RemoveDuoDateFromProject
+    [Migration("20201108144307_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -175,23 +175,20 @@ namespace Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(400)")
+                        .HasMaxLength(400);
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<int?>("UserStoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("UserStoryId");
 
@@ -289,7 +286,17 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -313,6 +320,21 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TeamRoles");
+                });
+
+            modelBuilder.Entity("Data.Models.TeamsUsers", b =>
+                {
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TeamId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TeamsUsers");
                 });
 
             modelBuilder.Entity("Data.Models.Ticket", b =>
@@ -466,13 +488,15 @@ namespace Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(25)")
+                        .HasMaxLength(25);
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(25)")
+                        .HasMaxLength(25);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -481,7 +505,8 @@ namespace Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MiddleName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(25)")
+                        .HasMaxLength(25);
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
@@ -503,9 +528,6 @@ namespace Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TeamRoleId")
                         .HasColumnType("int");
 
@@ -525,8 +547,6 @@ namespace Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("TeamRoleId");
 
@@ -688,12 +708,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Project", b =>
                 {
-                    b.HasOne("Data.Models.Team", "Team")
-                        .WithMany("Projects")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Data.Models.UserStory", "UserStories")
                         .WithMany()
                         .HasForeignKey("UserStoryId");
@@ -715,6 +729,30 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.Assignment", "Task")
                         .WithMany("SubTasks")
                         .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Team", b =>
+                {
+                    b.HasOne("Data.Models.Project", "Project")
+                        .WithOne("Team")
+                        .HasForeignKey("Data.Models.Team", "ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.TeamsUsers", b =>
+                {
+                    b.HasOne("Data.Models.Team", "Team")
+                        .WithMany("TeamsUsers")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Users.User", "User")
+                        .WithMany("TeamsUsers")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -755,10 +793,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Users.User", b =>
                 {
-                    b.HasOne("Data.Models.Team", "Team")
-                        .WithMany("Users")
-                        .HasForeignKey("TeamId");
-
                     b.HasOne("Data.Models.TeamRole", "TeamRole")
                         .WithMany()
                         .HasForeignKey("TeamRoleId");

@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Data.Models;
+using System.Collections.Generic;
 
 namespace DataModels.Models.Teams
 {
     public class CreateTeamInputModel
     {
-        public ICollection<int> TeamMembersIds { get; set; }
-        public int? ProjectId { get; set; }
+        public string Name { get; set; }
+
+        public ICollection<TeamsUsers> TeamsUsers { get; set; }
+
+        public ICollection<Project> Projects { get; set; }
     }
 }

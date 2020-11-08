@@ -183,15 +183,10 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("UserStoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("UserStoryId");
 
@@ -289,7 +284,17 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -313,6 +318,21 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TeamRoles");
+                });
+
+            modelBuilder.Entity("Data.Models.TeamsUsers", b =>
+                {
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TeamId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TeamsUsers");
                 });
 
             modelBuilder.Entity("Data.Models.Ticket", b =>
@@ -506,9 +526,6 @@ namespace Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TeamRoleId")
                         .HasColumnType("int");
 
@@ -528,8 +545,6 @@ namespace Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("TeamRoleId");
 
@@ -691,10 +706,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Project", b =>
                 {
-                    b.HasOne("Data.Models.Team", "Team")
-                        .WithMany("Projects")
-                        .HasForeignKey("TeamId");
-
                     b.HasOne("Data.Models.UserStory", "UserStories")
                         .WithMany()
                         .HasForeignKey("UserStoryId");
@@ -716,6 +727,30 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.Assignment", "Task")
                         .WithMany("SubTasks")
                         .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Team", b =>
+                {
+                    b.HasOne("Data.Models.Project", "Project")
+                        .WithOne("Team")
+                        .HasForeignKey("Data.Models.Team", "ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.TeamsUsers", b =>
+                {
+                    b.HasOne("Data.Models.Team", "Team")
+                        .WithMany("TeamsUsers")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Users.User", "User")
+                        .WithMany("TeamsUsers")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -756,10 +791,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Users.User", b =>
                 {
-                    b.HasOne("Data.Models.Team", "Team")
-                        .WithMany("Users")
-                        .HasForeignKey("TeamId");
-
                     b.HasOne("Data.Models.TeamRole", "TeamRole")
                         .WithMany()
                         .HasForeignKey("TeamRoleId");

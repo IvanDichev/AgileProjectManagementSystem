@@ -7,14 +7,6 @@ namespace Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
-
         public DbSet<Team> Teams { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
@@ -27,6 +19,22 @@ namespace Data
         public DbSet<TicketSeverity> TicketSeverities { get; set; }
         public DbSet<SprintStatus> SprintStatuses { get; set; }
         public DbSet<MockupAttachment> MockupAttachments { get; set; }
+        public DbSet<TeamsUsers> TeamsUsers { get; set; }
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<TeamsUsers>(x => x.HasKey(x => new { x.TeamId, x.UserId }));
+
+            base.OnModelCreating(builder);
+        }
 
     }
 }

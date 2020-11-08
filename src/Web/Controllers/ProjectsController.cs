@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using DataModels.Models.Project;
+using DataModels.Models.Projects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -28,6 +29,17 @@ namespace Web.Controllers
             return View(project);
         }
 
+        [Route("Projects")]
+        public IActionResult GetAll()
+        {
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var model = mapper.Map<IEnumerable<ProjectViewModel>>
+                (this.projectsService.GetAll());
+
+            return View(model);
+        }
+
         public IActionResult Create()
         {
             return View();
@@ -40,21 +52,14 @@ namespace Web.Controllers
             {
                 if (!this.projectsService.IsNameTaken(inputModel.Name))
                 {
+                    var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    await this.projectsService.CreateAsync(inputModel, userId);
 
-                    await this.projectsService.CreateAsync(inputModel);
                     int id = projectsService.GetAll().Where(x => x.Name == inputModel.Name).FirstOrDefault().Id;
                     return RedirectToAction("Get", new { id = id });
                 }
             }
             return View(inputModel);
-        }
-
-        [Route("Projects")]
-        public IActionResult GetAll()
-        {
-            var model = mapper.Map<IEnumerable<ProjectViewModel>>(this.projectsService.GetAll());
-
-            return View(model);
         }
 
         public async Task<IActionResult> Delete(int id)

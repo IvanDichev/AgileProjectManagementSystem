@@ -1,22 +1,21 @@
-﻿using System;
+﻿using Data.Models;
+using Data.Models.Users;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Shared.Constants;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Data.Models.Users;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Shared;
-using Shared.Constants;
 using Utilities.Mailing;
 
 namespace Web.Areas.Identity.Pages.Account
@@ -41,7 +40,7 @@ namespace Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _config = config;;
+            _config = config;
         }
 
         [BindProperty]
@@ -82,10 +81,19 @@ namespace Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email };
+                var user = new User { UserName = Input.Email, Email = Input.Email, };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    // Create default team for user.
+                    var teamsUsers = new TeamsUsers()
+                    {
+                        Team = new Team { Name = user.Email, AddedOn = DateTime.UtcNow },
+                        User = user
+                    };
+
+                    user.TeamsUsers.Add(teamsUsers);
+
                     await _userManager.AddToRoleAsync(user, ApplicationRolesConstatnts.USER);
                     _logger.LogInformation("User created a new account with password.");
 
