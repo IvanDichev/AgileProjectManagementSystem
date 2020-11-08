@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -26,6 +25,7 @@ namespace Web.Controllers
         public IActionResult Get(int id)
         {
             var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
+
             return View(project);
         }
 
@@ -55,17 +55,19 @@ namespace Web.Controllers
                     var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     int id = await this.projectsService.CreateAsync(inputModel, userId);
 
-                    //int id = projectsService.GetAll(userId).Where(x => x.Name == inputModel.Name).FirstOrDefault().Id;
                     return RedirectToAction("Get", new { id = id });
                 }
+
                 ModelState.AddModelError("", $"The project '{inputModel.Name}' already exists.");
             }
+
             return View(inputModel);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
             await this.projectsService.Delete(id);
+
             return RedirectToAction("GetAll", "Projects");
         }
     }

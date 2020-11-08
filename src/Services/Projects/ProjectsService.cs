@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Data.Models;
-using Data.Models.Users;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using Repo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Services.Projects
