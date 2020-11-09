@@ -8,7 +8,7 @@ namespace Web.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> logger;
-
+        
         public HomeController(ILogger<HomeController> logger)
         {
             this.logger = logger;

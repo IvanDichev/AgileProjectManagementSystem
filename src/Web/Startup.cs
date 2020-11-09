@@ -4,6 +4,7 @@ using Data.Models.Users;
 using Data.Seeding;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -46,7 +47,7 @@ namespace Web
                 .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -57,11 +58,17 @@ namespace Web
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
             // Register for all type of repositories.
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProjectsService, ProjectsService>();
-            //services.AddScoped<ITeamsService, TeamsService>();
+         
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -74,10 +81,11 @@ namespace Web
                     dbContext.Database.Migrate();
                     new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
                 }
-
+                app.UseCookiePolicy();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseSeedAdminAndRolesMiddleware();
+                app.UseBrowserLink();
             }
             else
             {

@@ -1,7 +1,7 @@
 ﻿@{
 }
 
-<nav class="navbar fixed-left navbar-light navbar-light border-right" 
+@*<nav class="navbar fixed-left navbar-light navbar-light border-right" 
      style="position: fixed;width: 25%;height: 44.6rem;border-left: 1px solid;background: #F8F8F8;top: 3.7rem; align-items: start !important;">
     <div class="container">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NameOfProject</a>
@@ -12,4 +12,78 @@
             </ul>
         </div>
     </div>
-</nav>
+</nav>*@
+<style>
+    .sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: #d5d5d5; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+
+@@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+
+<div id="mySidenav" class="sidenav" style="margin-top:3.7rem;width:250px">
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+</div>
+
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    } 
+
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        if (screen.width > 550) {
+        document.getElementById("main-container").style.marginLeft = "250px";
+        }
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main-container").style.marginLeft = "0";
+    }
+</script>
