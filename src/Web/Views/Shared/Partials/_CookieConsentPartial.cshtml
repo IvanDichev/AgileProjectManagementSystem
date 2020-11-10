@@ -5,14 +5,35 @@
     var showBanner = !consentFeature?.CanTrack ?? false;
     var cookieString = consentFeature?.CreateConsentCookie();
 }
+<style>
+    #cookieConsent {
+        position: absolute;
+        bottom: 0;
+        width: 100vw;
+        z-index: 999;
+        max-height: 6vh;
+    }
+
+    .cookie-text {
+
+    }
+
+    @@media screen and (max-width: 560px) {
+        #cookieConsent {
+            max-height: 10vh;
+        }
+    }
+</style>
 
 @if (showBanner)
 {
-    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show border-top footer text-muted" role="alert">
-        Use this space to summarize your privacy and cookie use policy. <a asp-page="/Privacy">Learn More</a>.
-        <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
-            <span aria-hidden="true">Accept</span>
-        </button>
+    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show border-top text-muted" role="alert">
+        <p class="cookie-text">
+            Use this space to summarize your privacy and cookie use policy. <a asp-page="/Privacy">Learn More</a>.
+            <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
+                <span aria-hidden="true">Accept</span>
+            </button>
+        </p>
     </div>
     <script>
         (function () {

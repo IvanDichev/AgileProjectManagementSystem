@@ -69,3 +69,12 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+#left-nav-buttton {
+    position: fixed;
+    max-width: 5vw;
+}
+
+#top-nav-container {
+    max-width: 82vw;
+}
