@@ -1,14 +1,17 @@
 ﻿// Push main content with leftNav
 function openNav() {
+    $.cookie('isNavOpen', '1');
     document.getElementById("mySidenav").style.width = "250px";
 }
 
 function closeNav() {
+    $.cookie('isNavOpen', '0');
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main-container").style.marginLeft = "0";
 }
 
 function openNav() {
+    $.cookie('isNavOpen', '1');
     document.getElementById("mySidenav").style.width = "250px";
     if (screen.width > 550) {
         document.getElementById("main-container").style.marginLeft = "250px";
@@ -27,4 +30,19 @@ $(document).ready(function () {
         $(".open-nav").hide();
         $(".close-nav").show();
     });
+});
+
+$(document).ready(function () {
+    if ($.cookie('isNavOpen') == '1') {
+        $(".sidenav").css("width", "250px").css("transition", "0s");
+        $("#main-container").css("margin-left", "250px");
+        $('.open-nav').hide();
+        $('.close-nav').show();
+    }
+    else {
+        $(".sidenav").css("width", "0px").css("transition", "0s");
+        $("#main-container").css("margin-left", "0px")
+        $('.open-nav').show();
+        $('.close-nav').hide();
+    }
 });

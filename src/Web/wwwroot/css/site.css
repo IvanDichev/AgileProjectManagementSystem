@@ -78,3 +78,7 @@ body {
 #top-nav-container {
     max-width: 82vw;
 }
+
+#main-container {
+    margin-top: 4rem;
+}

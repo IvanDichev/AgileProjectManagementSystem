@@ -15,7 +15,7 @@
     <partial name="~/Views/Shared/Partials/_LeftNavPartial.cshtml" />
 
     <div class="container">
-        <main role="main" id="main-container" class="pb-3" style="margin-top: 4rem;margin-left:250px">
+        <main role="main" id="main-container" class="pb-3">
             @RenderBody()
         </main>
     </div>
@@ -32,9 +32,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-cookie/jquery.cookie.min.js"></script>
     <script src="~/js/layout/leftNav.js" asp-append-version="true"></script>
-    <script>
-        $.cookie('testNav', '1');
-    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
