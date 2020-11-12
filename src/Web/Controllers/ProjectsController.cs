@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Web.Extentions;
 
 namespace Web.Controllers
 {
@@ -54,14 +56,16 @@ namespace Web.Controllers
                 {
                     var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     int id = await this.projectsService.CreateAsync(inputModel, userId);
-
-                    return RedirectToAction("Get", new { id = id });
+                    var all = mapper.Map<IEnumerable<ProjectViewModel>>(this.projectsService.GetAll(userId));
+                    var html = await this.RenderAsync("_ViewAll", all);
+                    return Json(new { isValid = true, html});
+                    //return RedirectToAction("Get", new { id = id });
                 }
 
                 ModelState.AddModelError("", $"The project '{inputModel.Name}' already exists.");
             }
-
-            return View(inputModel);
+            return Json(new { isValid = false, html = await this.RenderAsync("Create", inputModel) });
+            //return View(inputModel);
         }
 
         public IActionResult Edit(int id)
