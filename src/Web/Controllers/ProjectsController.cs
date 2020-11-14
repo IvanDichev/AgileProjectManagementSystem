@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Extentions;
+using Web.Helpers;
 
 namespace Web.Controllers
 {
@@ -42,6 +42,7 @@ namespace Web.Controllers
             return View(model);
         }
 
+        [NoDirectAccess]
         public IActionResult Create()
         {
             return View();
@@ -65,6 +66,7 @@ namespace Web.Controllers
             return Json(new { isValid = false, html = await this.RenderAsync("Create", inputModel, true) });
         }
 
+        [NoDirectAccess]
         public async Task<IActionResult> Edit(int id)
         {
             var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
