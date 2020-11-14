@@ -52,7 +52,7 @@ namespace Web.Extentions
             using (var writer = new StringWriter())
             {
                 IViewEngine viewEngine = controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
-                ViewEngineResult viewResult = viewEngine.FindView(controller.ControllerContext, viewName, !isPartial);
+                ViewEngineResult viewResult = viewEngine.FindView(controller.ControllerContext, viewName, isPartial);
 
                 ViewContext viewContext = new ViewContext(
                     controller.ControllerContext,

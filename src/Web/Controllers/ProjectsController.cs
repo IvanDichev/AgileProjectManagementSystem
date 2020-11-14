@@ -55,32 +55,27 @@ namespace Web.Controllers
                 if (!this.projectsService.IsNameTaken(inputModel.Name))
                 {
                     var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    int id = await this.projectsService.CreateAsync(inputModel, userId);
+                    await this.projectsService.CreateAsync(inputModel, userId);
                     var all = mapper.Map<IEnumerable<ProjectViewModel>>(this.projectsService.GetAll(userId));
-                    var html = await this.RenderAsync("_ViewAll", all);
-                    return Json(new { isValid = true, html});
-                    //return RedirectToAction("Get", new { id = id });
+                    return Json(new { isValid = true, html = await this.RenderAsync("_ViewAll", all, false)});
                 }
 
                 ModelState.AddModelError("", $"The project '{inputModel.Name}' already exists.");
             }
-            return Json(new { isValid = false, html = await this.RenderAsync("Create", inputModel) });
-            //return View(inputModel);
+            return Json(new { isValid = false, html = await this.RenderAsync("Create", inputModel, true) });
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
-
-            return View(project);
+            return Json(new { html = await this.RenderAsync("Edit", project, false) });
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(EditProjectViewModel model)
         {
             await this.projectsService.Edit(model);
-
-            return RedirectToAction("GetAll");
+            return Json(new { isValid = true, newDescription = model.Description });
         }
 
         public async Task<IActionResult> Delete(int id)

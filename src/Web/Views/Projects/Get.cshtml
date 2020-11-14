@@ -2,30 +2,30 @@
 @{
     ViewData["Title"] = "Project";
 }
-
-<h1>View</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <div class="card">
     <div class="card-body">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <span style="font-size:2rem;margin-right:3rem;" class="badge badge-secondary">@Model.Name.Substring(0, 1)</span>
-                <li class="breadcrumb-item active" aria-current="page" style="font-size:2rem;">@Model.Name</li>
+                <li id="project-name" class="breadcrumb-item active" aria-current="page" style="font-size:2rem;">@Model.Name</li>
+                <a class="btn btn-danger btn-sm ml-auto" id="del" asp-action="Delete" asp-route-id="@Model.Id"
+                   style="height: 100%;">Delete</a>
             </ol>
         </nav>
         <hr />
-        <p class="card-text"><p style="font-size:2rem;">About this project: </p>
+        <p class="card-text"><p style="font-size:1.6rem;">About this project: </p>
         <div style="font-size:1.3rem;">
-            @Html.DisplayFor(model => model.Name)
-            @Html.DisplayFor(model => model.Description)
+            <div id="description">
+                @Html.DisplayFor(model => model.Description)
+            </div>
         </div>
         <hr />
         <div style="margin-left:auto;">
-            <a class="btn btn-primary" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-primary" id="edit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
         </div>
     </div>
 </div>
+
+@section Scripts{
+    <script src="~/js/Projects/Get.js"></script>
+}
