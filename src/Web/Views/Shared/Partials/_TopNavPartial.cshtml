@@ -3,7 +3,7 @@
 @inject SignInManager<User> SignInManager
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
-    @if (SignInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User) && Url.ActionContext.RouteData.Values["projectId"] != null)
     {
         <div class="container" id="left-nav-buttton">
             <a href="" class="navbar-brand open-nav" onclick="openNav()" style="margin-left:-10px; display:none;">
@@ -32,9 +32,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Editor" asp-action="index">Editor</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="UserStories" asp-action="index">User Stories</a>
                 </li>
             </ul>
         </div>
