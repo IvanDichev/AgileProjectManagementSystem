@@ -2,6 +2,7 @@
 using Data.Models;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Models.UserStories.Dtos;
 
 namespace Web.Automapper
 {
@@ -13,6 +14,8 @@ namespace Web.Automapper
             CreateMap<ProjectDto, CreateProjectInputModel>().ReverseMap();
             CreateMap<ProjectDto, ProjectViewModel>().ReverseMap();
             CreateMap<ProjectDto, EditProjectViewModel>().ReverseMap();
+
+            CreateMap<UserStory, UserStoryDto>().ReverseMap();
         }
     }
 }

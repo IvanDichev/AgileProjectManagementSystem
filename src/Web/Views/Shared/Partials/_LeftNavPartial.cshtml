@@ -4,10 +4,11 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div id="mySidenav" class="sidenav">
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Clients</a>
-        <a href="#">Contact</a>
-    </div>
+<div id="mySidenav" class="sidenav">
+        <a class="nav-link" asp-area="" asp-controller="UserStories" asp-action="index">User Stories</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+</div>
 }

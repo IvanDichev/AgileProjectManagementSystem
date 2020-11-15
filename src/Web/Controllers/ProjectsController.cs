@@ -23,7 +23,7 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        [Route("Projects/{id}")]
+        [Route("{controller}/{id}")]
         public IActionResult Get(int id)
         {
             var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
@@ -31,7 +31,7 @@ namespace Web.Controllers
             return View(project);
         }
 
-        [Route("Projects")]
+        [Route("{controller}")]
         public IActionResult GetAll()
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
