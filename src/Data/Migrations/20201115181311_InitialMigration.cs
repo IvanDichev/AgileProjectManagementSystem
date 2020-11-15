@@ -39,6 +39,22 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
+                    Description = table.Column<string>(maxLength: 400, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SprintStatuses",
                 columns: table => new
                 {
@@ -106,6 +122,57 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Teams",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
+                    ProjectId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teams", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teams_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sprints",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    DueDate = table.Column<DateTime>(nullable: false),
+                    StatusId = table.Column<int>(nullable: true),
+                    ProjectId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sprints", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sprints_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sprints_SprintStatuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "SprintStatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -138,6 +205,45 @@ namespace Data.Migrations
                         name: "FK_AspNetUsers_TeamRoles_TeamRoleId",
                         column: x => x.TeamRoleId,
                         principalTable: "TeamRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    StoryPoints = table.Column<int>(nullable: true),
+                    BacklogPriorityId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    AcceptanceCriteria = table.Column<string>(nullable: true),
+                    ProjectId = table.Column<int>(nullable: false),
+                    SprintId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStories_BacklogPriorities_BacklogPriorityId",
+                        column: x => x.BacklogPriorityId,
+                        principalTable: "BacklogPriorities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserStories_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserStories_Sprints_SprintId",
+                        column: x => x.SprintId,
+                        principalTable: "Sprints",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -228,76 +334,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false),
-                    UserStoryId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comment_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Effort = table.Column<int>(nullable: false),
-                    SprintId = table.Column<int>(nullable: false),
-                    UserStoryId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tasks_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SubTasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    TaskId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubTasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SubTasks_Tasks_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "Tasks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TeamsUsers",
                 columns: table => new
                 {
@@ -307,6 +343,12 @@ namespace Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TeamsUsers", x => new { x.TeamId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_TeamsUsers_Teams_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TeamsUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -332,6 +374,12 @@ namespace Data.Migrations
                 {
                     table.PrimaryKey("PK_Tickets", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Tickets_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Tickets_TicketSeverities_SeverityId",
                         column: x => x.SeverityId,
                         principalTable: "TicketSeverities",
@@ -346,27 +394,30 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserStories",
+                name: "Comment",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    StoryPoints = table.Column<int>(nullable: false),
-                    BacklogPriorityId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    AcceptanceCriteria = table.Column<string>(nullable: true),
-                    SprintId = table.Column<int>(nullable: true)
+                    UserId = table.Column<int>(nullable: false),
+                    UserStoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserStories", x => x.Id);
+                    table.PrimaryKey("PK_Comment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserStories_BacklogPriorities_BacklogPriorityId",
-                        column: x => x.BacklogPriorityId,
-                        principalTable: "BacklogPriorities",
+                        name: "FK_Comment_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comment_UserStories_UserStoryId",
+                        column: x => x.UserStoryId,
+                        principalTable: "UserStories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -393,26 +444,40 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
+                name: "Tasks",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 50, nullable: true),
-                    Description = table.Column<string>(maxLength: 400, nullable: true),
-                    UserStoryId = table.Column<int>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    Effort = table.Column<int>(nullable: false),
+                    SprintId = table.Column<int>(nullable: false),
+                    UserStoryId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_Tasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_UserStories_UserStoryId",
+                        name: "FK_Tasks_Sprints_SprintId",
+                        column: x => x.SprintId,
+                        principalTable: "Sprints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tasks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tasks_UserStories_UserStoryId",
                         column: x => x.UserStoryId,
                         principalTable: "UserStories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -438,52 +503,23 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sprints",
+                name: "SubTasks",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    DueDate = table.Column<DateTime>(nullable: false),
-                    StatusId = table.Column<int>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: true)
+                    Description = table.Column<string>(nullable: true),
+                    TaskId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sprints", x => x.Id);
+                    table.PrimaryKey("PK_SubTasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sprints_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Sprints_SprintStatuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "SprintStatuses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 50, nullable: true),
-                    ProjectId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Teams_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
+                        name: "FK_SubTasks_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -553,11 +589,6 @@ namespace Data.Migrations
                 column: "MockupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_UserStoryId",
-                table: "Projects",
-                column: "UserStoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sprints_ProjectId",
                 table: "Sprints",
                 column: "ProjectId");
@@ -619,65 +650,18 @@ namespace Data.Migrations
                 column: "BacklogPriorityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserStories_ProjectId",
+                table: "UserStories",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserStories_SprintId",
                 table: "UserStories",
                 column: "SprintId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Comment_UserStories_UserStoryId",
-                table: "Comment",
-                column: "UserStoryId",
-                principalTable: "UserStories",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Tasks_UserStories_UserStoryId",
-                table: "Tasks",
-                column: "UserStoryId",
-                principalTable: "UserStories",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Tasks_Sprints_SprintId",
-                table: "Tasks",
-                column: "SprintId",
-                principalTable: "Sprints",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_TeamsUsers_Teams_TeamId",
-                table: "TeamsUsers",
-                column: "TeamId",
-                principalTable: "Teams",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Tickets_Projects_ProjectId",
-                table: "Tickets",
-                column: "ProjectId",
-                principalTable: "Projects",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_UserStories_Sprints_SprintId",
-                table: "UserStories",
-                column: "SprintId",
-                principalTable: "Sprints",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_UserStories_UserStoryId",
-                table: "Projects");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -727,10 +711,10 @@ namespace Data.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "TeamRoles");
+                name: "UserStories");
 
             migrationBuilder.DropTable(
-                name: "UserStories");
+                name: "TeamRoles");
 
             migrationBuilder.DropTable(
                 name: "BacklogPriorities");

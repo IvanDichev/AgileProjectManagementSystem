@@ -22,9 +22,6 @@ namespace Data.Models
 
         public ICollection<Sprint> Sprints { get; set; }
 
-        public int? UserStoryId { get; set; }
-        public virtual UserStory UserStories { get; set; }
-
         public virtual Team Team { get; set; }
     }
 }

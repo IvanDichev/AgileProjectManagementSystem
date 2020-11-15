@@ -5,7 +5,6 @@ using Services.UserStories;
 namespace Web.Controllers
 {
     [Authorize]
-    [Route("Projects")]
     public class UserStoriesController : BaseController
     {
         private readonly IUserStoriesService userStoriesService;
@@ -15,7 +14,7 @@ namespace Web.Controllers
             this.userStoriesService = userStoriesService;
         }
 
-        [Route("{projectId}/{controller}")]
+        [Route("Projects/{projectId}/{controller}/Index/")]
         public IActionResult Index(int projectId)
         {
 

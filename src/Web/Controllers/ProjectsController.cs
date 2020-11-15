@@ -23,10 +23,10 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        [Route("{controller}/{id}")]
-        public IActionResult Get(int id)
+        [Route("{controller}/{projectId}")]
+        public IActionResult Get(int projectId)
         {
-            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
+            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(projectId));
 
             return View(project);
         }
@@ -67,9 +67,9 @@ namespace Web.Controllers
         }
 
         [NoDirectAccess]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int projectId)
         {
-            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
+            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(projectId));
             return Json(new { html = await this.RenderAsync("Edit", project, false) });
         }
 

@@ -19,7 +19,7 @@ namespace Services.UserStories
 
         public IEnumerable<UserStoryDto> GetAll(int projectId)
         {
-            return this.mapper.Map<IEnumerable<UserStoryDto>>(this.repo.All());
+            return this.mapper.Map<IEnumerable<UserStoryDto>>(this.repo.All().Where(x => x.ProjectId == projectId));
         }
     }
 }

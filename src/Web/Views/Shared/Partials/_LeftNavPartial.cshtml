@@ -5,7 +5,10 @@
 @if (SignInManager.IsSignedIn(User))
 {
 <div id="mySidenav" class="sidenav">
-        <a class="nav-link" asp-area="" asp-controller="UserStories" asp-action="index">User Stories</a>
+        <a class="nav-link" asp-area="" asp-controller="UserStories" 
+           asp-action="index" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+            User Stories
+        </a>
     <a href="#">About</a>
     <a href="#">Services</a>
     <a href="#">Clients</a>

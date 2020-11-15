@@ -183,12 +183,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int?>("UserStoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserStoryId");
 
                     b.ToTable("Projects");
                 });
@@ -417,10 +412,13 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("SprintId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StoryPoints")
+                    b.Property<int?>("StoryPoints")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -429,6 +427,8 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BacklogPriorityId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("SprintId");
 
@@ -704,13 +704,6 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.Models.Project", b =>
-                {
-                    b.HasOne("Data.Models.UserStory", "UserStories")
-                        .WithMany()
-                        .HasForeignKey("UserStoryId");
-                });
-
             modelBuilder.Entity("Data.Models.Sprint", b =>
                 {
                     b.HasOne("Data.Models.Project", null)
@@ -781,6 +774,12 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.BacklogPriority", "BacklogPriority")
                         .WithMany()
                         .HasForeignKey("BacklogPriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
