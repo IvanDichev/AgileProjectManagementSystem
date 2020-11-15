@@ -1,6 +1,5 @@
 ﻿$('#del').on('click', function deleteItem() {
     if (confirm("Are you sure you want to delete this item?")) {
-        $.dialog.bind()
         return true;
     }
     return false;
@@ -12,7 +11,7 @@ document.getElementById("edit").onclick = function () {
         url: $(this).attr('href'),
         success: function (res) {
             $('#form-modal .modal-body').html(res.html);
-            $('#form-modal .modal-title').html(document.getElementById("project-name"));
+            $('#form-modal .modal-title').html($("#project-name").html());
             $('#form-modal').modal('show');
         }
     })
