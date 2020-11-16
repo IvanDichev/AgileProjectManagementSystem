@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
 using DataModels.Models.UserStories.Dtos;
+using Microsoft.EntityFrameworkCore;
 using Repo;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +20,13 @@ namespace Services.UserStories
 
         public IEnumerable<UserStoryDto> GetAll(int projectId)
         {
-            return this.mapper.Map<IEnumerable<UserStoryDto>>(this.repo.All().Where(x => x.ProjectId == projectId));
+            return this.mapper.Map<IEnumerable<UserStoryDto>>(this.repo.All()
+                .Include(x => x.BacklogPriority).Where(x => x.ProjectId == projectId));
         }
 
         public bool IsUserInProject(int projectId, int userId)
         {
-            var bo =  this.repo.All().Where(x => x.ProjectId == projectId)
-                .Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
-            return bo;
+            return this.repo.All().Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
         }
     }
 }

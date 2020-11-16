@@ -30,6 +30,9 @@ namespace Web.Controllers
             return View(all);
         }
 
-
+        public IActionResult create()
+        {
+            return View();
+        }
     }
 }
