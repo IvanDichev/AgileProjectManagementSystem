@@ -21,5 +21,12 @@ namespace Services.UserStories
         {
             return this.mapper.Map<IEnumerable<UserStoryDto>>(this.repo.All().Where(x => x.ProjectId == projectId));
         }
+
+        public bool IsUserInProject(int projectId, int userId)
+        {
+            var bo =  this.repo.All().Where(x => x.ProjectId == projectId)
+                .Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
+            return bo;
+        }
     }
 }

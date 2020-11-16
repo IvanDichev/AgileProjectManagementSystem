@@ -2,10 +2,10 @@
     ViewData["Title"] = "Unauthorized";
 }
 
-<div class="container">
+<div class="container text-center">
     <h5 class="text-center mt-5 error-msg">@ViewData["ErrorMessage"]</h5>
     <hr />
-    <img src="~/img/Error/error_401.png.png" alt="401 image" class="img-fluid img-404" />
+    <img src="~/img/Error/error_401.png" alt="401 image" class="img-fluid img-404" />
     <br />
     <hr />
     <a asp-action="index" asp-controller="home" style="width: 225px" class="btn btn-outline-info d-inline-block">
@@ -13,3 +13,12 @@
     </a>
     <hr />
 </div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#main-container').attr('style', 'margin-left:0px !important;')
+        });
+    </script>
+}

@@ -1,5 +1,6 @@
 ﻿using Data.Models.Base;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
 {
@@ -12,6 +13,7 @@ namespace Data.Models
             this.Comments = new HashSet<Comment>();
         }
 
+        [MaxLength(200)]
         public string Title { get; set; }
 
         public int? StoryPoints { get; set; }
@@ -21,7 +23,8 @@ namespace Data.Models
         public virtual BacklogPriority BacklogPriority { get; set; }
 
         public string Description { get; set; }
-
+        
+        [MaxLength(2000)]
         public string AcceptanceCriteria { get; set; }
 
         public int ProjectId { get; set; }

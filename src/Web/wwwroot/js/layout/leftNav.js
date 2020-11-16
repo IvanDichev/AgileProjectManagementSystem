@@ -36,7 +36,10 @@ $(document).ready(function () {
 $(document).ready(function () {
     if ($.cookie('isNavOpen') == '1') {
         $(".sidenav").css("width", "250px").css("transition", "0s");
-        $("#main-container").css("margin-left", "250px");
+        if (window.location.pathname.split('/')[1].toLocaleLowerCase() == 'projects'
+            && window.location.pathname.split('/')[2] != null) {
+            $("#main-container").css("margin-left", "250px");
+        }
         $('.open-nav').hide();
         $('.close-nav').show();
     }
