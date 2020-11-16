@@ -17,6 +17,10 @@
     {
       "library": "jqueryui@1.12.1",
       "destination": "wwwroot/lib/jqueryui/"
+    },
+    {
+      "library": "tinymce@5.5.1",
+      "destination": "wwwroot/lib/tinymce/"
     }
   ]
 }
