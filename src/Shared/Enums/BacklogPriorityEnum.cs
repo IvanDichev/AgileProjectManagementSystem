@@ -2,7 +2,6 @@
 {
     public enum BacklogPriorityEnum
     {
-        Default = 0,
         LevelOne = 1,
         LevelTwo = 2,
         LevelThree = 3,

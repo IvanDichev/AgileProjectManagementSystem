@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repo;
+using Services.BacklogPriorities;
 using Services.Projects;
 using Services.UserStories;
 using Utilities.Mailing;
@@ -75,6 +76,7 @@ namespace Web
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IUserStoriesService, UserStoriesService>();
+            services.AddScoped<IBacklogPrioritiesService, BacklogPrioritiesService>();
          
         }
 

@@ -1,0 +1,12 @@
+﻿<script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
+<script type="text/javascript" asp-append-version="true">
+    tinyMCE.init({
+        selector: '#textarea-tinemce',
+        plugins: 'image paste table link code media"',
+        themes: 'advanced',
+        languages: 'en'
+    });
+</script>
+
+<textarea name="mceContent" id="textarea-tinemce">
+    </textarea>

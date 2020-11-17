@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Data.Models;
+using DataModels.Models.BacklogPriorities;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
 
 namespace Web.Automapper
@@ -16,6 +18,10 @@ namespace Web.Automapper
             CreateMap<ProjectDto, EditProjectViewModel>().ReverseMap();
 
             CreateMap<UserStory, UserStoryDto>().ReverseMap();
+
+            CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
+
+            CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
         }
     }
 }

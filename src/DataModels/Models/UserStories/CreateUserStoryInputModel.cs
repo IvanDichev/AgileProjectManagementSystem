@@ -12,7 +12,6 @@ namespace DataModels.Models.UserStories
         [Range(0, ushort.MaxValue)]
         public ushort? StoryPoints { get; set; }
 
-        public string BacklogPriorityPriority { get; set; }
         public string BacklogPriorityid { get; set; }
 
         public string Description { get; set; }
@@ -22,10 +21,6 @@ namespace DataModels.Models.UserStories
 
         public int ProjectId { get; set; }
 
-        public string ProjectName { get; set; }
-
-        public ICollection<string> MockupsMockupAttachmentsAttachment { get; set; }
-
-        public ICollection<string> CommentsDescription { get; set; }
+        public ICollection<BacklogPriorityDropDownModel> PrioritiesDropDown { get; set; }
     }
 }

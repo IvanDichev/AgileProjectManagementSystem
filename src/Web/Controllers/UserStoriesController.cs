@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using DataModels.Models.UserStories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services.BacklogPriorities;
 using Services.UserStories;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
@@ -10,10 +16,16 @@ namespace Web.Controllers
     public class UserStoriesController : BaseController
     {
         private readonly IUserStoriesService userStoriesService;
+        private readonly IBacklogPrioritiesService backlogPrioritiesService;
+        private readonly IMapper mapper;
 
-        public UserStoriesController(IUserStoriesService userStoriesService)
+        public UserStoriesController(IUserStoriesService userStoriesService,
+            IBacklogPrioritiesService backlogPrioritiesService,
+            IMapper mapper)
         {
             this.userStoriesService = userStoriesService;
+            this.backlogPrioritiesService = backlogPrioritiesService;
+            this.mapper = mapper;
         }
 
         [Route("Projects/{projectId}/{controller}/")]
@@ -30,8 +42,21 @@ namespace Web.Controllers
             return View(all);
         }
 
-        public IActionResult create()
+        public async Task<IActionResult> Create()
         {
+            var createViewModel = new CreateUserStoryInputModel()
+            {
+                PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
+                (await this.backlogPrioritiesService.GetAllAsync())
+            };
+            ;  
+            return View(createViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateUserStoryInputModel model)
+        {
+            ;
             return View();
         }
     }
