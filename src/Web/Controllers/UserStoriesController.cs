@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace Web.Controllers
 {
     [Authorize]
+    [Route("Projects/{projectId}/[controller]/[action]")]
     public class UserStoriesController : BaseController
     {
         private readonly IUserStoriesService userStoriesService;
@@ -28,7 +29,7 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        [Route("Projects/{projectId}/[controller]/")]
+        [Route("")]
         public IActionResult Index(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -49,13 +50,24 @@ namespace Web.Controllers
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                 (await this.backlogPrioritiesService.GetAllAsync())
             };
-            ;  
+
             return View(createViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateUserStoryInputModel inputModel)
+        public async Task<IActionResult> Create(CreateUserStoryInputModel inputModel, int projectId)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(inputModel);
+            }
+
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!this.userStoriesService.IsUserInProject(projectId, userId))
+            {
+                return StatusCode((int)HttpStatusCode.Unauthorized);
+            }
+
             var userStoryId = await  this.userStoriesService.CreateAsync(inputModel);
 
             return RedirectToAction("index");

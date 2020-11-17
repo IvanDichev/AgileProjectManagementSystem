@@ -80,5 +80,10 @@ namespace Services.Projects
             this.repo.Update(p);
             await this.repo.SaveChangesAsync();
         }
+
+        public bool IsUserInProject(int projectId, int userId)
+        {
+            return this.repo.AllAsNoTracking().Where(x => x.Id == projectId).Any(x => x.Team.TeamsUsers.Any(x => x.UserId == userId));
+        }
     }
 }
