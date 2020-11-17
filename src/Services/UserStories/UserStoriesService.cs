@@ -29,9 +29,9 @@ namespace Services.UserStories
 
         public bool IsUserInProject(int projectId, int userId)
         {
-            return this.repo.All()
-                .Any(x => x.ProjectId == projectId && 
-                    x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
+            var i = this.repo.All().Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
+            return i;
+                //.Where(x => x.ProjectId == projectId).Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
         }
 
         public async Task<int> CreateAsync(CreateUserStoryInputModel model)

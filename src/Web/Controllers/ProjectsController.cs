@@ -24,7 +24,7 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        [Route("{controller}/{projectId}")]
+        [Route("[controller]/{projectId}")]
         public IActionResult Get(int projectId)
         {
             if (!isUserInProject(projectId))
@@ -37,7 +37,7 @@ namespace Web.Controllers
             return View(project);
         }
 
-        [Route("{controller}")]
+        [Route("[controller]")]
         public IActionResult GetAll()
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
