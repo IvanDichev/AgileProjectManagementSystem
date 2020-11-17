@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Data.Models;
+using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Repo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Services.UserStories
 {
@@ -31,6 +34,26 @@ namespace Services.UserStories
                 return true;
             }
             return this.repo.All().Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
+        }
+
+        public async Task<int> CreateAsync(CreateUserStoryInputModel model)
+        {
+            var userStory = new UserStory()
+            {
+                AddedOn = DateTime.UtcNow,
+                Title = model.Title,
+                Description = model.Description,
+                AcceptanceCriteria = model.AcceptanceCriteria,
+                ProjectId = model.ProjectId,
+                StoryPoints = model.StoryPoints,
+                BacklogPriorityId = int.Parse(model.BacklogPriorityid),
+            };
+
+            await this.repo.AddAsync(userStory);
+
+            await this.repo.SaveChangesAsync();
+            int userstoryId = this.repo.AllAsNoTracking().Where(x => x == userStory).FirstOrDefault().Id;
+            return userstoryId;
         }
     }
 }

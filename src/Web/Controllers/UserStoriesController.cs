@@ -28,7 +28,7 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        [Route("Projects/{projectId}/{controller}/")]
+        [Route("Projects/{projectId}/[controller]/")]
         public IActionResult Index(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -54,10 +54,11 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateUserStoryInputModel model)
+        public async Task<IActionResult> Create(CreateUserStoryInputModel inputModel)
         {
-            ;
-            return View();
+            var userStoryId = await  this.userStoriesService.CreateAsync(inputModel);
+
+            return RedirectToAction("index");
         }
     }
 }
