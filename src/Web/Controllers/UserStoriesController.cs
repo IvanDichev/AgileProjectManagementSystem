@@ -71,8 +71,32 @@ namespace Web.Controllers
                 return View(inputModel);
             }
 
-            await  this.userStoriesService.CreateAsync(inputModel);
+            await this.userStoriesService.CreateAsync(inputModel);
             return RedirectToAction("Index", new { projectId = projectId });
+        }
+
+        public async Task<IActionResult> Delete(int projectId, int userStoryId)
+        {
+            if (!IsUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            await this.userStoriesService.Delete(userStoryId);
+
+            return RedirectToAction("Index", new { projectId = projectId });
+        }
+
+        public IActionResult Get(int projectId, int userStoryId)
+        {
+            if (!IsUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            var userStory = this.mapper.Map<UserStoryViewModel>(this.userStoriesService.Get(userStoryId));
+
+            return View(userStory);
         }
 
         /// <summary>

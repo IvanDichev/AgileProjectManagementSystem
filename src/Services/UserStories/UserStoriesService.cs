@@ -27,14 +27,7 @@ namespace Services.UserStories
                 .Include(x => x.BacklogPriority).Where(x => x.ProjectId == projectId));
         }
 
-        public bool IsUserInProject(int projectId, int userId)
-        {
-            var i = this.repo.All().Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
-            return i;
-                //.Where(x => x.ProjectId == projectId).Any(x => x.Project.Team.TeamsUsers.Any(x => x.UserId == userId));
-        }
-
-        public async Task<int> CreateAsync(CreateUserStoryInputModel model)
+        public async Task CreateAsync(CreateUserStoryInputModel model)
         {
             var userStory = new UserStory()
             {
@@ -50,13 +43,19 @@ namespace Services.UserStories
             await this.repo.AddAsync(userStory);
 
             await this.repo.SaveChangesAsync();
-            int userstoryId = this.repo.AllAsNoTracking().Where(x => x == userStory).FirstOrDefault().Id;
-            return userstoryId;
         }
 
         public UserStoryDto Get(int userStoryId)
         {
-            throw new NotImplementedException();
+            var userStory = this.repo.All().Where(x => x.Id == userStoryId).FirstOrDefault();
+            return this.mapper.Map<UserStoryDto>(userStory);
+        }
+
+        public async Task Delete(int userStoryId)
+        {
+            var toRemove = this.repo.All().Where(x => x.Id == userStoryId).FirstOrDefault();
+            this.repo.Delete(toRemove);
+            await this.repo.SaveChangesAsync();
         }
     }
 }

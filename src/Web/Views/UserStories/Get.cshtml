@@ -1,0 +1,24 @@
+﻿@model UserStoryViewModel
+@{ 
+    ViewData["Title"] = "User story Details";
+}
+
+<div>
+    <p>Id</p>
+    <p>@Model.Id</p>
+    <hr />   
+    <p>Title</p>
+    <p>@Model.Title</p>
+    <hr />
+    <p>Description</p>
+    <p>@Html.Raw(Model.SanitizedDescription)</p>
+    <hr />
+    <p>Priority</p>
+    <p>@Model.BacklogPriorityPriority</p>
+    <hr />
+    <p>Acceptance criteria</p>
+    <p>@Html.Raw(Model.SanitizedAcceptanceCriteria)</p>
+    <hr />
+    <p>Story points</p>
+    <p>@Model.StoryPoints</p>
+</div>
