@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataModels.Models.Error;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Shared.Constants;
 using System.Diagnostics;
-using Web.Models.Error;
 
 namespace Web.Controllers
 {

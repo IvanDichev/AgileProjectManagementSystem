@@ -116,7 +116,7 @@ namespace Web
             {
                 endpoints.MapControllerRoute(
                      name: "Projects",
-                     pattern: "{Projects}/{projectId}/{controller}/{action=index}/{id?}",
+                     pattern: "Projects/{projectId}/{controller!=projects}/{action=index}/{id?}",
                      defaults: new { Projects = "Projects" });
 
                 endpoints.MapControllerRoute(

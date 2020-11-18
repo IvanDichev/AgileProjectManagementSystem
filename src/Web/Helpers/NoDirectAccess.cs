@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Web.Helpers
 {
+    /// <summary>
+    /// Restricts direct access to action.
+    /// </summary>
     public class NoDirectAccessAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)

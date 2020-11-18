@@ -1,6 +1,4 @@
-using System;
-
-namespace Web.Models.Error
+﻿namespace DataModels.Models.Error
 {
     public class ErrorViewModel
     {

@@ -13,6 +13,12 @@ namespace Services.Projects
         Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task Delete(int id);
         Task Edit(EditProjectViewModel editModel);
+
+        /// <summary>
+        /// Check if project has relation to the project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         bool IsUserInProject(int projectId, int userId);
     }
 }

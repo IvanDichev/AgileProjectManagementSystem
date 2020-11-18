@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
 using System.Collections.Generic;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Extentions;
@@ -27,13 +26,12 @@ namespace Web.Controllers
         [Route("[controller]/{projectId}")]
         public IActionResult Get(int projectId)
         {
-            if (!isUserInProject(projectId))
+            if (!IsUserInProject(projectId))
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
 
             var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(projectId));
-
             return View(project);
         }
 
@@ -59,7 +57,7 @@ namespace Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { isValid = false, html = await this.RenderAsync("Create", inputModel, true) });
+                return Json(new { isValid = false, html = await this.RenderViewAsStringAsync("Create", inputModel, true) });
             }
 
             if (!this.projectsService.IsNameTaken(inputModel.Name))
@@ -67,38 +65,40 @@ namespace Web.Controllers
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 await this.projectsService.CreateAsync(inputModel, userId);
                 var all = mapper.Map<IEnumerable<ProjectViewModel>>(this.projectsService.GetAll(userId));
-                return Json(new { isValid = true, html = await this.RenderAsync("_ViewAll", all, false) });
+                return Json(new { isValid = true, html = await this.RenderViewAsStringAsync("_ViewAll", all, false) });
             }
 
             ModelState.AddModelError("", $"The project '{inputModel.Name}' already exists.");
 
-            return Json(new { isValid = false, html = await this.RenderAsync("Create", inputModel, true) });
+            return Json(new { isValid = false, html = await this.RenderViewAsStringAsync("Create", inputModel, true) });
         }
 
         [NoDirectAccess]
-        public async Task<IActionResult> Edit(int projectId)
+        [Route("[controller]/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
         {
-            if (!isUserInProject(projectId))
+            if (!IsUserInProject(id))
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
 
-            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(projectId));
+            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
 
-            return Json(new { html = await this.RenderAsync("Edit", project, false) });
+            return Json(new { html = await this.RenderViewAsStringAsync("Edit", project, false) });
         }
 
         [HttpPost]
+        [Route("[controller]/edit/{id}")]
         public async Task<IActionResult> Edit(EditProjectViewModel model)
         {
+            if (!IsUserInProject(model.Id))
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
-            }
-
-            if (isUserInProject(model.Id))
-            {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
             }
 
             await this.projectsService.Edit(model);
@@ -108,9 +108,9 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            if (isUserInProject(id))
+            if (!IsUserInProject(id))
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
 
             await this.projectsService.Delete(id);
@@ -118,7 +118,12 @@ namespace Web.Controllers
             return RedirectToAction("GetAll", "Projects");
         }
 
-        private bool isUserInProject(int projectId)
+        /// <summary>
+        /// Check if project has relation to the project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        private bool IsUserInProject(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 

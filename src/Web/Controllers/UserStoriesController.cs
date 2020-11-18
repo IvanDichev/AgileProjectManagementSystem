@@ -6,15 +6,13 @@ using Services.BacklogPriorities;
 using Services.Projects;
 using Services.UserStories;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
     [Authorize]
-    [Route("Projects/{projectId}/[controller]")]
+    [Route("Projects/{projectId}/[controller]/[action]")]
     public class UserStoriesController : BaseController
     {
         private readonly IUserStoriesService userStoriesService;
@@ -33,12 +31,12 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        [Route("")]
+        [Route("", Name = "UserStoriesIndex")]
         public IActionResult Index(int projectId)
         {
             if (!IsUserInProject(projectId))
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
 
             var all = userStoriesService.GetAll(projectId);
@@ -46,12 +44,11 @@ namespace Web.Controllers
             return View(all);
         }
 
-        [Route("Create")]
         public async Task<IActionResult> Create(int projectId)
         {
             if (!IsUserInProject(projectId))
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
 
             var createViewModel = new CreateUserStoryInputModel()
@@ -64,12 +61,11 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("Create")]
         public async Task<IActionResult> Create(CreateUserStoryInputModel inputModel, int projectId)
         {
             if (!IsUserInProject(projectId))
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
 
             if (!ModelState.IsValid)
@@ -80,14 +76,20 @@ namespace Web.Controllers
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (!this.userStoriesService.IsUserInProject(projectId, userId))
             {
-                return StatusCode((int)HttpStatusCode.Unauthorized);
+                return Unauthorized();
             }
 
             await  this.userStoriesService.CreateAsync(inputModel);
 
+            return RedirectToRoute("UserStoriesIndex");
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Check if project has relation to the project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         private bool IsUserInProject(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
