@@ -3,7 +3,9 @@ using DataModels.Models.Projects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Extentions;
@@ -17,13 +19,13 @@ namespace Web.Controllers
         private readonly IProjectsService projectsService;
         private readonly IMapper mapper;
 
-        public ProjectsController(IProjectsService projectsService, IMapper mapper)
+        public ProjectsController(IProjectsService projectsService, 
+            IMapper mapper)
         {
             this.projectsService = projectsService;
             this.mapper = mapper;
         }
 
-        [Route("[controller]/{projectId}")]
         public IActionResult Get(int projectId)
         {
             if (!IsUserInProject(projectId))
@@ -32,10 +34,10 @@ namespace Web.Controllers
             }
 
             var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(projectId));
+
             return View(project);
         }
 
-        [Route("[controller]")]
         public IActionResult GetAll()
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -74,7 +76,6 @@ namespace Web.Controllers
         }
 
         [NoDirectAccess]
-        [Route("[controller]/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
             if (!IsUserInProject(id))
@@ -88,7 +89,6 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("[controller]/edit/{id}")]
         public async Task<IActionResult> Edit(EditProjectViewModel model)
         {
             if (!IsUserInProject(model.Id))

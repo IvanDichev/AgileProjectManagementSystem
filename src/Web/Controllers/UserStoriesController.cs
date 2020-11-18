@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 namespace Web.Controllers
 {
     [Authorize]
-    [Route("Projects/{projectId}/[controller]/[action]")]
     public class UserStoriesController : BaseController
     {
         private readonly IUserStoriesService userStoriesService;
@@ -31,7 +30,6 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        [Route("", Name = "UserStoriesIndex")]
         public IActionResult Index(int projectId)
         {
             if (!IsUserInProject(projectId))
@@ -73,16 +71,8 @@ namespace Web.Controllers
                 return View(inputModel);
             }
 
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (!this.userStoriesService.IsUserInProject(projectId, userId))
-            {
-                return Unauthorized();
-            }
-
             await  this.userStoriesService.CreateAsync(inputModel);
-
-            return RedirectToRoute("UserStoriesIndex");
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { projectId = projectId });
         }
 
         /// <summary>

@@ -33,10 +33,10 @@ $(document).ready(function () {
 });
 
 // Manage last leftNav state
-$(document).ready(function () {
+$(function () {
     if ($.cookie('isNavOpen') == '1') {
         $(".sidenav").css("width", "250px").css("transition", "0s");
-        if (window.location.pathname.split('/')[1].toLocaleLowerCase() == 'projects'
+        if (window.location.pathname.split('/')[1].toLocaleLowerCase() !== 'identity'
             && window.location.pathname.split('/')[2] != null) {
             $("#main-container").css("margin-left", "250px");
         }

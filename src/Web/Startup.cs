@@ -115,13 +115,8 @@ namespace Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                     name: "Projects",
-                     pattern: "Projects/{projectId}/{controller!=projects}/{action=index}/{id?}",
-                     defaults: new { Projects = "Projects" });
-
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                   name: "default",
+                   pattern: "{controller=Home}/{action=Index}/{projectId?}/{id?}");
 
                 endpoints.MapControllerRoute(
                             "areaRoute",
