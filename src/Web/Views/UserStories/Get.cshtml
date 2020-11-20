@@ -1,24 +1,167 @@
 ﻿@model UserStoryViewModel
-@{ 
+@{
     ViewData["Title"] = "User story Details";
 }
 
+<style>
+    @@media screen and (min-width: 600px) {
+        .small-flex {
+            display: flex;
+        }
+    }
+
+    #z-hide {
+        z-index: 0 !important;
+    }
+
+    .comments {
+        margin-top: 2rem;
+    }
+
+    .comment-header {
+        border: solid 1px;
+        border-color: #C0C0C0;
+        border-radius: 3px;
+        margin-bottom: 1rem;
+    }
+
+    .comment-header-text {
+        margin-left: 5px;
+        color: #A9A9A9;
+    }
+
+    .comment-header-details {
+        display: inline;
+    }
+
+    .header-details-name {
+        display: inline-block;
+    }
+
+    .header-detials-datestamp {
+        display: inline-block;
+        font-size: 0.7rem;
+    }
+
+    .comment-header-buttons {
+        display: inline-block;
+        font-size: 0.7rem;
+        margin-left: 2px;
+    }
+
+    .comment-content {
+        margin: 10px;
+    }
+</style>
+<script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
+<script type="text/javascript" asp-append-version="true">
+    tinyMCE.init({
+        selector: '#textarea-tinemce',
+        plugins: 'image paste table link code media lists',
+        toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
+alignleft aligncenter alignright alignjustify | code`,
+        themes: 'advanced',
+        menubar: false,
+        languages: 'en'
+    });
+</script>
+<script type="text/javascript" asp-append-version="true">
+    tinyMCE.init({
+        selector: '#textarea-tinemce2',
+        plugins: 'image paste table link code media lists',
+        toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
+alignleft aligncenter alignright alignjustify | code`,
+        themes: 'advanced',
+        menubar: false,
+        languages: 'en'
+    });
+</script>
+<script type="text/javascript" asp-append-version="true">
+    tinyMCE.init({
+        selector: '#textarea-tinemce3',
+        plugins: 'image paste table link code media lists',
+        toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
+alignleft aligncenter alignright alignjustify | code`,
+        themes: 'advanced',
+        menubar: false,
+        languages: 'en'
+    });
+</script>
+
 <div>
-    <p>Id</p>
-    <p>@Model.Id</p>
-    <hr />   
-    <p>Title</p>
-    <p>@Model.Title</p>
-    <hr />
-    <p>Description</p>
-    <p>@Html.Raw(Model.SanitizedDescription)</p>
-    <hr />
-    <p>Priority</p>
-    <p>@Model.BacklogPriorityPriority</p>
-    <hr />
-    <p>Acceptance criteria</p>
-    <p>@Html.Raw(Model.SanitizedAcceptanceCriteria)</p>
-    <hr />
-    <p>Story points</p>
-    <p>@Model.StoryPoints</p>
+    <form method="post" asp-action="Details">
+        <div class="left">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Id: @Model.Id</span>
+                </div>
+                <input type="text" class="form-control" value="@Model.Title" aria-label="Title" aria-describedby="basic-addon1">
+            </div>
+            <div class="small-flex">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign to</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Action</a>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Story points:</span>
+                    </div>
+                    <input type="text" class="form-control" value="@Model.StoryPoints" aria-label="Title" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Priority</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Action</a>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Text input with dropdown button" value="@Model.BacklogPriorityPriority">
+                </div>
+            </div>
+            <hr />
+            <p class="text-info">Description</p>
+            <textarea id="textarea-tinemce">@Html.Raw(Model.SanitizedDescription)</textarea>
+
+            <hr />
+            <p class="text-info">Acceptance criteria</p>
+            <textarea id="textarea-tinemce2">@Html.Raw(Model.SanitizedAcceptanceCriteria)</textarea>
+        </div>
+
+        <div class="comments">
+            <p class="text-info">Discussion</p>
+            <hr>
+            <p>Add comment</p>
+            <textarea id="textarea-tinemce3"></textarea>
+            <hr />
+            @for (int i = 0; i < 5; i++)
+            {
+                <div class="comment-header">
+                    <div class="comment-header-text">
+                        <div class="comment-header-details">
+                            <p class="header-details-name">I.Dichev</p>
+                            <p class="header-detials-datestamp">6 minuts ago</p>
+                        </div>
+
+                        <div class="comment-header-buttons">
+                            <a class="">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <p class="comment-content">Some comment...</p>
+                </div>
+            }
+
+        </div>
+    </form>
 </div>

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using DataModels.Models.Projects;
+using DataModels.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Extentions;
@@ -38,12 +38,10 @@ namespace Web.Controllers
             return View(project);
         }
 
-        public IActionResult GetAll()
+        public IActionResult GetAll(PaginationFilter paginationFilter)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var model = mapper.Map<IEnumerable<ProjectViewModel>>
-                (this.projectsService.GetAll(userId));
+            var model = this.projectsService.GetAll(userId, paginationFilter);
 
             return View(model);
         }
@@ -55,7 +53,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProjectInputModel inputModel)
+        public async Task<IActionResult> Create(CreateProjectInputModel inputModel, PaginationFilter paginationFilter)
         {
             if (!ModelState.IsValid)
             {
@@ -66,8 +64,8 @@ namespace Web.Controllers
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 await this.projectsService.CreateAsync(inputModel, userId);
-                var all = mapper.Map<IEnumerable<ProjectViewModel>>(this.projectsService.GetAll(userId));
-                return Json(new { isValid = true, html = await this.RenderViewAsStringAsync("_ViewAll", all, false) });
+                var model = this.projectsService.GetAll(userId, paginationFilter);
+                return Json(new { isValid = true, html = await this.RenderViewAsStringAsync("_ViewAll", model, false) });
             }
 
             ModelState.AddModelError("", $"The project '{inputModel.Name}' already exists.");
@@ -78,7 +76,8 @@ namespace Web.Controllers
         [NoDirectAccess]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!IsUserInProject(id))
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!IsUserInProject(userId))
             {
                 return Unauthorized();
             }
@@ -91,7 +90,8 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditProjectViewModel model)
         {
-            if (!IsUserInProject(model.Id))
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!IsUserInProject(userId))
             {
                 return Unauthorized();
             }
@@ -106,16 +106,17 @@ namespace Web.Controllers
             return Json(new { isValid = true, newDescription = model.Description });
         }
 
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int projectId)
         {
-            if (!IsUserInProject(id))
+            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (!IsUserInProject(userId))
             {
                 return Unauthorized();
             }
 
-            await this.projectsService.Delete(id);
+            await this.projectsService.Delete(projectId);
 
-            return RedirectToAction("GetAll", "Projects");
+            return RedirectToAction("GetAll", "Projects", new PaginationFilter());
         }
 
         /// <summary>

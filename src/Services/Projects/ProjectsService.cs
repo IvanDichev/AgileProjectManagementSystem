@@ -2,7 +2,8 @@
 using Data.Models;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
-using Org.BouncyCastle.Math.EC.Rfc7748;
+using DataModels.Pagination;
+using Microsoft.EntityFrameworkCore;
 using Repo;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Services.Projects
 
             await this.repo.AddAsync(project);
 
-            project.Team.TeamsUsers.Add(new TeamsUsers() {UserId = userId, TeamId = project.Team.Id });
+            project.Team.TeamsUsers.Add(new TeamsUsers() { UserId = userId, TeamId = project.Team.Id });
 
             await repo.SaveChangesAsync();
 
@@ -50,13 +51,36 @@ namespace Services.Projects
             return this.repo.AllAsNoTracking().Any(x => x.Name == name);
         }
 
-        public IEnumerable<ProjectDto> GetAll(int userId)
+        public PaginatedProjectViewModel GetAll(int userId, PaginationFilter paginationFilter)
         {
-            var all = mapper.Map<ICollection<ProjectDto>>(this.repo.All().Where(x => x.Team.ProjectId == x.Id)
-                .Where(x => x.Team.TeamsUsers.FirstOrDefault().TeamId == x.Team.Id &&
-                    x.Team.TeamsUsers.FirstOrDefault().UserId == userId));
+            var query = this.repo.All();
+            var all = query.Where(x => x.Team.ProjectId == x.Id)
+                .Where(p => p.Team.TeamsUsers.Any(x => x.TeamId == p.Team.Id && x.UserId == userId));
 
-            return mapper.Map<IEnumerable<ProjectDto>>(all.ToList());
+            var filter = all
+                .OrderBy(x => x.Id)
+                .Skip(paginationFilter.PageSize * (paginationFilter.PageNumber - 1))
+                .Take(paginationFilter.PageSize);
+
+            var paginatedResult = new PaginatedProjectViewModel()
+            {
+                AllProjects = this.mapper.Map<ICollection<ProjectViewModel>>(filter),
+                RecordsPerPage = paginationFilter.PageSize,
+                TotalPages = (int)Math.Ceiling(all.ToList().Count / (double)paginationFilter.PageSize)
+            };
+
+            var a = this.mapper.Map<IEnumerable<ProjectDto>>(filter);
+            return paginatedResult;
+        }
+
+        public async Task<int> GetAllPages(int userId)
+        {
+            var query = this.repo.All();
+            var all = await query.Where(x => x.Team.ProjectId == x.Id)
+                .Where(p => p.Team.TeamsUsers.Any(x => x.TeamId == p.Team.Id && x.UserId == userId))
+                .ToListAsync();
+
+            return all.Count;
         }
 
         public ProjectDto Get(int id)
@@ -73,7 +97,7 @@ namespace Services.Projects
 
         public async Task Edit(EditProjectViewModel editModel)
         {
-            var project = this.repo.All().Where(x => x.Id == editModel.Id).FirstOrDefault();
+            var project = this.repo.All().Where(x => x.Id == editModel.ProjectId).FirstOrDefault();
             project.Description = editModel.Description;
             project.ModifiedOn = DateTime.UtcNow;
             var p = mapper.Map<Project>(project);

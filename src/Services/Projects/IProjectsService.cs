@@ -1,5 +1,6 @@
 ﻿using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Pagination;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace Services.Projects
     {
         bool IsNameTaken(string name);
         ProjectDto Get(int id);
-        IEnumerable<ProjectDto> GetAll(int userId);
+        PaginatedProjectViewModel GetAll(int userId, PaginationFilter paginationFilter);
         Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task Delete(int id);
         Task Edit(EditProjectViewModel editModel);

@@ -5,6 +5,7 @@ using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
+using DataModels.Pagination;
 
 namespace Web.Automapper
 {
@@ -13,6 +14,7 @@ namespace Web.Automapper
         public AutomapperProfiles()
         {
             CreateMap<Project, ProjectDto>().ReverseMap();
+            CreateMap<Project, ProjectViewModel>().ReverseMap();
             CreateMap<ProjectDto, CreateProjectInputModel>().ReverseMap();
             CreateMap<ProjectDto, ProjectViewModel>().ReverseMap();
             CreateMap<ProjectDto, EditProjectViewModel>().ReverseMap();
