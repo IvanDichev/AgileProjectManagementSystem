@@ -66,7 +66,7 @@ namespace Services.Projects
             {
                 AllProjects = this.mapper.Map<ICollection<ProjectViewModel>>(filter),
                 RecordsPerPage = paginationFilter.PageSize,
-                TotalPages = (int)Math.Ceiling(all.ToList().Count / (double)paginationFilter.PageSize)
+                TotalPages = (int)Math.Ceiling(all.Count(x => x.Id == x.Id) / (double)paginationFilter.PageSize)
             };
 
             var a = this.mapper.Map<IEnumerable<ProjectDto>>(filter);

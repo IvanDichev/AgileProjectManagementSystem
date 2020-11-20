@@ -10,5 +10,7 @@
 
         public string ShortDescription => 
             this.Description?.Length > 150 ? this.Description.Substring(0, 150) + "..." : this.Description;
+
+        public int Count { get; set; }
     }
 }
