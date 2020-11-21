@@ -1,4 +1,5 @@
 ﻿using Ganss.XSS;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataModels.Models.UserStories
 {
@@ -13,8 +14,11 @@ namespace DataModels.Models.UserStories
 
         public int Id { get; set; }
 
+        [MaxLength(200)]
+        [Required]
         public string Title { get; set; }
 
+        [Range(0, ushort.MaxValue)]
         public int StoryPoints { get; set; }
 
         public string BacklogPriorityPriority { get; set; }
@@ -23,6 +27,7 @@ namespace DataModels.Models.UserStories
 
         public string SanitizedDescription => this.htmlSanitizer.Sanitize(this.Description);
 
+        [MaxLength(2000)]
         public string AcceptanceCriteria { get; set; }
 
         public string SanitizedAcceptanceCriteria => this.htmlSanitizer.Sanitize(this.AcceptanceCriteria);

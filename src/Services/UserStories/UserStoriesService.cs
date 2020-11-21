@@ -23,8 +23,19 @@ namespace Services.UserStories
 
         public IEnumerable<UserStoryDto> GetAll(int projectId)
         {
-            return this.mapper.Map<IEnumerable<UserStoryDto>>(this.repo.All()
-                .Include(x => x.BacklogPriority).Where(x => x.ProjectId == projectId));
+            var userStories = this.repo.All()
+                .Where(x => x.ProjectId == projectId)
+                .Select(x => new UserStory()
+                { 
+                    Id = x.Id,
+                    AcceptanceCriteria = x.AcceptanceCriteria,
+                    BacklogPriority = x.BacklogPriority,
+                    ProjectId = x.ProjectId,
+                    StoryPoints = x.StoryPoints,
+                    Title = x.Title,
+                });
+
+            return this.mapper.Map<IEnumerable<UserStoryDto>>(userStories);
         }
 
         public async Task CreateAsync(CreateUserStoryInputModel model)
@@ -47,7 +58,9 @@ namespace Services.UserStories
 
         public UserStoryDto Get(int userStoryId)
         {
-            var userStory = this.repo.All().Where(x => x.Id == userStoryId).FirstOrDefault();
+            var userStory = this.repo.All()
+                .Where(x => x.Id == userStoryId);
+
             return this.mapper.Map<UserStoryDto>(userStory);
         }
 

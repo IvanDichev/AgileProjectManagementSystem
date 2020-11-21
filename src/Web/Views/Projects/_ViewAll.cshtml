@@ -3,6 +3,7 @@
     string pageNumber = Context.Request.Query["PageNumber"].ToString();
     int currentPage = String.IsNullOrEmpty(pageNumber) ? 1 : int.Parse(pageNumber);
 }
+
 <div class="row">
     @foreach (var item in Model.AllProjects)
     {

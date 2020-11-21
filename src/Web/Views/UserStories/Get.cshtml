@@ -1,6 +1,8 @@
-﻿@model UserStoryViewModel
+﻿@model DetailsUserStoriesViewModel
 @{
     ViewData["Title"] = "User story Details";
+    var priorities = Model.PrioritiesDropDown.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
+
 }
 
 <style>
@@ -88,50 +90,67 @@ alignleft aligncenter alignright alignjustify | code`,
     });
 </script>
 
+<script type="text/javascript">
+    function updateInputFromSelect(fromElId, toElId) {
+        var e = document.getElementById(fromElId);
+        var catSelected = e.options[e.selectedIndex].text;
+
+        document.getElementById(toElId).value = catSelected;
+    }
+</script>
+
 <div>
     <form method="post" asp-action="Details">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="@Model.ViewModel.Id" hidden/>
         <div class="left">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Id: @Model.Id</span>
+                    <span class="input-group-text" id="basic-addon1">Id: @Model.ViewModel.Id</span>
                 </div>
-                <input type="text" class="form-control" value="@Model.Title" aria-label="Title" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" asp-for="@Model.ViewModel.Title" aria-label="Title" aria-describedby="basic-addon1">
+                <button class="btn btn-light" type="submit">Save and close</button>
             </div>
             <div class="small-flex">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign to</button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Action</a>
+                            <select asp-for="@Model.PrioritiesDropDown" id="assignedToSelect" onchange="updateInputFromSelect('assignedToSelect', 'assignedToInput');" class="form-control"
+                                    asp-items="priorities"></select>
+                            <span asp-validation-for="@Model.PrioritiesDropDown." class="text-danger"></span>
                         </div>
                     </div>
-                    <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                    <input type="text" id="assignedToInput" class="form-control" aria-label="Text input with dropdown button">
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">Story points:</span>
+                        <span class="input-group-text" id="basic-addon1">Story points</span>
                     </div>
-                    <input type="text" class="form-control" value="@Model.StoryPoints" aria-label="Title" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" asp-for="@Model.ViewModel.StoryPoints" aria-label="Title" aria-describedby="basic-addon1">
+                    
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Priority</button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Action</a>
+                            <select asp-for="@Model.PrioritiesDropDown" id="priorityInputSelect" onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
+                                    asp-items="priorities"></select>
+                            <span asp-validation-for="@Model.PrioritiesDropDown." class="text-danger"></span>
                         </div>
                     </div>
-                    <input type="text" class="form-control" aria-label="Text input with dropdown button" value="@Model.BacklogPriorityPriority">
+                    <input type="text" class="form-control" id="priorityInput" aria-label="Text input with dropdown button" value="@Model.ViewModel.BacklogPriorityPriority">
                 </div>
             </div>
             <hr />
             <p class="text-info">Description</p>
-            <textarea id="textarea-tinemce">@Html.Raw(Model.SanitizedDescription)</textarea>
+            <textarea id="textarea-tinemce">@Html.Raw(Model.ViewModel.SanitizedDescription)</textarea>
 
             <hr />
             <p class="text-info">Acceptance criteria</p>
-            <textarea id="textarea-tinemce2">@Html.Raw(Model.SanitizedAcceptanceCriteria)</textarea>
+            <textarea id="textarea-tinemce2">@Html.Raw(Model.ViewModel.SanitizedAcceptanceCriteria)</textarea>
         </div>
 
         <div class="comments">

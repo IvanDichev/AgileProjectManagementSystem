@@ -9,11 +9,11 @@ namespace Services.Projects
     public interface IProjectsService
     {
         bool IsNameTaken(string name);
-        ProjectDto Get(int id);
-        PaginatedProjectViewModel GetAll(int userId, PaginationFilter paginationFilter);
+        Task<ProjectDto> GetAsync(int id);
+        Task<PaginatedProjectViewModel> GetAllAsync(int userId, PaginationFilter paginationFilter);
         Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
-        Task Delete(int id);
-        Task Edit(EditProjectViewModel editModel);
+        Task DeleteAsync(int id);
+        Task EditAsync(EditProjectViewModel editModel);
 
         /// <summary>
         /// Check if project has relation to the project.

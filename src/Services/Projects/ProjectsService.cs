@@ -2,6 +2,7 @@
 using Data.Models;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Models.UserStories;
 using DataModels.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Repo;
@@ -43,15 +44,20 @@ namespace Services.Projects
 
             await repo.SaveChangesAsync();
 
-            return this.repo.AllAsNoTracking().Where(x => x.Name == inputModel.Name).FirstOrDefault().Id;
+            var createdProject = await this.repo.AllAsNoTracking()
+                .Where(x => x.Name == inputModel.Name)
+                .FirstOrDefaultAsync();
+
+            return createdProject.Id;
         }
 
         public bool IsNameTaken(string name)
         {
-            return this.repo.AllAsNoTracking().Any(x => x.Name == name);
+            return this.repo.AllAsNoTracking()
+                .Any(x => x.Name == name);
         }
 
-        public PaginatedProjectViewModel GetAll(int userId, PaginationFilter paginationFilter)
+        public async Task<PaginatedProjectViewModel> GetAllAsync(int userId, PaginationFilter paginationFilter)
         {
             var query = this.repo.All();
             var all = query.Where(x => x.Team.ProjectId == x.Id)
@@ -66,14 +72,14 @@ namespace Services.Projects
             {
                 AllProjects = this.mapper.Map<ICollection<ProjectViewModel>>(filter),
                 RecordsPerPage = paginationFilter.PageSize,
-                TotalPages = (int)Math.Ceiling(all.Count(x => x.Id == x.Id) / (double)paginationFilter.PageSize)
+                TotalPages = (int)Math.Ceiling(await all.CountAsync(x => x.Id == x.Id) / (double)paginationFilter.PageSize)
             };
 
             var a = this.mapper.Map<IEnumerable<ProjectDto>>(filter);
             return paginatedResult;
         }
 
-        public async Task<int> GetAllPages(int userId)
+        public async Task<int> GetAllPagesAsync(int userId)
         {
             var query = this.repo.All();
             var all = await query.Where(x => x.Team.ProjectId == x.Id)
@@ -83,31 +89,45 @@ namespace Services.Projects
             return all.Count;
         }
 
-        public ProjectDto Get(int id)
+        public async Task<ProjectDto> GetAsync(int id)
         {
-            return mapper.Map<ProjectDto>(this.repo.AllAsNoTracking().Where(x => x.Id == id).FirstOrDefault());
+            return mapper.Map<ProjectDto>(await this.repo.AllAsNoTracking()
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync());
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var toRemove = this.repo.All().Where(x => x.Id == id).FirstOrDefault();
+            var toRemove = await this.repo.All()
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+
             this.repo.Delete(toRemove);
+
             await this.repo.SaveChangesAsync();
         }
 
-        public async Task Edit(EditProjectViewModel editModel)
+        public async Task EditAsync(EditProjectViewModel editModel)
         {
-            var project = this.repo.All().Where(x => x.Id == editModel.ProjectId).FirstOrDefault();
+            var project = await this.repo.All()
+                .Where(x => x.Id == editModel.ProjectId)
+                .FirstOrDefaultAsync();
+
             project.Description = editModel.Description;
             project.ModifiedOn = DateTime.UtcNow;
+
             var p = mapper.Map<Project>(project);
             this.repo.Update(p);
+
             await this.repo.SaveChangesAsync();
         }
 
         public bool IsUserInProject(int projectId, int userId)
         {
-            return this.repo.AllAsNoTracking().Where(x => x.Id == projectId).Any(x => x.Team.TeamsUsers.Any(x => x.UserId == userId));
+            return this.repo.AllAsNoTracking()
+                .Where(x => x.Id == projectId)
+                .Any(x => x.Team.TeamsUsers
+                    .Any(x => x.UserId == userId));
         }
     }
 }

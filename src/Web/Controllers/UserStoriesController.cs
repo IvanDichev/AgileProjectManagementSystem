@@ -87,17 +87,27 @@ namespace Web.Controllers
             return RedirectToAction("Index", new { projectId = projectId });
         }
 
-        public IActionResult Get(int projectId, int userStoryId)
+        public async Task<IActionResult> Get(int projectId, int userStoryId)
         {
             if (!IsUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            var userStory = this.mapper.Map<UserStoryViewModel>(this.userStoriesService.Get(userStoryId));
+            var userStory = new DetailsUserStoriesViewModel()
+            {
+                PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
+                (await this.backlogPrioritiesService.GetAllAsync()),
+                ViewModel = this.mapper.Map<UserStoryViewModel>(userStoriesService.Get(userStoryId))
+            };
 
             return View(userStory);
         }
+
+        //public IActionResult Details(DetailsUserStoriesViewModel model)
+        //{
+
+        //}
 
         /// <summary>
         /// Check if project has relation to the project.

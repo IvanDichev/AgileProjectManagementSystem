@@ -26,22 +26,22 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult Get(int projectId)
+        public async Task<IActionResult> Get(int projectId)
         {
             if (!IsUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(projectId));
+            var project = mapper.Map<ProjectViewModel>(await this.projectsService.GetAsync(projectId));
 
             return View(project);
         }
 
-        public IActionResult GetAll(PaginationFilter paginationFilter)
+        public async Task<IActionResult> GetAll(PaginationFilter paginationFilter)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var model = this.projectsService.GetAll(userId, paginationFilter);
+            var model = await this.projectsService.GetAllAsync(userId, paginationFilter);
 
             return View(model);
         }
@@ -64,7 +64,7 @@ namespace Web.Controllers
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 await this.projectsService.CreateAsync(inputModel, userId);
-                var model = this.projectsService.GetAll(userId, paginationFilter);
+                var model = await this.projectsService.GetAllAsync(userId, paginationFilter);
                 return Json(new { isValid = true, html = await this.RenderViewAsStringAsync("_ViewAll", model, false) });
             }
 
@@ -82,7 +82,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var project = mapper.Map<ProjectViewModel>(this.projectsService.Get(id));
+            var project = mapper.Map<ProjectViewModel>(await this.projectsService.GetAsync(id));
 
             return Json(new { html = await this.RenderViewAsStringAsync("Edit", project, false) });
         }
@@ -101,7 +101,7 @@ namespace Web.Controllers
                 return View(model);
             }
 
-            await this.projectsService.Edit(model);
+            await this.projectsService.EditAsync(model);
 
             return Json(new { isValid = true, newDescription = model.Description });
         }
@@ -114,7 +114,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            await this.projectsService.Delete(projectId);
+            await this.projectsService.DeleteAsync(projectId);
 
             return RedirectToAction("GetAll", "Projects", new PaginationFilter());
         }

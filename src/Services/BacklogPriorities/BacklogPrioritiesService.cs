@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Models;
 using DataModels.Models.BacklogPriorities;
 using Microsoft.EntityFrameworkCore;
 using Repo;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.BacklogPriorities
