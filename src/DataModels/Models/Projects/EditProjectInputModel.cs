@@ -2,7 +2,7 @@
 
 namespace DataModels.Models.Projects
 {
-    public class EditProjectViewModel
+    public class EditProjectInputModel
     {
         public int ProjectId { get; set; }
 

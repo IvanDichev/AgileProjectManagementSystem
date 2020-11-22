@@ -10,10 +10,10 @@ namespace Services.Projects
     {
         bool IsNameTaken(string name);
         Task<ProjectDto> GetAsync(int id);
-        Task<PaginatedProjectViewModel> GetAllAsync(int userId, PaginationFilter paginationFilter);
+        Task<PaginatedProjectDto> GetAllAsync(int userId, PaginationFilter paginationFilter);
         Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task DeleteAsync(int id);
-        Task EditAsync(EditProjectViewModel editModel);
+        Task EditAsync(EditProjectInputModel editModel);
 
         /// <summary>
         /// Check if project has relation to the project.

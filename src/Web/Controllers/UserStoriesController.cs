@@ -30,14 +30,14 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult Index(int projectId)
+        public async Task<IActionResult> Index(int projectId)
         {
             if (!IsUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            var all = userStoriesService.GetAll(projectId);
+            var all = await userStoriesService.GetAllAsync(projectId);
 
             return View(all);
         }
@@ -82,7 +82,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            await this.userStoriesService.Delete(userStoryId);
+            await this.userStoriesService.DeleteAsync(userStoryId);
 
             return RedirectToAction("Index", new { projectId = projectId });
         }
@@ -98,7 +98,7 @@ namespace Web.Controllers
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                 (await this.backlogPrioritiesService.GetAllAsync()),
-                ViewModel = this.mapper.Map<UserStoryViewModel>(userStoriesService.Get(userStoryId))
+                ViewModel = this.mapper.Map<UserStoryViewModel>(await userStoriesService.GetAsync(userStoryId))
             };
 
             return View(userStory);

@@ -15,5 +15,7 @@
         public string Description { get; set; }
 
         public string AcceptanceCriteria { get; set; }
+
+        public int TasksCount { get; set; }
     }
 }

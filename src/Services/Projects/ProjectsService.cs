@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Models;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
-using DataModels.Models.UserStories;
 using DataModels.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Repo;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,29 +25,18 @@ namespace Services.Projects
 
         public async Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId)
         {
-            var project = new Project
-            {
-                AddedOn = DateTime.UtcNow,
-                Name = inputModel.Name,
-                Description = inputModel.Description,
-                Team = new Team()
-                {
-                    Name = inputModel.Name + " Team",
-                    AddedOn = DateTime.UtcNow,
-                }
-            };
-
+            var project = this.mapper.Map<Project>(inputModel);
             await this.repo.AddAsync(project);
-
-            project.Team.TeamsUsers.Add(new TeamsUsers() { UserId = userId, TeamId = project.Team.Id });
-
+            project.Team.TeamsUsers.Add(new TeamsUsers() 
+            { 
+                UserId = userId, TeamId = project.Team.Id 
+            });
             await repo.SaveChangesAsync();
 
-            var createdProject = await this.repo.AllAsNoTracking()
+            return await this.repo.AllAsNoTracking()
                 .Where(x => x.Name == inputModel.Name)
+                .Select(x => x.Id)
                 .FirstOrDefaultAsync();
-
-            return createdProject.Id;
         }
 
         public bool IsNameTaken(string name)
@@ -57,43 +45,42 @@ namespace Services.Projects
                 .Any(x => x.Name == name);
         }
 
-        public async Task<PaginatedProjectViewModel> GetAllAsync(int userId, PaginationFilter paginationFilter)
+        public async Task<PaginatedProjectDto> GetAllAsync(int userId, PaginationFilter paginationFilter)
         {
             var query = this.repo.All();
-            var all = query.Where(x => x.Team.ProjectId == x.Id)
+            var allForUser = query.Where(x => x.Team.ProjectId == x.Id)
                 .Where(p => p.Team.TeamsUsers.Any(x => x.TeamId == p.Team.Id && x.UserId == userId));
 
-            var filter = all
+            var filter = allForUser
                 .OrderBy(x => x.Id)
                 .Skip(paginationFilter.PageSize * (paginationFilter.PageNumber - 1))
                 .Take(paginationFilter.PageSize);
 
-            var paginatedResult = new PaginatedProjectViewModel()
+            var paginatedResult = new PaginatedProjectDto()
             {
-                AllProjects = this.mapper.Map<ICollection<ProjectViewModel>>(filter),
+                AllProjects = await filter.ProjectTo<ProjectDto>(this.mapper.ConfigurationProvider).ToListAsync(), 
                 RecordsPerPage = paginationFilter.PageSize,
-                TotalPages = (int)Math.Ceiling(await all.CountAsync(x => x.Id == x.Id) / (double)paginationFilter.PageSize)
+                TotalPages = (int)Math.Ceiling(await allForUser.CountAsync(x => x.Id == x.Id) / (double)paginationFilter.PageSize)
             };
 
-            var a = this.mapper.Map<IEnumerable<ProjectDto>>(filter);
             return paginatedResult;
         }
 
         public async Task<int> GetAllPagesAsync(int userId)
         {
-            var query = this.repo.All();
-            var all = await query.Where(x => x.Team.ProjectId == x.Id)
+            return await this.repo
+                .AllAsNoTracking()
+                .Where(x => x.Team.ProjectId == x.Id)
                 .Where(p => p.Team.TeamsUsers.Any(x => x.TeamId == p.Team.Id && x.UserId == userId))
-                .ToListAsync();
-
-            return all.Count;
+                .CountAsync();
         }
 
         public async Task<ProjectDto> GetAsync(int id)
         {
-            return mapper.Map<ProjectDto>(await this.repo.AllAsNoTracking()
+            return await this.repo.AllAsNoTracking()
                 .Where(x => x.Id == id)
-                .FirstOrDefaultAsync());
+                .ProjectTo<ProjectDto>(mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -107,7 +94,7 @@ namespace Services.Projects
             await this.repo.SaveChangesAsync();
         }
 
-        public async Task EditAsync(EditProjectViewModel editModel)
+        public async Task EditAsync(EditProjectInputModel editModel)
         {
             var project = await this.repo.All()
                 .Where(x => x.Id == editModel.ProjectId)
@@ -116,8 +103,7 @@ namespace Services.Projects
             project.Description = editModel.Description;
             project.ModifiedOn = DateTime.UtcNow;
 
-            var p = mapper.Map<Project>(project);
-            this.repo.Update(p);
+            this.repo.Update(project);
 
             await this.repo.SaveChangesAsync();
         }

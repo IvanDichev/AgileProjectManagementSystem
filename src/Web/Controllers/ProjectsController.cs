@@ -41,7 +41,8 @@ namespace Web.Controllers
         public async Task<IActionResult> GetAll(PaginationFilter paginationFilter)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var model = await this.projectsService.GetAllAsync(userId, paginationFilter);
+            var model = this.mapper.Map<PaginatedProjectViewModel>
+                (await this.projectsService.GetAllAsync(userId, paginationFilter));
 
             return View(model);
         }
@@ -64,7 +65,9 @@ namespace Web.Controllers
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 await this.projectsService.CreateAsync(inputModel, userId);
-                var model = await this.projectsService.GetAllAsync(userId, paginationFilter);
+                var model = this.mapper.Map<PaginatedProjectViewModel>
+                    (await this.projectsService.GetAllAsync(userId, paginationFilter));
+
                 return Json(new { isValid = true, html = await this.RenderViewAsStringAsync("_ViewAll", model, false) });
             }
 
@@ -74,7 +77,7 @@ namespace Web.Controllers
         }
 
         [NoDirectAccess]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (!IsUserInProject(userId))
@@ -82,13 +85,13 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var project = mapper.Map<ProjectViewModel>(await this.projectsService.GetAsync(id));
+            var project = mapper.Map<ProjectViewModel>(await this.projectsService.GetAsync(projectId));
 
-            return Json(new { html = await this.RenderViewAsStringAsync("Edit", project, false) });
+            return Json(new { html = await this.RenderViewAsStringAsync("Edit", project) });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditProjectViewModel model)
+        public async Task<IActionResult> Edit(EditProjectInputModel model)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (!IsUserInProject(userId))

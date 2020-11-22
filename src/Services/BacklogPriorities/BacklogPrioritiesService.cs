@@ -5,7 +5,6 @@ using DataModels.Models.BacklogPriorities;
 using Microsoft.EntityFrameworkCore;
 using Repo;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.BacklogPriorities
@@ -24,7 +23,7 @@ namespace Services.BacklogPriorities
         // Return all projectPriorites as dto list
         public async Task<ICollection<BacklogPrioritiesDto>> GetAllAsync()
         {
-            return this.mapper.Map<ICollection<BacklogPrioritiesDto>>(await this.repo.All().ToListAsync());
+            return await this.repo.All().ProjectTo<BacklogPrioritiesDto>(mapper.ConfigurationProvider).ToListAsync();
         }
     }
 }

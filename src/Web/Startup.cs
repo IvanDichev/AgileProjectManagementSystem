@@ -77,7 +77,7 @@ namespace Web
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IUserStoriesService, UserStoriesService>();
             services.AddScoped<IBacklogPrioritiesService, BacklogPrioritiesService>();
-         
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,10 +90,11 @@ namespace Web
                     dbContext.Database.Migrate();
                     new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
                 }
+
                 app.UseCookiePolicy();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseSeedAdminAndRolesMiddleware();
+                //app.UseSeedAdminAndRolesMiddleware();
                 app.UseBrowserLink();
             }
             else

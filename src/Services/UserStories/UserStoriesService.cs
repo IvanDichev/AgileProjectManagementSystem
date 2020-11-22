@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Data.Models;
 using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
@@ -21,53 +22,42 @@ namespace Services.UserStories
             this.mapper = mapper;
         }
 
-        public IEnumerable<UserStoryDto> GetAll(int projectId)
+        public async Task<IEnumerable<UserStoryDto>> GetAllAsync(int projectId)
         {
-            var userStories = this.repo.All()
+            var userStories = await this.repo.All()
                 .Where(x => x.ProjectId == projectId)
-                .Select(x => new UserStory()
-                { 
-                    Id = x.Id,
-                    AcceptanceCriteria = x.AcceptanceCriteria,
-                    BacklogPriority = x.BacklogPriority,
-                    ProjectId = x.ProjectId,
-                    StoryPoints = x.StoryPoints,
-                    Title = x.Title,
-                });
+                .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
 
             return this.mapper.Map<IEnumerable<UserStoryDto>>(userStories);
         }
 
         public async Task CreateAsync(CreateUserStoryInputModel model)
         {
-            var userStory = new UserStory()
-            {
-                AddedOn = DateTime.UtcNow,
-                Title = model.Title,
-                Description = model.Description,
-                AcceptanceCriteria = model.AcceptanceCriteria,
-                ProjectId = model.ProjectId,
-                StoryPoints = model.StoryPoints,
-                BacklogPriorityId = int.Parse(model.BacklogPriorityid),
-            };
+            var userStory = this.mapper.Map<UserStory>(model);
+            userStory.AddedOn = DateTime.UtcNow;
 
             await this.repo.AddAsync(userStory);
 
             await this.repo.SaveChangesAsync();
         }
 
-        public UserStoryDto Get(int userStoryId)
+        public async Task<UserStoryDto> GetAsync(int userStoryId)
         {
-            var userStory = this.repo.All()
-                .Where(x => x.Id == userStoryId);
-
-            return this.mapper.Map<UserStoryDto>(userStory);
+            return await this.repo.All()
+                .Where(x => x.Id == userStoryId)
+                .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task Delete(int userStoryId)
+        public async Task DeleteAsync(int userStoryId)
         {
-            var toRemove = this.repo.All().Where(x => x.Id == userStoryId).FirstOrDefault();
+            var toRemove = this.repo.All()
+                .Where(x => x.Id == userStoryId)
+                .FirstOrDefault();
+
             this.repo.Delete(toRemove);
+
             await this.repo.SaveChangesAsync();
         }
     }

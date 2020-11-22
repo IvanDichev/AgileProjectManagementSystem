@@ -5,7 +5,7 @@ using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
-using DataModels.Pagination;
+using System;
 
 namespace Web.Automapper
 {
@@ -15,11 +15,18 @@ namespace Web.Automapper
         {
             CreateMap<Project, ProjectDto>().ReverseMap();
             CreateMap<Project, ProjectViewModel>().ReverseMap();
+            CreateMap<Project, CreateProjectInputModel>().ReverseMap()
+                .ForPath(m => m.Team.Name, opt => opt.MapFrom(x => x.Name + " Team"))
+                .ForPath(m => m.Team.AddedOn, opt => opt.MapFrom(x => DateTime.Now))
+                .ForMember(m => m.AddedOn, opt => opt.MapFrom(x => DateTime.Now));
+
             CreateMap<ProjectDto, CreateProjectInputModel>().ReverseMap();
             CreateMap<ProjectDto, ProjectViewModel>().ReverseMap();
-            CreateMap<ProjectDto, EditProjectViewModel>().ReverseMap();
+            CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap();
+            CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
 
             CreateMap<UserStory, UserStoryDto>().ReverseMap();
+            CreateMap<UserStory, CreateUserStoryInputModel>().ReverseMap();
             CreateMap<UserStoryViewModel, UserStoryDto>().ReverseMap();
             CreateMap<DetailsUserStoriesViewModel, UserStoryDto>().ReverseMap();
 
