@@ -28,6 +28,7 @@ namespace Web.Automapper
             CreateMap<UserStory, UserStoryDto>().ReverseMap();
             CreateMap<UserStory, CreateUserStoryInputModel>().ReverseMap();
             CreateMap<UserStoryViewModel, UserStoryDto>().ReverseMap();
+            CreateMap<UserStoriesAllViewModel, UserStoryDto>().ReverseMap();
             CreateMap<DetailsUserStoriesViewModel, UserStoryDto>().ReverseMap();
 
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();

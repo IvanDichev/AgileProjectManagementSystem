@@ -1,7 +1,6 @@
 ﻿using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Pagination;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Projects

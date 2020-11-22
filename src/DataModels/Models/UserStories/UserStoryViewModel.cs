@@ -19,7 +19,7 @@ namespace DataModels.Models.UserStories
         public string Title { get; set; }
 
         [Range(0, ushort.MaxValue)]
-        public int StoryPoints { get; set; }
+        public ushort StoryPoints { get; set; }
 
         public string BacklogPriorityPriority { get; set; }
 

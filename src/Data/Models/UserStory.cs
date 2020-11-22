@@ -16,7 +16,7 @@ namespace Data.Models
         [MaxLength(200)]
         public string Title { get; set; }
 
-        public int? StoryPoints { get; set; }
+        public ushort? StoryPoints { get; set; }
         
         public int BacklogPriorityId { get; set; }
 

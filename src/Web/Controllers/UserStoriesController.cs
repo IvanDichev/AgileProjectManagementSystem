@@ -22,7 +22,7 @@ namespace Web.Controllers
         public UserStoriesController(IUserStoriesService userStoriesService,
             IBacklogPrioritiesService backlogPrioritiesService,
             IProjectsService projectsService,
-            IMapper mapper)
+            IMapper mapper) : base(projectsService)
         {
             this.userStoriesService = userStoriesService;
             this.backlogPrioritiesService = backlogPrioritiesService;
@@ -37,7 +37,8 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var all = await userStoriesService.GetAllAsync(projectId);
+            var all = this.mapper.Map<IEnumerable<UserStoriesAllViewModel>>
+                (await userStoriesService.GetAllAsync(projectId));
 
             return View(all);
         }
@@ -108,17 +109,5 @@ namespace Web.Controllers
         //{
 
         //}
-
-        /// <summary>
-        /// Check if project has relation to the project.
-        /// </summary>
-        /// <param name="projectId"></param>
-        /// <returns></returns>
-        private bool IsUserInProject(int projectId)
-        {
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            return this.projectsService.IsUserInProject(projectId, userId);
-        }
     }
 }

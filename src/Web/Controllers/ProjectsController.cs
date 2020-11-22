@@ -20,7 +20,7 @@ namespace Web.Controllers
         private readonly IMapper mapper;
 
         public ProjectsController(IProjectsService projectsService, 
-            IMapper mapper)
+            IMapper mapper) : base(projectsService)
         {
             this.projectsService = projectsService;
             this.mapper = mapper;
@@ -120,18 +120,6 @@ namespace Web.Controllers
             await this.projectsService.DeleteAsync(projectId);
 
             return RedirectToAction("GetAll", "Projects", new PaginationFilter());
-        }
-
-        /// <summary>
-        /// Check if project has relation to the project.
-        /// </summary>
-        /// <param name="projectId"></param>
-        /// <returns></returns>
-        private bool IsUserInProject(int projectId)
-        {
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            return this.projectsService.IsUserInProject(projectId, userId);
         }
     }
 }

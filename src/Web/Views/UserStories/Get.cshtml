@@ -102,7 +102,8 @@ alignleft aligncenter alignright alignjustify | code`,
 <div>
     <form method="post" asp-action="Details">
         <div asp-validation-summary="All" class="text-danger"></div>
-        <input asp-for="@Model.ViewModel.Id" hidden/>
+        <span asp-validation-for="@Model.ViewModel.StoryPoints" class="text-danger"></span>
+        <input asp-for="@Model.ViewModel.Id" hidden />
         <div class="left">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -129,7 +130,7 @@ alignleft aligncenter alignright alignjustify | code`,
                         <span class="input-group-text" id="basic-addon1">Story points</span>
                     </div>
                     <input type="text" class="form-control" asp-for="@Model.ViewModel.StoryPoints" aria-label="Title" aria-describedby="basic-addon1">
-                    
+
                 </div>
 
                 <div class="input-group mb-3">

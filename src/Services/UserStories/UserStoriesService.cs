@@ -24,12 +24,10 @@ namespace Services.UserStories
 
         public async Task<IEnumerable<UserStoryDto>> GetAllAsync(int projectId)
         {
-            var userStories = await this.repo.All()
+            return await this.repo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId)
                 .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
-
-            return this.mapper.Map<IEnumerable<UserStoryDto>>(userStories);
         }
 
         public async Task CreateAsync(CreateUserStoryInputModel model)
@@ -52,9 +50,9 @@ namespace Services.UserStories
 
         public async Task DeleteAsync(int userStoryId)
         {
-            var toRemove = this.repo.All()
+            var toRemove = await this.repo.All()
                 .Where(x => x.Id == userStoryId)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             this.repo.Delete(toRemove);
 
