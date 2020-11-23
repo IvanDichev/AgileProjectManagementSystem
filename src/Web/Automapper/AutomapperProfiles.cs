@@ -26,10 +26,17 @@ namespace Web.Automapper
             CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
 
             CreateMap<UserStory, UserStoryDto>().ReverseMap();
-            CreateMap<UserStory, CreateUserStoryInputModel>().ReverseMap();
+            CreateMap<UserStory, UserStoryUpdateModel>().ReverseMap();             
+            CreateMap<UserStory, UserStoryInputModel>().ReverseMap()
+                .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription))
+                .ForMember(x => x.AcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria));             
+            CreateMap<UserStoryViewModel, UserStoryUpdateModel>().ReverseMap();                
             CreateMap<UserStoryViewModel, UserStoryDto>().ReverseMap();
             CreateMap<UserStoriesAllViewModel, UserStoryDto>().ReverseMap();
-            CreateMap<DetailsUserStoriesViewModel, UserStoryDto>().ReverseMap();
+            CreateMap<UpdateUserStoriesViewModel, UserStoryDto>().ReverseMap();
+            CreateMap<UpdateUserStoriesViewModel, UserStoryUpdateModel>().ReverseMap()
+                .ForPath(x => x.ViewModel.SanitizedAcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria))
+                .ForPath(x => x.ViewModel.SanitizedDescription, opt => opt.MapFrom(x => x.Description));
 
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
 

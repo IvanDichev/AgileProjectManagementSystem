@@ -94,7 +94,7 @@ namespace Services.Projects
             await this.repo.SaveChangesAsync();
         }
 
-        public async Task EditAsync(EditProjectInputModel editModel)
+        public async Task UpdateAsync(EditProjectInputModel editModel)
         {
             var project = await this.repo.All()
                 .Where(x => x.Id == editModel.ProjectId)

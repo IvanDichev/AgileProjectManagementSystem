@@ -9,7 +9,8 @@ namespace Services.UserStories
     {
         Task<IEnumerable<UserStoryDto>> GetAllAsync(int projectId);
         Task<UserStoryDto> GetAsync(int userStoryId);
-        Task CreateAsync(CreateUserStoryInputModel model);
+        Task CreateAsync(UserStoryInputModel model);
         Task DeleteAsync(int userStoryId);
+        Task UpdateAsync(UserStoryUpdateModel updateModel);
     }
 }

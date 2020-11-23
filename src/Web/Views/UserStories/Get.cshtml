@@ -1,7 +1,8 @@
-﻿@model DetailsUserStoriesViewModel
+﻿@model UpdateUserStoriesViewModel
 @{
     ViewData["Title"] = "User story Details";
-    var priorities = Model.PrioritiesDropDown.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
+
+       var priorities = Model.PrioritiesDropDown?.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
 
 }
 
@@ -54,6 +55,11 @@
     .comment-content {
         margin: 10px;
     }
+
+    #validation-all {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 </style>
 <script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
 <script type="text/javascript" asp-append-version="true">
@@ -89,7 +95,6 @@ alignleft aligncenter alignright alignjustify | code`,
         languages: 'en'
     });
 </script>
-
 <script type="text/javascript">
     function updateInputFromSelect(fromElId, toElId) {
         var e = document.getElementById(fromElId);
@@ -100,7 +105,7 @@ alignleft aligncenter alignright alignjustify | code`,
 </script>
 
 <div>
-    <form method="post" asp-action="Details">
+    <form method="post" asp-action="Get">
         <div asp-validation-summary="All" class="text-danger"></div>
         <span asp-validation-for="@Model.ViewModel.StoryPoints" class="text-danger"></span>
         <input asp-for="@Model.ViewModel.Id" hidden />
@@ -113,17 +118,18 @@ alignleft aligncenter alignright alignjustify | code`,
                 <button class="btn btn-light" type="submit">Save and close</button>
             </div>
             <div class="small-flex">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign to</button>
-                        <div class="dropdown-menu">
-                            <select asp-for="@Model.PrioritiesDropDown" id="assignedToSelect" onchange="updateInputFromSelect('assignedToSelect', 'assignedToInput');" class="form-control"
-                                    asp-items="priorities"></select>
-                            <span asp-validation-for="@Model.PrioritiesDropDown." class="text-danger"></span>
-                        </div>
+                @* Assigned to *@
+                @*<div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign to</button>
+                    <div class="dropdown-menu">
+                        <select asp-for="@Model.PrioritiesDropDown" id="assignedToSelect" onchange="updateInputFromSelect('assignedToSelect', 'assignedToInput');" class="form-control"
+                                asp-items="priorities"></select>
+                        <span asp-validation-for="@Model.PrioritiesDropDown." class="text-danger"></span>
                     </div>
-                    <input type="text" id="assignedToInput" class="form-control" aria-label="Text input with dropdown button">
                 </div>
+                <input type="text" id="assignedToInput" class="form-control" aria-label="Text input with dropdown button">
+            </div>*@
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -135,23 +141,23 @@ alignleft aligncenter alignright alignjustify | code`,
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Priority</button>
-                        <div class="dropdown-menu">
-                            <select asp-for="@Model.PrioritiesDropDown" id="priorityInputSelect" onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
+                        <div>
+                            <select asp-for="@Model.ViewModel.BacklogPriorityId" id="priorityInputSelect" onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
                                     asp-items="priorities"></select>
-                            <span asp-validation-for="@Model.PrioritiesDropDown." class="text-danger"></span>
+                            <span asp-validation-for="@Model.ViewModel.BacklogPriorityPriority" class="text-danger"></span>
                         </div>
                     </div>
-                    <input type="text" class="form-control" id="priorityInput" aria-label="Text input with dropdown button" value="@Model.ViewModel.BacklogPriorityPriority">
+                    <input disabled type="text" class="form-control" id="priorityInput" aria-label="Text input with dropdown button" value="@Model.ViewModel.BacklogPriorityPriority">
                 </div>
             </div>
             <hr />
             <p class="text-info">Description</p>
-            <textarea id="textarea-tinemce">@Html.Raw(Model.ViewModel.SanitizedDescription)</textarea>
-
+            <textarea asp-for="@Model.ViewModel.Description" id="textarea-tinemce"> </textarea>
             <hr />
             <p class="text-info">Acceptance criteria</p>
-            <textarea id="textarea-tinemce2">@Html.Raw(Model.ViewModel.SanitizedAcceptanceCriteria)</textarea>
+            <textarea asp-for="@Model.ViewModel.AcceptanceCriteria" id="textarea-tinemce2"></textarea>
+            <span asp-validation-for="@Model.ViewModel.AcceptanceCriteria" class="text-danger"></span>
+
         </div>
 
         <div class="comments">

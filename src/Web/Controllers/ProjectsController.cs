@@ -104,7 +104,7 @@ namespace Web.Controllers
                 return View(model);
             }
 
-            await this.projectsService.EditAsync(model);
+            await this.projectsService.UpdateAsync(model);
 
             return Json(new { isValid = true, newDescription = model.Description });
         }

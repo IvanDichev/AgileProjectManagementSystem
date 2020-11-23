@@ -24,7 +24,7 @@ namespace Data.Models
 
         public string Description { get; set; }
         
-        [MaxLength(2000)]
+        [MaxLength(3000)]
         public string AcceptanceCriteria { get; set; }
 
         public int ProjectId { get; set; }

@@ -2,10 +2,10 @@
 {
     public class BacklogPriorityConstants
     {
-        public const string LevelOne = "Level one";
-        public const string LevelTwo = "Level two";
-        public const string LevelThree = "Level three";
-        public const string LevelFour = "Level four";
-        public const string LevelFive = "Level five";
+        public const string LevelOne = "Level One";
+        public const string LevelTwo = "Level Two";
+        public const string LevelThree = "Level Three";
+        public const string LevelFour = "Level Four";
+        public const string LevelFive = "Level Five";
     }
 }

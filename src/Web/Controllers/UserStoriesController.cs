@@ -2,10 +2,12 @@
 using DataModels.Models.UserStories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Services.BacklogPriorities;
 using Services.Projects;
 using Services.UserStories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -50,7 +52,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var createViewModel = new CreateUserStoryInputModel()
+            var createViewModel = new UserStoryInputModel()
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                 (await this.backlogPrioritiesService.GetAllAsync())
@@ -60,7 +62,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateUserStoryInputModel inputModel, int projectId)
+        public async Task<IActionResult> Create(UserStoryInputModel inputModel, int projectId)
         {
             if (!IsUserInProject(projectId))
             {
@@ -95,7 +97,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var userStory = new DetailsUserStoriesViewModel()
+            var userStory = new UpdateUserStoriesViewModel()
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                 (await this.backlogPrioritiesService.GetAllAsync()),
@@ -105,9 +107,28 @@ namespace Web.Controllers
             return View(userStory);
         }
 
-        //public IActionResult Details(DetailsUserStoriesViewModel model)
-        //{
+        [HttpPost]
+        public async Task<IActionResult> Get(UpdateUserStoriesViewModel model, int projectId)
+        {
+            if(!IsUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
 
-        //}
+            if(!ModelState.IsValid)
+            {
+                // If model is not valid prioritiesDropDown will be null so we need do populated it.
+                model.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
+                    (await this.backlogPrioritiesService.GetAllAsync());
+
+                return View(model);
+            }
+
+            var userStory = this.mapper.Map<UserStoryUpdateModel>(model.ViewModel);
+            userStory.ProjectId = projectId;
+            await this.userStoriesService.UpdateAsync(userStory);
+
+            return RedirectToAction("Index", new { projectId = projectId });
+        }
     }
 }

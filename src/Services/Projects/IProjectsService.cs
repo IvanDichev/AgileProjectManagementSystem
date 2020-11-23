@@ -12,7 +12,7 @@ namespace Services.Projects
         Task<PaginatedProjectDto> GetAllAsync(int userId, PaginationFilter paginationFilter);
         Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task DeleteAsync(int id);
-        Task EditAsync(EditProjectInputModel editModel);
+        Task UpdateAsync(EditProjectInputModel editModel);
 
         /// <summary>
         /// Check if project has relation to the project.

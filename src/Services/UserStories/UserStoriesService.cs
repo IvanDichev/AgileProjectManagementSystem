@@ -30,7 +30,7 @@ namespace Services.UserStories
                 .ToListAsync();
         }
 
-        public async Task CreateAsync(CreateUserStoryInputModel model)
+        public async Task CreateAsync(UserStoryInputModel model)
         {
             var userStory = this.mapper.Map<UserStory>(model);
             userStory.AddedOn = DateTime.UtcNow;
@@ -56,6 +56,21 @@ namespace Services.UserStories
 
             this.repo.Delete(toRemove);
 
+            await this.repo.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(UserStoryUpdateModel updateModel)
+        {
+            var addedOn = await this.repo.AllAsNoTracking()
+                .Where(x => x.Id == updateModel.Id)
+                .Select(x => x.AddedOn)
+                .FirstOrDefaultAsync();
+
+            var toUpdate = this.mapper.Map<UserStory>(updateModel);
+            toUpdate.AddedOn = addedOn;
+            toUpdate.ModifiedOn = DateTime.UtcNow;
+
+            this.repo.Update(toUpdate);
             await this.repo.SaveChangesAsync();
         }
     }
