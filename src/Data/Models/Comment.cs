@@ -1,5 +1,4 @@
-﻿using System;
-using Data.Models.Base;
+﻿using Data.Models.Base;
 using Data.Models.Users;
 
 namespace Data.Models

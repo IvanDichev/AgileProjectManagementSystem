@@ -10,6 +10,7 @@ namespace Data
         public DbSet<Team> Teams { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<UserStory> UserStories { get; set; }
         public DbSet<Assignment> Tasks { get; set; }
         public DbSet<SubTask> SubTasks { get; set; }
