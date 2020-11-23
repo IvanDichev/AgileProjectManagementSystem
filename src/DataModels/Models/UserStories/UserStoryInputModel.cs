@@ -29,7 +29,7 @@ namespace DataModels.Models.UserStories
 
         public string SanitizedDescription => this.htmlSanitizer.Sanitize(this.Description);
 
-        [MaxLength(2000)]
+        [MaxLength(3000)]
         [Display(Name = "Acceptance Criteria")]
         public string AcceptanceCriteria { get; set; }
 

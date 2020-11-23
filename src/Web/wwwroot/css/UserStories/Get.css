@@ -1,0 +1,53 @@
+﻿@media screen and (min-width: 800px) {
+    .small-flex {
+        display: flex;
+    }
+}
+
+#z-hide {
+    z-index: 0 !important;
+}
+
+.comments {
+    margin-top: 2rem;
+}
+
+.comment-header {
+    border: solid 1px;
+    border-color: #C0C0C0;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+}
+
+.comment-header-text {
+    margin-left: 5px;
+    color: #A9A9A9;
+}
+
+.comment-header-details {
+    display: inline;
+}
+
+.header-details-name {
+    display: inline-block;
+}
+
+.header-detials-datestamp {
+    display: inline-block;
+    font-size: 0.7rem;
+}
+
+.comment-header-buttons {
+    display: inline-block;
+    font-size: 0.7rem;
+    margin-left: 2px;
+}
+
+.comment-content {
+    margin: 10px;
+}
+
+#validation-all {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}

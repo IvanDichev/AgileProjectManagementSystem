@@ -71,6 +71,8 @@ namespace Web.Controllers
 
             if (!ModelState.IsValid)
             {
+                inputModel.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
+                    (await this.backlogPrioritiesService.GetAllAsync());
                 return View(inputModel);
             }
 
@@ -100,7 +102,7 @@ namespace Web.Controllers
             var userStory = new UpdateUserStoriesViewModel()
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
-                (await this.backlogPrioritiesService.GetAllAsync()),
+                    (await this.backlogPrioritiesService.GetAllAsync()),
                 ViewModel = this.mapper.Map<UserStoryViewModel>(await userStoriesService.GetAsync(userStoryId))
             };
 

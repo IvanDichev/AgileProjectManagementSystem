@@ -1,4 +1,7 @@
-﻿namespace DataModels.Models.UserStories.Dtos
+﻿using DataModels.Models.Comments;
+using System.Collections.Generic;
+
+namespace DataModels.Models.UserStories.Dtos
 {
     public class UserStoryDto
     {
@@ -17,5 +20,7 @@
         public string AcceptanceCriteria { get; set; }
 
         public int TasksCount { get; set; }
+
+        public ICollection<CommentViewModel> Comments { get; set; }
     }
 }

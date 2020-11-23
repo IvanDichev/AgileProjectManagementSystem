@@ -1,66 +1,15 @@
-﻿@model UpdateUserStoriesViewModel
+﻿@model UpdateUserStoriesViewModel;
+@using Utilities.CalculateTimeAgo;
+
 @{
     ViewData["Title"] = "User story Details";
 
-       var priorities = Model.PrioritiesDropDown?.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
-
+    var priorities = Model.PrioritiesDropDown?
+        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
 }
 
-<style>
-    @@media screen and (min-width: 600px) {
-        .small-flex {
-            display: flex;
-        }
-    }
+<link rel="stylesheet" href="~/css/UserStories/Get.css" />
 
-    #z-hide {
-        z-index: 0 !important;
-    }
-
-    .comments {
-        margin-top: 2rem;
-    }
-
-    .comment-header {
-        border: solid 1px;
-        border-color: #C0C0C0;
-        border-radius: 3px;
-        margin-bottom: 1rem;
-    }
-
-    .comment-header-text {
-        margin-left: 5px;
-        color: #A9A9A9;
-    }
-
-    .comment-header-details {
-        display: inline;
-    }
-
-    .header-details-name {
-        display: inline-block;
-    }
-
-    .header-detials-datestamp {
-        display: inline-block;
-        font-size: 0.7rem;
-    }
-
-    .comment-header-buttons {
-        display: inline-block;
-        font-size: 0.7rem;
-        margin-left: 2px;
-    }
-
-    .comment-content {
-        margin: 10px;
-    }
-
-    #validation-all {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-    }
-</style>
 <script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
 <script type="text/javascript" asp-append-version="true">
     tinyMCE.init({
@@ -118,36 +67,20 @@ alignleft aligncenter alignright alignjustify | code`,
                 <button class="btn btn-light" type="submit">Save and close</button>
             </div>
             <div class="small-flex">
-                @* Assigned to *@
-                @*<div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <button id="z-hide" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Assign to</button>
-                    <div class="dropdown-menu">
-                        <select asp-for="@Model.PrioritiesDropDown" id="assignedToSelect" onchange="updateInputFromSelect('assignedToSelect', 'assignedToInput');" class="form-control"
-                                asp-items="priorities"></select>
-                        <span asp-validation-for="@Model.PrioritiesDropDown." class="text-danger"></span>
-                    </div>
-                </div>
-                <input type="text" id="assignedToInput" class="form-control" aria-label="Text input with dropdown button">
-            </div>*@
-
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Story points</span>
                     </div>
                     <input type="text" class="form-control" asp-for="@Model.ViewModel.StoryPoints" aria-label="Title" aria-describedby="basic-addon1">
-
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <div>
-                            <select asp-for="@Model.ViewModel.BacklogPriorityId" id="priorityInputSelect" onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
-                                    asp-items="priorities"></select>
-                            <span asp-validation-for="@Model.ViewModel.BacklogPriorityPriority" class="text-danger"></span>
-                        </div>
+                        <span class="input-group-text" id="basic-addon1">Story points</span>
                     </div>
-                    <input disabled type="text" class="form-control" id="priorityInput" aria-label="Text input with dropdown button" value="@Model.ViewModel.BacklogPriorityPriority">
+                    <select asp-for="@Model.ViewModel.BacklogPriorityId" id="priorityInputSelect" onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
+                            asp-items="priorities"></select>
+                    <span asp-validation-for="@Model.ViewModel.BacklogPriorityPriority" class="text-danger"></span>
                 </div>
             </div>
             <hr />
@@ -157,7 +90,6 @@ alignleft aligncenter alignright alignjustify | code`,
             <p class="text-info">Acceptance criteria</p>
             <textarea asp-for="@Model.ViewModel.AcceptanceCriteria" id="textarea-tinemce2"></textarea>
             <span asp-validation-for="@Model.ViewModel.AcceptanceCriteria" class="text-danger"></span>
-
         </div>
 
         <div class="comments">
@@ -166,13 +98,18 @@ alignleft aligncenter alignright alignjustify | code`,
             <p>Add comment</p>
             <textarea id="textarea-tinemce3"></textarea>
             <hr />
-            @for (int i = 0; i < 5; i++)
+            @foreach (var comment in Model.ViewModel.Comments)
             {
                 <div class="comment-header">
                     <div class="comment-header-text">
                         <div class="comment-header-details">
-                            <p class="header-details-name">I.Dichev</p>
-                            <p class="header-detials-datestamp">6 minuts ago</p>
+                            <p class="header-details-name">
+                                @comment.AddedByEmail
+                            </p>
+                            <p class="header-detials-datestamp">
+                                
+                                @CalculateTimeAgo.Calculate(comment.ModifedOn ?? comment.AddedOn)
+                            </p>
                         </div>
 
                         <div class="comment-header-buttons">
@@ -183,8 +120,7 @@ alignleft aligncenter alignright alignjustify | code`,
                             </a>
                         </div>
                     </div>
-
-                    <p class="comment-content">Some comment...</p>
+                    <p class="comment-content">@comment.Description</p>
                 </div>
             }
 

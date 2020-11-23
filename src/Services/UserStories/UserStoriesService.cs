@@ -4,6 +4,7 @@ using Data.Models;
 using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Repo;
 using System;
 using System.Collections.Generic;
@@ -16,17 +17,20 @@ namespace Services.UserStories
     {
         private readonly IRepository<UserStory> repo;
         private readonly IMapper mapper;
-        public UserStoriesService(IRepository<UserStory> repo, IMapper mapper)
+        private readonly ILogger<UserStoriesService> logger;
+
+        public UserStoriesService(IRepository<UserStory> repo, IMapper mapper, ILogger<UserStoriesService> logger)
         {
             this.repo = repo;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
-        public async Task<IEnumerable<UserStoryDto>> GetAllAsync(int projectId)
+        public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId)
         {
             return await this.repo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId)
-                .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
+                .ProjectTo<UserStoryAllDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
@@ -61,17 +65,24 @@ namespace Services.UserStories
 
         public async Task UpdateAsync(UserStoryUpdateModel updateModel)
         {
-            var addedOn = await this.repo.AllAsNoTracking()
-                .Where(x => x.Id == updateModel.Id)
-                .Select(x => x.AddedOn)
-                .FirstOrDefaultAsync();
+            try
+            {
+                var addedOn = await this.repo.AllAsNoTracking()
+                    .Where(x => x.Id == updateModel.Id)
+                    .Select(x => x.AddedOn)
+                    .FirstOrDefaultAsync();
 
-            var toUpdate = this.mapper.Map<UserStory>(updateModel);
-            toUpdate.AddedOn = addedOn;
-            toUpdate.ModifiedOn = DateTime.UtcNow;
+                var toUpdate = this.mapper.Map<UserStory>(updateModel);
+                toUpdate.AddedOn = addedOn;
+                toUpdate.ModifiedOn = DateTime.UtcNow;
 
-            this.repo.Update(toUpdate);
-            await this.repo.SaveChangesAsync();
+                this.repo.Update(toUpdate);
+                await this.repo.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                this.logger.LogWarning(e, $"Error while updating entity with id {updateModel.Id}.");
+            }
         }
     }
 }

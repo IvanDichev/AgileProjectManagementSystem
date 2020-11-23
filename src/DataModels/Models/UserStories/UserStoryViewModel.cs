@@ -1,4 +1,5 @@
-﻿using Ganss.XSS;
+﻿using DataModels.Models.Comments;
+using Ganss.XSS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -35,7 +36,6 @@ namespace DataModels.Models.UserStories
 
         public string SanitizedAcceptanceCriteria => this.htmlSanitizer.Sanitize(this.AcceptanceCriteria);
 
-        // TODO Add comments
-        public ICollection<string> Comments { get; set; }
+        public ICollection<CommentViewModel> Comments { get; set; }
     }
 }

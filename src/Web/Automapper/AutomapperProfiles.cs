@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
 using DataModels.Models.BacklogPriorities;
+using DataModels.Models.Comments;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.UserStories;
@@ -26,13 +27,15 @@ namespace Web.Automapper
             CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
 
             CreateMap<UserStory, UserStoryDto>().ReverseMap();
+            CreateMap<UserStory, UserStoryAllDto>().ReverseMap();
             CreateMap<UserStory, UserStoryUpdateModel>().ReverseMap();             
             CreateMap<UserStory, UserStoryInputModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription))
-                .ForMember(x => x.AcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria));             
+                .ForMember(x => x.AcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria));                           
             CreateMap<UserStoryViewModel, UserStoryUpdateModel>().ReverseMap();                
             CreateMap<UserStoryViewModel, UserStoryDto>().ReverseMap();
             CreateMap<UserStoriesAllViewModel, UserStoryDto>().ReverseMap();
+            CreateMap<UserStoriesAllViewModel, UserStoryAllDto>().ReverseMap();
             CreateMap<UpdateUserStoriesViewModel, UserStoryDto>().ReverseMap();
             CreateMap<UpdateUserStoriesViewModel, UserStoryUpdateModel>().ReverseMap()
                 .ForPath(x => x.ViewModel.SanitizedAcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria))
@@ -41,6 +44,8 @@ namespace Web.Automapper
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
 
             CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
+
+            CreateMap<Comment, CommentViewModel>().ReverseMap();
         }
     }
 }

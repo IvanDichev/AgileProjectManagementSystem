@@ -5,6 +5,7 @@ using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Pagination;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Repo;
 using System;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace Services.Projects
     {
         private readonly IRepository<Project> repo;
         private readonly IMapper mapper;
+        private readonly ILogger<ProjectsService> logger;
 
-        public ProjectsService(IRepository<Project> repo, IMapper mapper)
+        public ProjectsService(IRepository<Project> repo, IMapper mapper, ILogger<ProjectsService> logger)
         {
             this.repo = repo;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         public async Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId)
@@ -96,16 +99,23 @@ namespace Services.Projects
 
         public async Task UpdateAsync(EditProjectInputModel editModel)
         {
-            var project = await this.repo.All()
-                .Where(x => x.Id == editModel.ProjectId)
-                .FirstOrDefaultAsync();
+            try
+            {
+                var project = await this.repo.All()
+                    .Where(x => x.Id == editModel.ProjectId)
+                    .FirstOrDefaultAsync();
 
-            project.Description = editModel.Description;
-            project.ModifiedOn = DateTime.UtcNow;
+                project.Description = editModel.Description;
+                project.ModifiedOn = DateTime.UtcNow;
 
-            this.repo.Update(project);
+                this.repo.Update(project);
 
-            await this.repo.SaveChangesAsync();
+                await this.repo.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                this.logger.LogWarning(e, $"Error while updating entity with id {editModel.ProjectId}.");
+            }
         }
 
         public bool IsUserInProject(int projectId, int userId)
