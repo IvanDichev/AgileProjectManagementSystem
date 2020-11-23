@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Shared.Constants;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,12 +10,17 @@ namespace Data.Seeding
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
-            var dict = Enum.GetValues(typeof(Shared.Enums.BacklogPriorityEnum)).Cast<int>()
-                  .ToDictionary(v => v, v => Enum.GetName(typeof(Shared.Enums.BacklogPriorityEnum), v));
-
-            foreach (var kvp in dict)
+            var priorities = new Dictionary<string, int>()
             {
-                await SeedBacklogPrioriesAsync(dbContext, kvp.Value, kvp.Key);
+                {BacklogPriorityConstants.LevelOne, 1},
+                {BacklogPriorityConstants.LevelTwo, 2},
+                {BacklogPriorityConstants.LevelThree, 3},
+                {BacklogPriorityConstants.LevelFour, 4},
+                { BacklogPriorityConstants.LevelFive, 5},
+            };
+            foreach (var kvp in priorities)
+            {
+                await SeedBacklogPrioriesAsync(dbContext, kvp.Key, kvp.Value);
             }
         }
         private async Task SeedBacklogPrioriesAsync(ApplicationDbContext dbContext, string priorityName, int weight)
