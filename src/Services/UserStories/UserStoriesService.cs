@@ -37,24 +37,6 @@ namespace Services.UserStories
                 .ToListAsync();
         }
 
-        private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)
-        {
-            return sortingFilter.SortingParams switch
-            {
-                "IdAsc" => query.OrderBy(x => x.Id),
-                "IdDesc" => query.OrderByDescending(x => x.Id),
-                "TitleAsc" => query.OrderBy(x => x.Title),
-                "TitleDesc" => query.OrderByDescending(x => x.Title),
-                "TasksCountAsc" => query.OrderBy(x => x.Tasks.Count),
-                "TasksCountDesc" => query.OrderByDescending(x => x.Tasks.Count),
-                "StoryPointsAsc" => query.OrderBy(x => x.StoryPoints),
-                "StoryPointsDesc" => query.OrderByDescending(x => x.StoryPoints),
-                "PriorityAsc" => query.OrderBy(x => x.BacklogPriority.Weight),
-                "PriorityDesc" => query.OrderByDescending(x => x.BacklogPriority.Weight),
-                _ => query,
-            };
-        }
-
         public async Task CreateAsync(UserStoryInputModel model)
         {
             var userStory = this.mapper.Map<UserStory>(model);
@@ -114,6 +96,24 @@ namespace Services.UserStories
             {
                 this.logger.LogWarning(e, $"Error while updating entity with id {updateModel.Id}.");
             }
+        }
+
+        private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)
+        {
+            return sortingFilter.SortingParams switch
+            {
+                "IdAsc" => query.OrderBy(x => x.Id),
+                "IdDesc" => query.OrderByDescending(x => x.Id),
+                "TitleAsc" => query.OrderBy(x => x.Title),
+                "TitleDesc" => query.OrderByDescending(x => x.Title),
+                "TasksCountAsc" => query.OrderBy(x => x.Tasks.Count),
+                "TasksCountDesc" => query.OrderByDescending(x => x.Tasks.Count),
+                "StoryPointsAsc" => query.OrderBy(x => x.StoryPoints),
+                "StoryPointsDesc" => query.OrderByDescending(x => x.StoryPoints),
+                "PriorityAsc" => query.OrderBy(x => x.BacklogPriority.Weight),
+                "PriorityDesc" => query.OrderByDescending(x => x.BacklogPriority.Weight),
+                _ => query,
+            };
         }
     }
 }
