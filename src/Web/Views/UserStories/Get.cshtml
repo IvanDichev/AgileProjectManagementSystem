@@ -6,42 +6,45 @@
 
     var priorities = Model.PrioritiesDropDown?
         .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
+
+    var commentsCounter = 0;
 }
 
-<link rel="stylesheet" href="~/css/UserStories/Get.css" />
-
+<link rel="stylesheet" href="~/css/UserStories/Get.css" asp-append-version="true"/>
 <script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
 <script type="text/javascript" asp-append-version="true">
     tinyMCE.init({
-        selector: '#textarea-tinemce',
+        selector: '#textarea-tinemce-description',
         plugins: 'image paste table link code media lists',
         toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
 alignleft aligncenter alignright alignjustify | code`,
         themes: 'advanced',
         menubar: false,
-        languages: 'en'
+        languages: 'en',
+        height: '480',
     });
 </script>
 <script type="text/javascript" asp-append-version="true">
     tinyMCE.init({
-        selector: '#textarea-tinemce2',
+        selector: '#textarea-tinemce-acceptanceCriteria',
         plugins: 'image paste table link code media lists',
         toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
 alignleft aligncenter alignright alignjustify | code`,
         themes: 'advanced',
         menubar: false,
-        languages: 'en'
+        languages: 'en',
+        height: '380',
     });
 </script>
 <script type="text/javascript" asp-append-version="true">
     tinyMCE.init({
-        selector: '#textarea-tinemce3',
+        selector: '#textarea-tinemce-comment',
         plugins: 'image paste table link code media lists',
         toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
 alignleft aligncenter alignright alignjustify | code`,
         themes: 'advanced',
         menubar: false,
-        languages: 'en'
+        languages: 'en',
     });
 </script>
 <script type="text/javascript">
@@ -84,17 +87,19 @@ alignleft aligncenter alignright alignjustify | code`,
                 </div>
             </div>
             <hr />
+
             <p class="text-info">Description</p>
-            <textarea asp-for="@Model.ViewModel.Description" id="textarea-tinemce"> </textarea>
+            <textarea asp-for="@Model.ViewModel.Description" id="textarea-tinemce-description"> </textarea>
             <hr />
+
             <p class="text-info">Acceptance criteria</p>
-            <textarea asp-for="@Model.ViewModel.AcceptanceCriteria" id="textarea-tinemce2"></textarea>
+            <textarea asp-for="@Model.ViewModel.AcceptanceCriteria" id="textarea-tinemce-acceptanceCriteria"></textarea>
             <span asp-validation-for="@Model.ViewModel.AcceptanceCriteria" class="text-danger"></span>
 
-            <p class="text-info">Discussion</p>
             <hr>
+            <p class="text-info">Discussion</p>
             <p>Add comment</p>
-            <textarea id="textarea-tinemce3" asp-for="Comment.Description"></textarea>
+            <textarea id="textarea-tinemce-comment" asp-for="Comment.Description"></textarea>
             <hr />
         </div>
 
@@ -108,25 +113,34 @@ alignleft aligncenter alignright alignjustify | code`,
                                 @comment.AddedByEmail
                             </p>
                             <p class="header-detials-datestamp">
-                                
                                 @CalculateTimeAgo.Calculate(comment.ModifedOn ?? comment.AddedOn)
                             </p>
                         </div>
 
-                        <div class="comment-header-buttons">
-                            <a class="">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <div class="comment-header-buttons dropdown">
+                            <a onclick="myFunction(@commentsCounter)" class="dropbtn">
+                                <svg width="1.2rem" height="1.2rem" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                                 </svg>
                             </a>
+                            <div id="myDropdown-@commentsCounter" class="dropdown-content">
+                                <a asp-action="EditComment" asp-controller="Comments" asp-route-userStoryId="@comment.UserStoryId">Edit</a>
+                                <a asp-action="DeleteComment" asp-controller="Comments" asp-route-userStoryId="@comment.UserStoryId">Delete</a>
+                            </div>
                         </div>
                     </div>
                     <div class="comment-content">
-                        <p>@Html.Raw(@comment.SanitizedDescription)</p>
+                        @Html.Raw(@comment.SanitizedDescription)
                     </div>
                 </div>
+                <p hidden>
+                    @(commentsCounter+= 1)
+                </p>
             }
-
         </div>
     </form>
 </div>
+
+@section Scripts{
+    <script src="~/js/UserStories/Get.js" asp-append-version="true"></script>
+}
