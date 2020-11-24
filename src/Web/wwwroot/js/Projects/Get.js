@@ -1,10 +1,4 @@
-﻿$('#del').on('click', function deleteItem() {
-    if (confirm("Are you sure you want to delete this item?")) {
-        return true;
-    }
-    return false;
-});
-
+﻿// Ajax GET to open modal for editing project.
 document.getElementById("edit").onclick = function () {
     $.ajax({
         type: 'GET',
@@ -19,28 +13,7 @@ document.getElementById("edit").onclick = function () {
     return false;
 };
 
-//EditAjaxPost = form => {
-//    $.ajax({
-//        type: 'POST',
-//        url: form.action,
-//        data: new FormData(form),
-//        contentType: false,
-//        processData: false,
-//        success: function (res) {
-//            if (res.isValid) {
-//                $('#description').text(res.newDescription)
-//                $('#form-modal .modal-body').html('');
-//                $('#form-modal .modal-title').html('');
-//                $('#form-modal').modal('hide');
-//            }
-//            else
-//                $('#form-modal .modal-body').html(res.html);
-//        }
-//    })
-//    //to prevent default form submit event
-//    return false;
-//}
-
+// Ajax POST to edit project.
 EditAjaxPost = form => {
     try {
         $.ajax({

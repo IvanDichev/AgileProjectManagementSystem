@@ -1,14 +1,4 @@
-﻿// Add loader to indicate loading for ajax call
-$(function () {
-    $("#loaderbody").addClass('hide');
-    $(document).bind('ajaxStart', function () {
-        $("#loaderbody").removeClass('hide');
-    }).bind('ajaxStop', function () {
-        $("#loaderbody").addClass('hide');
-    });
-});
-
-// Open modal
+﻿// Ajax GET to open modal for creating project.
 showInPopup = (url, title) => {
     $.ajax({
         type: 'GET',
@@ -21,7 +11,7 @@ showInPopup = (url, title) => {
     });
 }
 
-// Post create from
+// Ajax POST to create project and refresh the page of listed projects.
 jQueryAjaxPost = form => {
     $.ajax({
         type: 'POST',
