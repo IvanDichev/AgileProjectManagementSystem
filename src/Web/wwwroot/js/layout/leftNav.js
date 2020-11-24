@@ -1,4 +1,4 @@
-﻿// Push main content with leftNav
+﻿// Push main content with leftNav.
 function openNav() {
     $.cookie('isNavOpen', '1', { path: '/'});
     document.getElementById("mySidenav").style.width = "250px";
@@ -18,7 +18,7 @@ function openNav() {
     }
 }
 
-// Toggle left/rigth arrow icon for open/close leftNav
+// Toggle left/rigth arrow icon for open/close leftNav.
 $(document).ready(function () {
     $(".close-nav").click(function (event) {
         event.preventDefault();
@@ -32,7 +32,7 @@ $(document).ready(function () {
     });
 });
 
-// Manage last leftNav state
+// Manage last leftNav state.
 $(function () {
     if ($.cookie('isNavOpen') == '1') {
         $(".sidenav").css("width", "250px").css("transition", "0s");
