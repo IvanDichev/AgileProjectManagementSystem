@@ -39,13 +39,18 @@ namespace Web.Automapper
             CreateMap<UpdateUserStoriesViewModel, UserStoryDto>().ReverseMap();
             CreateMap<UpdateUserStoriesViewModel, UserStoryUpdateModel>().ReverseMap()
                 .ForPath(x => x.ViewModel.SanitizedAcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria))
-                .ForPath(x => x.ViewModel.SanitizedDescription, opt => opt.MapFrom(x => x.Description));
+                .ForPath(x => x.ViewModel.SanitizedDescription, opt => opt.MapFrom(x => x.Description))
+                .ForMember(x => x.Comment, opt => opt.MapFrom(x => x.Comment));
 
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
 
             CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
 
-            CreateMap<Comment, CommentViewModel>().ReverseMap();
+            CreateMap<Comment, CommentViewModel>().ReverseMap()
+                .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
+            CreateMap<Comment, CommentInputModel>().ReverseMap()
+                .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
+            CreateMap<CommentViewModel, CommentInputModel>().ReverseMap();
         }
     }
 }

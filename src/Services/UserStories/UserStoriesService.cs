@@ -72,7 +72,17 @@ namespace Services.UserStories
                     .Select(x => x.AddedOn)
                     .FirstOrDefaultAsync();
 
+                
+
                 var toUpdate = this.mapper.Map<UserStory>(updateModel);
+
+                if (updateModel.Comment != null)
+                {
+                    var comment = this.mapper.Map<Comment>(updateModel.Comment);
+                    comment.AddedOn = DateTime.UtcNow;
+                    toUpdate.Comments.Add(comment);
+                }
+
                 toUpdate.AddedOn = addedOn;
                 toUpdate.ModifiedOn = DateTime.UtcNow;
 

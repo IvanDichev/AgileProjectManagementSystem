@@ -90,15 +90,16 @@ alignleft aligncenter alignright alignjustify | code`,
             <p class="text-info">Acceptance criteria</p>
             <textarea asp-for="@Model.ViewModel.AcceptanceCriteria" id="textarea-tinemce2"></textarea>
             <span asp-validation-for="@Model.ViewModel.AcceptanceCriteria" class="text-danger"></span>
-        </div>
 
-        <div class="comments">
             <p class="text-info">Discussion</p>
             <hr>
             <p>Add comment</p>
-            <textarea id="textarea-tinemce3"></textarea>
+            <textarea id="textarea-tinemce3" asp-for="Comment.Description"></textarea>
             <hr />
-            @foreach (var comment in Model.ViewModel.Comments)
+        </div>
+
+        <div class="comments">
+            @foreach (var comment in Model.ViewModel.Comments.OrderByDescending(x => x.AddedOn))
             {
                 <div class="comment-header">
                     <div class="comment-header-text">
@@ -120,7 +121,9 @@ alignleft aligncenter alignright alignjustify | code`,
                             </a>
                         </div>
                     </div>
-                    <p class="comment-content">@comment.Description</p>
+                    <div class="comment-content">
+                        <p>@Html.Raw(@comment.SanitizedDescription)</p>
+                    </div>
                 </div>
             }
 

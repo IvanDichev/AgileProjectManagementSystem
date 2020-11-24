@@ -2,12 +2,10 @@
 using DataModels.Models.UserStories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Services.BacklogPriorities;
 using Services.Projects;
 using Services.UserStories;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -112,12 +110,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Get(UpdateUserStoriesViewModel model, int projectId)
         {
-            if(!IsUserInProject(projectId))
+            if (!IsUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 // If model is not valid prioritiesDropDown will be null so we need do populated it.
                 model.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
@@ -127,6 +125,15 @@ namespace Web.Controllers
             }
 
             var userStory = this.mapper.Map<UserStoryUpdateModel>(model.ViewModel);
+
+            if (!string.IsNullOrWhiteSpace(model.Comment.Description))
+            {
+                var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                userStory.Comment = model.Comment;
+                userStory.Comment.UserStoryId = model.ViewModel.Id;
+                userStory.Comment.AddedById = userId;
+            }
+
             userStory.ProjectId = projectId;
             await this.userStoriesService.UpdateAsync(userStory);
 

@@ -12,6 +12,10 @@
     margin-top: 2rem;
 }
 
+.comment-content {
+    margin: 1rem;
+}
+
 .comment-header {
     border: solid 1px;
     border-color: #C0C0C0;

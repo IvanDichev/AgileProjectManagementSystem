@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataModels.Models.Comments;
+using System;
 
 namespace DataModels.Models.UserStories
 {
@@ -21,5 +22,7 @@ namespace DataModels.Models.UserStories
         public DateTime AddedOn { get; set; }
 
         public DateTime ModifedOn { get; set; }
+
+        public CommentInputModel Comment { get; set; }
     }
 }
