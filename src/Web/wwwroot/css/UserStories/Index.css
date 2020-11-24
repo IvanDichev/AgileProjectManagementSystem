@@ -1,0 +1,22 @@
+﻿td {
+    border: 0px solid #dee2e6 !important;
+}
+
+#table-nav {
+    border-radius: 20px 20px 0px 0px;
+}
+
+.sorting {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+}
+
+.th-header {
+    display: flex;
+}
+
+.th-header-title {
+    display: flex;
+    align-items: center;
+}

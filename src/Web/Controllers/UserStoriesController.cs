@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DataModels.Models.Sorting;
 using DataModels.Models.UserStories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,6 @@ namespace Web.Controllers
     {
         private readonly IUserStoriesService userStoriesService;
         private readonly IBacklogPrioritiesService backlogPrioritiesService;
-        private readonly IProjectsService projectsService;
         private readonly IMapper mapper;
 
         public UserStoriesController(IUserStoriesService userStoriesService,
@@ -26,11 +26,10 @@ namespace Web.Controllers
         {
             this.userStoriesService = userStoriesService;
             this.backlogPrioritiesService = backlogPrioritiesService;
-            this.projectsService = projectsService;
             this.mapper = mapper;
         }
 
-        public async Task<IActionResult> Index(int projectId)
+        public async Task<IActionResult> Index(int projectId, SortingFilter sortingFilter)
         {
             if (!IsUserInProject(projectId))
             {
@@ -38,7 +37,7 @@ namespace Web.Controllers
             }
 
             var all = this.mapper.Map<IEnumerable<UserStoriesAllViewModel>>
-                (await userStoriesService.GetAllAsync(projectId));
+                (await userStoriesService.GetAllAsync(projectId, sortingFilter));
 
             return View(all);
         }

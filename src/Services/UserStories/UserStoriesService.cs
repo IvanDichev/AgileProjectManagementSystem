@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Data.Models;
+using DataModels.Models.Sorting;
 using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +27,32 @@ namespace Services.UserStories
             this.logger = logger;
         }
 
-        public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId)
+        public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
         {
-            return await this.repo.AllAsNoTracking()
-                .Where(x => x.ProjectId == projectId)
-                .ProjectTo<UserStoryAllDto>(this.mapper.ConfigurationProvider)
+            var query = this.repo.AllAsNoTracking()
+                .Where(x => x.ProjectId == projectId);
+            var sroted = Sort(sortingFilter, query);
+
+            return await sroted.ProjectTo<UserStoryAllDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
+        }
+
+        private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)
+        {
+            return sortingFilter.SortingParams switch
+            {
+                "IdAsc" => query.OrderBy(x => x.Id),
+                "IdDesc" => query.OrderByDescending(x => x.Id),
+                "TitleAsc" => query.OrderBy(x => x.Title),
+                "TitleDesc" => query.OrderByDescending(x => x.Title),
+                "TasksCountAsc" => query.OrderBy(x => x.Tasks.Count),
+                "TasksCountDesc" => query.OrderByDescending(x => x.Tasks.Count),
+                "StoryPointsAsc" => query.OrderBy(x => x.StoryPoints),
+                "StoryPointsDesc" => query.OrderByDescending(x => x.StoryPoints),
+                "PriorityAsc" => query.OrderBy(x => x.BacklogPriority.Weight),
+                "PriorityDesc" => query.OrderByDescending(x => x.BacklogPriority.Weight),
+                _ => query,
+            };
         }
 
         public async Task CreateAsync(UserStoryInputModel model)

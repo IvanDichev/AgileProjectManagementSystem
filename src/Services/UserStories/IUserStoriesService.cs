@@ -1,4 +1,5 @@
-﻿using DataModels.Models.UserStories;
+﻿using DataModels.Models.Sorting;
+using DataModels.Models.UserStories;
 using DataModels.Models.UserStories.Dtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace Services.UserStories
 {
     public interface IUserStoriesService
     {
-        Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId);
+        Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter);
         Task<UserStoryDto> GetAsync(int userStoryId);
         Task CreateAsync(UserStoryInputModel model);
         Task DeleteAsync(int userStoryId);
