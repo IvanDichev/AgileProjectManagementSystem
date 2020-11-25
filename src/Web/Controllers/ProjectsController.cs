@@ -107,6 +107,7 @@ namespace Web.Controllers
             return Json(new { isValid = true, newDescription = model.Description });
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);

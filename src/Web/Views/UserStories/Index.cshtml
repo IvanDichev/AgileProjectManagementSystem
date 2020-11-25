@@ -139,8 +139,21 @@
                         <td>@userStory.StoryPoints</td>
                         <td>@userStory.BacklogPriorityPriority</td>
                         <td>
-                            <a asp-action="Get" asp-route-userStoryId="@userStory.Id" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]" class="btn btn-sm btn-info">Edit</a>
-                            <a asp-action="Delete" asp-route-userStoryId="@userStory.Id" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]" class="btn btn-sm btn-danger" id="del">Delete</a>
+                            <a asp-action="Get" 
+                               asp-route-userStoryId="@userStory.Id" 
+                               asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]" 
+                               class="btn btn-sm btn-info">
+                                Edit
+                            </a>
+                            <form method="post" style="display:inline-block;" 
+                                   asp-action="Delete"
+                                   asp-route-userStoryId="@userStory.Id"
+                                   asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+                                <button type="submit" 
+                                   class="btn btn-sm btn-danger" id="del">
+                                    Delete
+                                </button>
+                            </form>
 
                         </td>
                     </tr>

@@ -27,13 +27,17 @@ namespace Services.Comments
                 .Where(x => x.Id == commentId)
                 .FirstOrDefaultAsync();
 
-            this.repo.Delete(commentToDelete);
-            await this.repo.SaveChangesAsync();
+            if (commentToDelete != null)
+            {
+                this.repo.Delete(commentToDelete);
+                await this.repo.SaveChangesAsync();
+            }
         }
 
         public async Task<CommentDto> GetAsync(int commentId)
         {
-            return await this.repo.All().Where(x => x.Id == commentId)
+            return await this.repo.All()
+                .Where(x => x.Id == commentId)
                 .ProjectTo<CommentDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
         }

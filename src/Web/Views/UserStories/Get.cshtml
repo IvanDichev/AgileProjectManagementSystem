@@ -127,7 +127,8 @@ alignleft aligncenter alignright alignjustify | code`,
                                 <a asp-action="Edit" asp-controller="Comments"
                                    asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
                                    asp-route-userStoryId="@comment.UserStoryId"
-                                   asp-route-commentId="@comment.Id">
+                                   asp-route-commentId="@comment.Id"
+                                   id="edit-comment">
                                     Edit
                                 </a>
                                 <a asp-action="Delete" asp-controller="Comments"

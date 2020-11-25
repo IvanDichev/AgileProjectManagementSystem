@@ -35,7 +35,7 @@ namespace Web.Controllers
             {
                 return Unauthorized();
             }
-
+            
             var all = this.mapper.Map<IEnumerable<UserStoriesAllViewModel>>
                 (await userStoriesService.GetAllAsync(projectId, sortingFilter));
 
@@ -77,6 +77,7 @@ namespace Web.Controllers
             return RedirectToAction("Index", new { projectId = projectId });
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(int projectId, int userStoryId)
         {
             if (!IsUserInProject(projectId))
@@ -102,6 +103,11 @@ namespace Web.Controllers
                     (await this.backlogPrioritiesService.GetAllAsync()),
                 ViewModel = this.mapper.Map<UserStoryViewModel>(await userStoriesService.GetAsync(userStoryId))
             };
+
+            if (userStory.ViewModel == null)
+            {
+                return NotFound();
+            }
 
             return View(userStory);
         }

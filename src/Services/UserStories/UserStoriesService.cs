@@ -62,9 +62,12 @@ namespace Services.UserStories
                 .Where(x => x.Id == userStoryId)
                 .FirstOrDefaultAsync();
 
-            this.repo.Delete(toRemove);
+            if (toRemove != null)
+            {
+                this.repo.Delete(toRemove);
 
-            await this.repo.SaveChangesAsync();
+                await this.repo.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateAsync(UserStoryUpdateModel updateModel)
