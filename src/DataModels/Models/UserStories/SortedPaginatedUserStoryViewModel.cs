@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataModels.Models.UserStories
 {
-    public class SortedPaginatedUserStoryResult
+    public class SortedPaginatedUserStoryViewModel
     {
         public ICollection<UserStoryViewModel> UserStoryViewModel { get; set; }
 
