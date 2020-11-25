@@ -15,7 +15,7 @@ namespace DataModels.Models.Comments
 
         public DateTime AddedOn { get; set; }
 
-        public DateTime? ModifedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
 
         public string Description { get; set; }
 
