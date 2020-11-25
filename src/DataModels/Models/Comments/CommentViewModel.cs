@@ -11,6 +11,8 @@ namespace DataModels.Models.Comments
             this.sanitizer = new HtmlSanitizer();
         }
 
+        public int Id { get; set; }
+
         public DateTime AddedOn { get; set; }
 
         public DateTime? ModifedOn { get; set; }

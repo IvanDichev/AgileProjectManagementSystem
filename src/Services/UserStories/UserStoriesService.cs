@@ -7,6 +7,7 @@ using DataModels.Models.UserStories.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repo;
+using Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,16 +103,16 @@ namespace Services.UserStories
         {
             return sortingFilter.SortingParams switch
             {
-                "IdAsc" => query.OrderBy(x => x.Id),
-                "IdDesc" => query.OrderByDescending(x => x.Id),
-                "TitleAsc" => query.OrderBy(x => x.Title),
-                "TitleDesc" => query.OrderByDescending(x => x.Title),
-                "TasksCountAsc" => query.OrderBy(x => x.Tasks.Count),
-                "TasksCountDesc" => query.OrderByDescending(x => x.Tasks.Count),
-                "StoryPointsAsc" => query.OrderBy(x => x.StoryPoints),
-                "StoryPointsDesc" => query.OrderByDescending(x => x.StoryPoints),
-                "PriorityAsc" => query.OrderBy(x => x.BacklogPriority.Weight),
-                "PriorityDesc" => query.OrderByDescending(x => x.BacklogPriority.Weight),
+                UserStoriesSortingConstants.IdAsc => query.OrderBy(x => x.Id),
+                UserStoriesSortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
+                UserStoriesSortingConstants.TitleAsc => query.OrderBy(x => x.Title),
+                UserStoriesSortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
+                UserStoriesSortingConstants.TasksCountAsc => query.OrderBy(x => x.Tasks.Count),
+                UserStoriesSortingConstants.TasksCountDesc => query.OrderByDescending(x => x.Tasks.Count),
+                UserStoriesSortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),
+                UserStoriesSortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
+                UserStoriesSortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),
+                UserStoriesSortingConstants.PriorityDesc => query.OrderByDescending(x => x.BacklogPriority.Weight),
                 _ => query,
             };
         }
