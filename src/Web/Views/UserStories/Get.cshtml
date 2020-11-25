@@ -10,7 +10,7 @@
     var commentsCounter = 0;
 }
 
-<link rel="stylesheet" href="~/css/UserStories/Get.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/UserStories/Get.css" asp-append-version="true" />
 <script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
 <script type="text/javascript" asp-append-version="true">
     tinyMCE.init({
@@ -124,8 +124,19 @@ alignleft aligncenter alignright alignjustify | code`,
                                 </svg>
                             </a>
                             <div id="myDropdown-@commentsCounter" class="dropdown-content">
-                                <a asp-action="EditComment" asp-controller="Comments" asp-route-userStoryId="@comment.UserStoryId">Edit</a>
-                                <a asp-action="DeleteComment" asp-controller="Comments" asp-route-userStoryId="@comment.UserStoryId">Delete</a>
+                                <a asp-action="Edit" asp-controller="Comments"
+                                   asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
+                                   asp-route-userStoryId="@comment.UserStoryId"
+                                   asp-route-commentId="@comment.Id">
+                                    Edit
+                                </a>
+                                <a asp-action="Delete" asp-controller="Comments"
+                                   asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
+                                   asp-route-userStoryId="@comment.UserStoryId"
+                                   asp-route-commentId="@comment.Id"
+                                   id="del">
+                                    Delete
+                                </a>
                             </div>
                         </div>
                     </div>

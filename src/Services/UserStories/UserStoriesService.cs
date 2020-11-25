@@ -76,8 +76,6 @@ namespace Services.UserStories
                     .Select(x => x.AddedOn)
                     .FirstOrDefaultAsync();
 
-                
-
                 var toUpdate = this.mapper.Map<UserStory>(updateModel);
 
                 if (updateModel.Comment != null)

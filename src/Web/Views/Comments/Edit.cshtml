@@ -1,0 +1,24 @@
+﻿@model CommentViewModel
+
+<script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
+<script type="text/javascript" asp-append-version="true">
+    tinyMCE.init({
+        selector: '#textarea-tinemce-editComment',
+        plugins: 'image paste table link code media lists',
+        toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
+alignleft aligncenter alignright alignjustify | code`,
+        themes: 'advanced',
+        menubar: false,
+        languages: 'en',
+        height: '480',
+    });
+</script>
+
+<div class="container">
+    <form asp-action="Edit">
+        <textarea id="textarea-tinemce-editComment" asp-for="Description"></textarea>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a class="btn btn-primary">Close</a>
+        <input hidden asp-for="Id" />
+    </form>
+</div>

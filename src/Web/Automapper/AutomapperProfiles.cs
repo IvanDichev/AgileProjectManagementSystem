@@ -2,6 +2,7 @@
 using Data.Models;
 using DataModels.Models.BacklogPriorities;
 using DataModels.Models.Comments;
+using DataModels.Models.Comments.Dtos;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.UserStories;
@@ -46,11 +47,14 @@ namespace Web.Automapper
 
             CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
 
+            CreateMap<Comment, CommentDto>().ReverseMap();
             CreateMap<Comment, CommentViewModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
             CreateMap<Comment, CommentInputModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
+            CreateMap<CommentViewModel, CommentDto>().ReverseMap();
             CreateMap<CommentViewModel, CommentInputModel>().ReverseMap();
+            CreateMap<CommentsUpdateModel, CommentInputModel>().ReverseMap();
         }
     }
 }

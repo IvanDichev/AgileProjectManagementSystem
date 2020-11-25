@@ -10,6 +10,8 @@ namespace DataModels.Models.Comments
             this.sanitizer = new HtmlSanitizer();
         }
 
+        public int Id { get; set; }
+
         public string Description { get; set; }
 
         public string SanitizedDescription => this.sanitizer.Sanitize(this.Description);
