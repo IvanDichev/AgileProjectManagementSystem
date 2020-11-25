@@ -5,8 +5,11 @@ namespace Services.Comments
 {
     public interface ICommentsService
     {
-        Task<CommentDto> Get(int commentId); 
-        Task Update(CommentsUpdateModel updateModel); 
+        Task<CommentDto> GetAsync(int commentId); 
+
+        Task UpdateAsync(CommentsUpdateModel updateModel); 
+
+        Task DeleteAsync(int commentId); 
 
         bool IsUsersComment(int userId, int commentId);
     }

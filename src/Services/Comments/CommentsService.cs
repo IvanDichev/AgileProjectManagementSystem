@@ -21,7 +21,17 @@ namespace Services.Comments
             this.mapper = mapper;
         }
 
-        public async Task<CommentDto> Get(int commentId)
+        public async Task DeleteAsync(int commentId)
+        {
+            var commentToDelete = await this.repo.All()
+                .Where(x => x.Id == commentId)
+                .FirstOrDefaultAsync();
+
+            this.repo.Delete(commentToDelete);
+            await this.repo.SaveChangesAsync();
+        }
+
+        public async Task<CommentDto> GetAsync(int commentId)
         {
             return await this.repo.All().Where(x => x.Id == commentId)
                 .ProjectTo<CommentDto>(mapper.ConfigurationProvider)
@@ -35,7 +45,7 @@ namespace Services.Comments
                 .Any(x => x.UserId == userId);
         }
 
-        public async Task Update(CommentsUpdateModel updateModel)
+        public async Task UpdateAsync(CommentsUpdateModel updateModel)
         {
             var toUpdate = await this.repo.All()
                 .Where(x => x.Id == updateModel.Id)

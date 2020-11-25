@@ -26,7 +26,7 @@ namespace Web.Controllers
         public async Task<IActionResult> Edit(int commentId)
         {
             var commentViewModel = this.mapper.Map<CommentViewModel>
-                (await this.commentsService.Get(commentId));
+                (await this.commentsService.GetAsync(commentId));
                 
             return View(commentViewModel);
         }
@@ -34,13 +34,35 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int projectId, CommentInputModel model)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if(!IsUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
             var uesrId = int.Parse(this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             var updateModel = this.mapper.Map<CommentsUpdateModel>(model);
-            await this.commentsService.Update(updateModel);
-            var updated = await this.commentsService.Get(model.Id);
+            await this.commentsService.UpdateAsync(updateModel);
+            var updated = await this.commentsService.GetAsync(model.Id);
 
             return RedirectToAction("Get", "UserStories", new { ProjectId = projectId, userStoryId = updated.UserStoryId });
+        }
+
+        public async Task<IActionResult> Delete(int projectId, int commentId, int userStoryId)
+        {
+            if (!IsUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            await this.commentsService.DeleteAsync(commentId);
+
+            return RedirectToAction("Get", "UserStories", new { projectId = projectId, userStoryId = userStoryId });
         }
         
         public IActionResult Index()
