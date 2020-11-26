@@ -101,6 +101,21 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WorkItemTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Type = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkItemTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -217,12 +232,14 @@ namespace Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(maxLength: 200, nullable: true),
                     StoryPoints = table.Column<int>(nullable: true),
                     BacklogPriorityId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    AcceptanceCriteria = table.Column<string>(nullable: true),
+                    AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
                     ProjectId = table.Column<int>(nullable: false),
+                    WorkItemTypeId = table.Column<int>(nullable: false),
+                    WorkItemId = table.Column<int>(nullable: true),
                     SprintId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -246,6 +263,18 @@ namespace Data.Migrations
                         principalTable: "Sprints",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserStories_UserStories_WorkItemId",
+                        column: x => x.WorkItemId,
+                        principalTable: "UserStories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserStories_WorkItemTypes_WorkItemTypeId",
+                        column: x => x.WorkItemTypeId,
+                        principalTable: "WorkItemTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -394,7 +423,7 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comment",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -407,15 +436,15 @@ namespace Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_AspNetUsers_UserId",
+                        name: "FK_Comments_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comment_UserStories_UserStoryId",
+                        name: "FK_Comments_UserStories_UserStoryId",
                         column: x => x.UserStoryId,
                         principalTable: "UserStories",
                         principalColumn: "Id",
@@ -444,43 +473,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Effort = table.Column<int>(nullable: false),
-                    SprintId = table.Column<int>(nullable: false),
-                    UserStoryId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tasks_Sprints_SprintId",
-                        column: x => x.SprintId,
-                        principalTable: "Sprints",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Tasks_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tasks_UserStories_UserStoryId",
-                        column: x => x.UserStoryId,
-                        principalTable: "UserStories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MockupAttachments",
                 columns: table => new
                 {
@@ -498,28 +490,6 @@ namespace Data.Migrations
                         name: "FK_MockupAttachments_Mockup_MockupId",
                         column: x => x.MockupId,
                         principalTable: "Mockup",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SubTasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    TaskId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubTasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SubTasks_Tasks_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -569,13 +539,13 @@ namespace Data.Migrations
                 column: "TeamRoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_UserId",
-                table: "Comment",
+                name: "IX_Comments_UserId",
+                table: "Comments",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_UserStoryId",
-                table: "Comment",
+                name: "IX_Comments_UserStoryId",
+                table: "Comments",
                 column: "UserStoryId");
 
             migrationBuilder.CreateIndex(
@@ -597,26 +567,6 @@ namespace Data.Migrations
                 name: "IX_Sprints_StatusId",
                 table: "Sprints",
                 column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SubTasks_TaskId",
-                table: "SubTasks",
-                column: "TaskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_SprintId",
-                table: "Tasks",
-                column: "SprintId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_UserId",
-                table: "Tasks",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_UserStoryId",
-                table: "Tasks",
-                column: "UserStoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teams_ProjectId",
@@ -658,6 +608,16 @@ namespace Data.Migrations
                 name: "IX_UserStories_SprintId",
                 table: "UserStories",
                 column: "SprintId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStories_WorkItemId",
+                table: "UserStories",
+                column: "WorkItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStories_WorkItemTypeId",
+                table: "UserStories",
+                column: "WorkItemTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -678,13 +638,10 @@ namespace Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comment");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "MockupAttachments");
-
-            migrationBuilder.DropTable(
-                name: "SubTasks");
 
             migrationBuilder.DropTable(
                 name: "TeamsUsers");
@@ -697,9 +654,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Mockup");
-
-            migrationBuilder.DropTable(
-                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "Teams");
@@ -721,6 +675,9 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sprints");
+
+            migrationBuilder.DropTable(
+                name: "WorkItemTypes");
 
             migrationBuilder.DropTable(
                 name: "Projects");

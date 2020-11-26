@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201116112952_ChangeDataTypeOfStoryPointsAndNotNullToTitle")]
-    partial class ChangeDataTypeOfStoryPointsAndNotNullToTitle
+    [Migration("20201126162910_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,45 +20,6 @@ namespace Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Data.Models.Assignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Effort")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SprintId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserStoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SprintId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserStoryId");
-
-                    b.ToTable("Tasks");
-                });
 
             modelBuilder.Entity("Data.Models.BacklogPriority", b =>
                 {
@@ -112,7 +73,7 @@ namespace Data.Migrations
 
                     b.HasIndex("UserStoryId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
@@ -242,32 +203,6 @@ namespace Data.Migrations
                     b.ToTable("SprintStatuses");
                 });
 
-            modelBuilder.Entity("Data.Models.SubTask", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("SubTasks");
-                });
-
             modelBuilder.Entity("Data.Models.Team", b =>
                 {
                     b.Property<int>("Id")
@@ -392,54 +327,6 @@ namespace Data.Migrations
                     b.ToTable("TicketSeverities");
                 });
 
-            modelBuilder.Entity("Data.Models.UserStory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AcceptanceCriteria")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("BacklogPriorityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SprintId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StoryPoints")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BacklogPriorityId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("SprintId");
-
-                    b.ToTable("UserStories");
-                });
-
             modelBuilder.Entity("Data.Models.Users.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -556,6 +443,84 @@ namespace Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Data.Models.WorkItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AcceptanceCriteria")
+                        .HasColumnType("nvarchar(3000)")
+                        .HasMaxLength(3000);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("BacklogPriorityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SprintId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StoryPoints")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<int?>("WorkItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkItemTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BacklogPriorityId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("SprintId");
+
+                    b.HasIndex("WorkItemId");
+
+                    b.HasIndex("WorkItemTypeId");
+
+                    b.ToTable("UserStories");
+                });
+
+            modelBuilder.Entity("Data.Models.WorkItemType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkItemTypes");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -657,25 +622,6 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Data.Models.Assignment", b =>
-                {
-                    b.HasOne("Data.Models.Sprint", "Sprint")
-                        .WithMany()
-                        .HasForeignKey("SprintId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Data.Models.UserStory", "UserStory")
-                        .WithMany("Tasks")
-                        .HasForeignKey("UserStoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Data.Models.Comment", b =>
                 {
                     b.HasOne("Data.Models.Users.User", "AddedBy")
@@ -684,7 +630,7 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.UserStory", "UserStory")
+                    b.HasOne("Data.Models.WorkItem", "UserStory")
                         .WithMany("Comments")
                         .HasForeignKey("UserStoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -693,7 +639,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
                 {
-                    b.HasOne("Data.Models.UserStory", "UserStory")
+                    b.HasOne("Data.Models.WorkItem", "UserStory")
                         .WithMany("Mockups")
                         .HasForeignKey("UserStoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -718,15 +664,6 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.SprintStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId");
-                });
-
-            modelBuilder.Entity("Data.Models.SubTask", b =>
-                {
-                    b.HasOne("Data.Models.Assignment", "Task")
-                        .WithMany("SubTasks")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Data.Models.Team", b =>
@@ -774,7 +711,14 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.Models.UserStory", b =>
+            modelBuilder.Entity("Data.Models.Users.User", b =>
+                {
+                    b.HasOne("Data.Models.TeamRole", "TeamRole")
+                        .WithMany()
+                        .HasForeignKey("TeamRoleId");
+                });
+
+            modelBuilder.Entity("Data.Models.WorkItem", b =>
                 {
                     b.HasOne("Data.Models.BacklogPriority", "BacklogPriority")
                         .WithMany()
@@ -791,13 +735,16 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.Sprint", null)
                         .WithMany("UserStories")
                         .HasForeignKey("SprintId");
-                });
 
-            modelBuilder.Entity("Data.Models.Users.User", b =>
-                {
-                    b.HasOne("Data.Models.TeamRole", "TeamRole")
+                    b.HasOne("Data.Models.WorkItem", "ParentWorkItem")
+                        .WithMany("WorkItems")
+                        .HasForeignKey("WorkItemId");
+
+                    b.HasOne("Data.Models.WorkItemType", "WorkItemType")
                         .WithMany()
-                        .HasForeignKey("TeamRoleId");
+                        .HasForeignKey("WorkItemTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
