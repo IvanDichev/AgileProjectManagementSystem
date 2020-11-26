@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserStoriesAllViewModel>
+﻿@model IEnumerable<WorkItemAllViewModel>
 @using Shared.Constants;
 
 @{
@@ -17,7 +17,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" asp-area="" asp-controller="UserStories"
+                        <a class="nav-link" asp-area="" asp-controller="WorkItems"
                            asp-action="Create" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
                             Add +
                         </a>
@@ -130,27 +130,27 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var userStory in Model)
+                @foreach (var WorkItem in Model)
                 {
                     <tr>
-                        <td>@userStory.Id</td>
-                        <td>@userStory.Title</td>
-                        <td>@userStory.TasksCount</td>
-                        <td>@userStory.StoryPoints</td>
-                        <td>@userStory.BacklogPriorityPriority</td>
+                        <td>@WorkItem.Id</td>
+                        <td>@WorkItem.Title</td>
+                        <td>@WorkItem.TasksCount</td>
+                        <td>@WorkItem.StoryPoints</td>
+                        <td>@WorkItem.BacklogPriorityPriority</td>
                         <td>
                             <a asp-action="Get" 
-                               asp-route-userStoryId="@userStory.Id" 
+                               asp-route-userStoryId="@WorkItem.Id" 
                                asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]" 
                                class="btn btn-sm btn-info">
                                 Edit
                             </a>
                             <form method="post" style="display:inline-block;" 
                                    asp-action="Delete"
-                                   asp-route-userStoryId="@userStory.Id"
+                                   asp-route-userStoryId="@WorkItem.Id"
                                    asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
                                 <button type="submit" 
-                                   class="btn btn-sm btn-danger" id="del">
+                                   class="btn btn-sm btn-danger" id="delete">
                                     Delete
                                 </button>
                             </form>

@@ -495,7 +495,7 @@ namespace Data.Migrations
 
                     b.HasIndex("WorkItemTypeId");
 
-                    b.ToTable("UserStories");
+                    b.ToTable("WorkItems");
                 });
 
             modelBuilder.Entity("Data.Models.WorkItemType", b =>

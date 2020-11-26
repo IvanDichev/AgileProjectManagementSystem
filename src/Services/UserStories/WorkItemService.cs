@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Data.Models;
 using DataModels.Models.Sorting;
-using DataModels.Models.UserStories;
-using DataModels.Models.UserStories.Dtos;
+using DataModels.Models.WorkItems;
+using DataModels.Models.WorkItems.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repo;
@@ -15,45 +15,46 @@ using System.Threading.Tasks;
 
 namespace Services.UserStories
 {
-    public class UserStoriesService : IUserStoriesService
+    public class WorkItemService : IWorkItemService
     {
         private readonly IRepository<WorkItem> repo;
         private readonly IMapper mapper;
-        private readonly ILogger<UserStoriesService> logger;
+        private readonly ILogger<WorkItemService> logger;
 
-        public UserStoriesService(IRepository<WorkItem> repo, IMapper mapper, ILogger<UserStoriesService> logger)
+        public WorkItemService(IRepository<WorkItem> repo, IMapper mapper, ILogger<WorkItemService> logger)
         {
             this.repo = repo;
             this.mapper = mapper;
             this.logger = logger;
         }
 
-        public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
+        public async Task<IEnumerable<WokrItemAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
         {
             var query = this.repo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId);
             var sroted = Sort(sortingFilter, query);
 
-            return await sroted.ProjectTo<UserStoryAllDto>(this.mapper.ConfigurationProvider)
+            return await sroted.ProjectTo<WokrItemAllDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
-        public async Task CreateAsync(UserStoryInputModel model)
+        public async Task CreateAsync(WorkItemInputModel model)
         {
-            var userStory = this.mapper.Map<WorkItem>(model);
-            userStory.AddedOn = DateTime.UtcNow;
+            var workItem = this.mapper.Map<WorkItem>(model);
+            workItem.AddedOn = DateTime.UtcNow;
 
-            await this.repo.AddAsync(userStory);
+            await this.repo.AddAsync(workItem);
 
             await this.repo.SaveChangesAsync();
         }
 
-        public async Task<UserStoryDto> GetAsync(int userStoryId)
+        public async Task<WorkItemDto> GetAsync(int WorkItemId)
         {
-            return await this.repo.All()
-                .Where(x => x.Id == userStoryId)
-                .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
+            var a = await this.repo.All()
+                .Where(x => x.Id == WorkItemId)
+                .ProjectTo<WorkItemDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+            return a;
         }
 
         public async Task DeleteAsync(int userStoryId)
@@ -70,16 +71,22 @@ namespace Services.UserStories
             }
         }
 
-        public async Task UpdateAsync(UserStoryUpdateModel updateModel)
+        public async Task UpdateAsync(WorkItemUpdateModel updateModel)
         {
             try
             {
-                var addedOn = await this.repo.AllAsNoTracking()
+                var toUpdate = this.repo.All()
                     .Where(x => x.Id == updateModel.Id)
-                    .Select(x => x.AddedOn)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefault();
+                toUpdate = this.mapper.Map<WorkItem>(updateModel);
 
-                var toUpdate = this.mapper.Map<WorkItem>(updateModel);
+                toUpdate.ModifiedOn = DateTime.UtcNow;
+                toUpdate.Title = updateModel.Title;
+                toUpdate.StoryPoints = updateModel.StoryPoints;
+                toUpdate.WorkItemTypeId = updateModel.WorkItemTypeId;
+                toUpdate.AcceptanceCriteria = updateModel.AcceptanceCriteria;
+                toUpdate.BacklogPriorityId = updateModel.BacklogPriorityid;
+                toUpdate.Description = updateModel.Description;
 
                 if (updateModel.Comment != null)
                 {
@@ -87,9 +94,6 @@ namespace Services.UserStories
                     comment.AddedOn = DateTime.UtcNow;
                     toUpdate.Comments.Add(comment);
                 }
-
-                toUpdate.AddedOn = addedOn;
-                toUpdate.ModifiedOn = DateTime.UtcNow;
 
                 this.repo.Update(toUpdate);
                 await this.repo.SaveChangesAsync();
@@ -108,8 +112,6 @@ namespace Services.UserStories
                 UserStoriesSortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
                 UserStoriesSortingConstants.TitleAsc => query.OrderBy(x => x.Title),
                 UserStoriesSortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
-                //UserStoriesSortingConstants.TasksCountAsc => query.OrderBy(x => x.Tasks.Count),
-                //UserStoriesSortingConstants.TasksCountDesc => query.OrderByDescending(x => x.Tasks.Count),
                 UserStoriesSortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),
                 UserStoriesSortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
                 UserStoriesSortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),

@@ -3,13 +3,13 @@ using Ganss.XSS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataModels.Models.UserStories
+namespace DataModels.Models.WorkItems
 {
-    public class UserStoryViewModel
+    public class WorkItemViewModel
     {
         private readonly HtmlSanitizer htmlSanitizer;
         
-        public UserStoryViewModel()
+        public WorkItemViewModel()
         {
             this.htmlSanitizer = new HtmlSanitizer();
         }
@@ -28,6 +28,8 @@ namespace DataModels.Models.UserStories
         public string BacklogPriorityId { get; set; }
 
         public string Description { get; set; }
+
+        public int WorkItemTypeId { get; set; }
 
         public string SanitizedDescription => this.htmlSanitizer.Sanitize(this.Description);
 

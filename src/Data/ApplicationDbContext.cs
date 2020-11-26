@@ -11,10 +11,7 @@ namespace Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<WorkItem> UserStories { get; set; }
-
-        //public DbSet<Assignment> Tasks { get; set; }
-        //public DbSet<SubTask> SubTasks { get; set; }
+        public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<TeamRole> TeamRoles { get; set; }
         public DbSet<BacklogPriority> BacklogPriorities { get; set; }

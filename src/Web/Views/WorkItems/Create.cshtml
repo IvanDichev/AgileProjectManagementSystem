@@ -1,8 +1,12 @@
-﻿@model UserStoryInputModel
+﻿@model WorkItemInputModel
 
 @{
     ViewData["Title"] = "Create";
-    var priorities = Model.PrioritiesDropDown.Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
+    var priorities = Model.PrioritiesDropDown
+        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
+
+    var workItemTypes = Model.WorkItemTypesDropDown
+        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Type });
 }
 
 <script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
@@ -50,6 +54,12 @@ alignleft aligncenter alignright alignjustify | code`,
                 <select asp-for="BacklogPriorityid" class="form-control"
                         asp-items="priorities"></select>
                 <span asp-validation-for="BacklogPriorityid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkItemTypesId" class="control-label"></label>
+                <select asp-for="WorkItemTypesId" class="form-control"
+                        asp-items="workItemTypes"></select>
+                <span asp-validation-for="WorkItemTypesId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>

@@ -1,6 +1,6 @@
-﻿namespace DataModels.Models.UserStories.Dtos
+﻿namespace DataModels.Models.WorkItems.Dtos
 {
-    public class UserStoryAllDto
+    public class WokrItemAllDto
     {
         public int Id { get; set; }
 

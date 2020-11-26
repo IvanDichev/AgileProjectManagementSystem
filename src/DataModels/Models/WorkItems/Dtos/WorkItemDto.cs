@@ -1,9 +1,9 @@
 ﻿using DataModels.Models.Comments;
 using System.Collections.Generic;
 
-namespace DataModels.Models.UserStories.Dtos
+namespace DataModels.Models.WorkItems.Dtos
 {
-    public class UserStoryDto
+    public class WorkItemDto
     {
         public int Id { get; set; }
 
@@ -19,7 +19,9 @@ namespace DataModels.Models.UserStories.Dtos
 
         public string AcceptanceCriteria { get; set; }
 
-        public int TasksCount { get; set; }
+        public string WorkItemTypeType { get; set; }
+
+        public int WorkItemTypeId { get; set; }
 
         public ICollection<CommentViewModel> Comments { get; set; }
     }

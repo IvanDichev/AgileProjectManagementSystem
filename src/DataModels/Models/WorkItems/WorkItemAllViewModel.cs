@@ -1,6 +1,6 @@
-﻿namespace DataModels.Models.UserStories
+﻿namespace DataModels.Models.WorkItems
 {
-    public class UserStoriesAllViewModel
+    public class WorkItemAllViewModel
     {
         public int Id { get; set; }
 

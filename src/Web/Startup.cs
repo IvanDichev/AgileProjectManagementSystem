@@ -16,6 +16,7 @@ using Services.BacklogPriorities;
 using Services.Comments;
 using Services.Projects;
 using Services.UserStories;
+using Services.WorkItemTypesSErvices;
 using Utilities.Mailing;
 using Web.Middlewares;
 
@@ -76,9 +77,10 @@ namespace Web
             // Register for all type of repositories.
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProjectsService, ProjectsService>();
-            services.AddScoped<IUserStoriesService, UserStoriesService>();
+            services.AddScoped<IWorkItemService, WorkItemService>();
             services.AddScoped<IBacklogPrioritiesService, BacklogPrioritiesService>();
             services.AddScoped<ICommentsService, CommentsService>();
+            services.AddScoped<IWorkItemTypesService, WorkItemTypesService>();
 
         }
 
@@ -96,7 +98,7 @@ namespace Web
                 app.UseCookiePolicy();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                //app.UseSeedAdminAndRolesMiddleware();
+                app.UseSeedAdminAndRolesMiddleware();
                 app.UseBrowserLink();
             }
             else

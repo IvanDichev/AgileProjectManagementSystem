@@ -1,9 +1,9 @@
 ﻿using DataModels.Models.Comments;
 using System;
 
-namespace DataModels.Models.UserStories
+namespace DataModels.Models.WorkItems
 {
-    public class UserStoryUpdateModel
+    public class WorkItemUpdateModel
     {
         public int Id { get; set; }
 
@@ -13,13 +13,13 @@ namespace DataModels.Models.UserStories
 
         public int BacklogPriorityid { get; set; }
 
+        public int WorkItemTypeId { get; set; }
+
         public string Description { get; set; }
 
         public string AcceptanceCriteria { get; set; }
 
         public int ProjectId { get; set; }
-
-        public DateTime AddedOn { get; set; }
 
         public DateTime ModifedOn { get; set; }
 

@@ -10,7 +10,7 @@
                 <span style="font-size:2rem;margin-right:3rem;" class="badge badge-secondary">@Model.Name.Substring(0, 1)</span>
                 <li id="project-name" class="breadcrumb-item active" aria-current="page" style="font-size:2rem;">@Model.Name</li>
                 <form method="post" style="margin-left:auto;">
-                    <button type="submit" class="btn btn-danger btn-sm ml-auto" id="del" 
+                    <button type="submit" class="btn btn-danger btn-sm ml-auto" id="delete" 
                             asp-action="Delete" 
                             asp-controller="Projects" 
                             asp-route-projectId="@Model.Id">

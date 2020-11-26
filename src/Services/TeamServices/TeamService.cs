@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
 using DataModels.Models.Teams;
-using DataModels.Models.UserStories;
 using Repo;
-using System.Linq;
 
 namespace Services.TeamServices
 {
@@ -20,8 +18,6 @@ namespace Services.TeamServices
 
         public UserDto GetUsersInProject(int userId, int projectId)
         {
-            //var query = this.repo.All();
-            //var usersInProject = 
             return new UserDto();
         }
     }

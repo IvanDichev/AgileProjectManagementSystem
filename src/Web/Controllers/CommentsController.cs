@@ -48,7 +48,7 @@ namespace Web.Controllers
             await this.commentsService.UpdateAsync(updateModel);
             var updated = await this.commentsService.GetAsync(model.Id);
 
-            return RedirectToAction("Get", "UserStories", new { ProjectId = projectId, userStoryId = updated.UserStoryId });
+            return RedirectToAction("Get", "UserStories", new { ProjectId = projectId, userStoryId = updated.WorkItemId });
         }
 
         [HttpPost]

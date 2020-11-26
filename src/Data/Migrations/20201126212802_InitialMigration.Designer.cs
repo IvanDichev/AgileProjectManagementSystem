@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201126162910_InitialMigration")]
+    [Migration("20201126212802_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -497,7 +497,7 @@ namespace Data.Migrations
 
                     b.HasIndex("WorkItemTypeId");
 
-                    b.ToTable("UserStories");
+                    b.ToTable("WorkItems");
                 });
 
             modelBuilder.Entity("Data.Models.WorkItemType", b =>

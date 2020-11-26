@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using DataModels.Models.Sorting;
-using DataModels.Models.UserStories;
+using DataModels.Models.WorkItems;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.BacklogPriorities;
 using Services.Projects;
 using Services.UserStories;
+using Services.WorkItemTypesSErvices;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,19 +14,22 @@ using System.Threading.Tasks;
 namespace Web.Controllers
 {
     [Authorize]
-    public class UserStoriesController : BaseController
+    public class WorkItemsController : BaseController
     {
-        private readonly IUserStoriesService userStoriesService;
+        private readonly IWorkItemService userStoriesService;
         private readonly IBacklogPrioritiesService backlogPrioritiesService;
+        private readonly IWorkItemTypesService workItemTypesService;
         private readonly IMapper mapper;
 
-        public UserStoriesController(IUserStoriesService userStoriesService,
+        public WorkItemsController(IWorkItemService userStoriesService,
             IBacklogPrioritiesService backlogPrioritiesService,
             IProjectsService projectsService,
+            IWorkItemTypesService workItemTypesService,
             IMapper mapper) : base(projectsService)
         {
             this.userStoriesService = userStoriesService;
             this.backlogPrioritiesService = backlogPrioritiesService;
+            this.workItemTypesService = workItemTypesService;
             this.mapper = mapper;
         }
 
@@ -35,8 +39,8 @@ namespace Web.Controllers
             {
                 return Unauthorized();
             }
-            
-            var all = this.mapper.Map<IEnumerable<UserStoriesAllViewModel>>
+
+            var all = this.mapper.Map<IEnumerable<WorkItemAllViewModel>>
                 (await userStoriesService.GetAllAsync(projectId, sortingFilter));
 
             return View(all);
@@ -49,17 +53,19 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var createViewModel = new UserStoryInputModel()
+            var createViewModel = new WorkItemInputModel()
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
-                (await this.backlogPrioritiesService.GetAllAsync())
+                    (await this.backlogPrioritiesService.GetAllAsync()),
+                WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
+                    (await this.workItemTypesService.GetWorkItemTypesAsync())
             };
 
             return View(createViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserStoryInputModel inputModel, int projectId)
+        public async Task<IActionResult> Create(WorkItemInputModel inputModel, int projectId)
         {
             if (!IsUserInProject(projectId))
             {
@@ -70,6 +76,8 @@ namespace Web.Controllers
             {
                 inputModel.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync());
+                inputModel.WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
+                    (await this.workItemTypesService.GetWorkItemTypesAsync());
                 return View(inputModel);
             }
 
@@ -97,11 +105,13 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var userStory = new UpdateUserStoriesViewModel()
+            var userStory = new UpdateWorkItemViewModel()
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync()),
-                ViewModel = this.mapper.Map<UserStoryViewModel>(await userStoriesService.GetAsync(userStoryId))
+                ViewModel = this.mapper.Map<WorkItemViewModel>(await userStoriesService.GetAsync(userStoryId)),
+                WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
+                    (await this.workItemTypesService.GetWorkItemTypesAsync()),
             };
 
             if (userStory.ViewModel == null)
@@ -113,7 +123,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Get(UpdateUserStoriesViewModel model, int projectId)
+        public async Task<IActionResult> Get(UpdateWorkItemViewModel model, int projectId)
         {
             if (!IsUserInProject(projectId))
             {
@@ -125,17 +135,19 @@ namespace Web.Controllers
                 // If model is not valid prioritiesDropDown will be null so we need do populated it.
                 model.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync());
+                model.WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
+                    (await this.workItemTypesService.GetWorkItemTypesAsync());
 
                 return View(model);
             }
 
-            var userStory = this.mapper.Map<UserStoryUpdateModel>(model.ViewModel);
+            var userStory = this.mapper.Map<WorkItemUpdateModel>(model.ViewModel);
 
             if (!string.IsNullOrWhiteSpace(model.Comment.Description))
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 userStory.Comment = model.Comment;
-                userStory.Comment.UserStoryId = model.ViewModel.Id;
+                userStory.Comment.WorkItemId = model.ViewModel.Id;
                 userStory.Comment.AddedById = userId;
             }
 

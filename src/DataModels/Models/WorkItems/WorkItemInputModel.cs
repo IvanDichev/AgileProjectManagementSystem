@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataModels.Models.UserStories
+namespace DataModels.Models.WorkItems
 {
-    public class UserStoryInputModel
+    public class WorkItemInputModel
     {
         private readonly HtmlSanitizer htmlSanitizer;
 
-        public UserStoryInputModel()
+        public WorkItemInputModel()
         {
-            this.htmlSanitizer = new HtmlSanitizer();
+            htmlSanitizer = new HtmlSanitizer();
         }
         public int Id { get; set; }
 
@@ -27,16 +27,20 @@ namespace DataModels.Models.UserStories
 
         public string Description { get; set; }
 
-        public string SanitizedDescription => this.htmlSanitizer.Sanitize(this.Description);
+        public string SanitizedDescription => htmlSanitizer.Sanitize(Description);
 
         [MaxLength(3000)]
         [Display(Name = "Acceptance Criteria")]
         public string AcceptanceCriteria { get; set; }
 
-        public string SanitizedAcceptanceCriteria => this.htmlSanitizer.Sanitize(this.AcceptanceCriteria);
+        public string SanitizedAcceptanceCriteria => htmlSanitizer.Sanitize(AcceptanceCriteria);
 
         public int ProjectId { get; set; }
 
+        public int WorkItemTypesId { get; set; }
+
         public ICollection<BacklogPriorityDropDownModel> PrioritiesDropDown { get; set; }
+
+        public ICollection<WorkItemTypesDropDownModel> WorkItemTypesDropDown { get; set; }
     }
 }

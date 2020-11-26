@@ -1,4 +1,4 @@
-﻿namespace DataModels.Models.UserStories
+﻿namespace DataModels.Models.WorkItems
 {
     public class UsersInProjectDropDown
     {

@@ -16,7 +16,7 @@ namespace DataModels.Models.Comments
 
         public string SanitizedDescription => this.sanitizer.Sanitize(this.Description);
 
-        public int UserStoryId { get; set; }
+        public int WorkItemId { get; set; }
 
         public int AddedById { get; set; }
     }
