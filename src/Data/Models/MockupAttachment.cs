@@ -2,7 +2,7 @@
 
 namespace Data.Models
 {
-    public class MockupAttachment : BaseModel<int>
+    public class MockupAttachment : BaseEntity<int>
     {
         public string Attachment { get; set; }
         public int MockupId { get; set; }

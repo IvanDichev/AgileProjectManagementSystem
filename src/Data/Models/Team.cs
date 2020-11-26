@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Models
 {
-    public class Team : BaseModel<int>
+    public class Team : BaseEntity<int>
     {
         public Team()
         {

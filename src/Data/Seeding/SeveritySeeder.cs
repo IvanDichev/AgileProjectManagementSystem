@@ -28,7 +28,7 @@ namespace Data.Seeding
                 {
                     AddedOn = DateTime.UtcNow,
                     Severity = severity,
-                    Weight = weight
+                    Weight = weight,
                 });
             }
         }

@@ -11,9 +11,10 @@ namespace Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<UserStory> UserStories { get; set; }
-        public DbSet<Assignment> Tasks { get; set; }
-        public DbSet<SubTask> SubTasks { get; set; }
+        public DbSet<WorkItem> UserStories { get; set; }
+
+        //public DbSet<Assignment> Tasks { get; set; }
+        //public DbSet<SubTask> SubTasks { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<TeamRole> TeamRoles { get; set; }
         public DbSet<BacklogPriority> BacklogPriorities { get; set; }
@@ -21,6 +22,7 @@ namespace Data
         public DbSet<SprintStatus> SprintStatuses { get; set; }
         public DbSet<MockupAttachment> MockupAttachments { get; set; }
         public DbSet<TeamsUsers> TeamsUsers { get; set; }
+        public DbSet<WorkItemType> WorkItemTypes { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
@@ -33,6 +35,15 @@ namespace Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TeamsUsers>(x => x.HasKey(x => new { x.TeamId, x.UserId }));
+
+            builder.Entity<WorkItem>(entity => 
+            {
+                entity.HasKey(x => x.Id);
+                entity.HasOne(x => x.ParentWorkItem)
+                    .WithMany(x => x.WorkItems)
+                    .HasForeignKey(x => x.WorkItemId)
+                    .IsRequired(false);
+            });
 
             base.OnModelCreating(builder);
         }

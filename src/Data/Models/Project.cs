@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
 {
-    public class Project : BaseModel<int>
+    public class Project : BaseEntity<int>
     {
         public Project()
         {

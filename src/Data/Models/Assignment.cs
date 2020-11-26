@@ -4,7 +4,7 @@ using Data.Models.Users;
 
 namespace Data.Models
 {
-    public class Assignment : BaseModel<int>
+    public class Assignment : BaseEntity<int>
     {
         public Assignment()
         {
@@ -21,7 +21,7 @@ namespace Data.Models
         public virtual Sprint Sprint { get; set; }
 
         public int UserStoryId { get; set; }
-        public virtual UserStory UserStory { get; set; }
+        public virtual WorkItem UserStory { get; set; }
 
         public int? UserId { get; set; }
         public virtual User CreatedBy { get; set; }

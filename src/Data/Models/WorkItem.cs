@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
 {
-    public class UserStory : BaseModel<int>
+    public class WorkItem : BaseEntity<int>
     {
-        public UserStory()
+        public WorkItem()
         {
-            this.Tasks = new HashSet<Assignment>();
             this.Mockups = new HashSet<Mockup>();
             this.Comments = new HashSet<Comment>();
+            this.WorkItems = new HashSet<WorkItem>();
         }
 
         [MaxLength(200)]
@@ -31,10 +31,19 @@ namespace Data.Models
 
         public virtual Project Project { get; set; }
 
-        public ICollection<Assignment> Tasks { get; set; }
+        public int WorkItemTypeId { get; set; }
+
+        public virtual WorkItemType WorkItemType { get; set; }
 
         public ICollection<Mockup> Mockups { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+
+        public int? WorkItemId { get; set; }
+
+        public WorkItem ParentWorkItem { get; set; }
+
+        public ICollection<WorkItem> WorkItems { get; set; }
+
     }
 }

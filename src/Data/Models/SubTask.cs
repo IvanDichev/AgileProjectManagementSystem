@@ -2,7 +2,7 @@
 
 namespace Data.Models
 {
-    public class SubTask : BaseModel<int>
+    public class SubTask : BaseEntity<int>
     {
         public string Description { get; set; }
 

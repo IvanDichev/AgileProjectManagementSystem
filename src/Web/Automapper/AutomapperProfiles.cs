@@ -27,10 +27,10 @@ namespace Web.Automapper
             CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap();
             CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
 
-            CreateMap<UserStory, UserStoryDto>().ReverseMap();
-            CreateMap<UserStory, UserStoryAllDto>().ReverseMap();
-            CreateMap<UserStory, UserStoryUpdateModel>().ReverseMap();             
-            CreateMap<UserStory, UserStoryInputModel>().ReverseMap()
+            CreateMap<WorkItem, UserStoryDto>().ReverseMap();
+            CreateMap<WorkItem, UserStoryAllDto>().ReverseMap();
+            CreateMap<WorkItem, UserStoryUpdateModel>().ReverseMap();             
+            CreateMap<WorkItem, UserStoryInputModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription))
                 .ForMember(x => x.AcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria));                           
             CreateMap<UserStoryViewModel, UserStoryUpdateModel>().ReverseMap();                

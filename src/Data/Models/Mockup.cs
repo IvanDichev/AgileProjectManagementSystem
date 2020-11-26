@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Data.Models
 {
-    public class Mockup : BaseModel<int>
+    public class Mockup : BaseEntity<int>
     {
         public Mockup()
         {
@@ -13,6 +13,6 @@ namespace Data.Models
         public ICollection<MockupAttachment> MockupAttachments { get; set; }
 
         public int UserStoryId { get; set; }
-        public virtual UserStory UserStory { get; set; }
+        public virtual WorkItem UserStory { get; set; }
     }
 }

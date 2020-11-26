@@ -27,7 +27,8 @@ namespace Data.Seeding
                 new BacklogPrioritySeeder(),
                 new SeveritySeeder(),
                 new TeamRolesSeeder(),
-                new SprintStatusSeeder()
+                new SprintStatusSeeder(),
+                new WorkItemTypesSeeder(),
             };
 
             foreach (var seeder in seeders)

@@ -2,7 +2,7 @@
 
 namespace Data.Models
 {
-    public class TeamRole : BaseModel<int>
+    public class TeamRole : BaseEntity<int>
     {
         public string Role { get; set; }
     }

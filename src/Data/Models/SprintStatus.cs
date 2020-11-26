@@ -2,7 +2,7 @@
 
 namespace Data.Models
 {
-    public class SprintStatus : BaseModel<int>
+    public class SprintStatus : BaseEntity<int>
     {
         public string Status { get; set; }
     }

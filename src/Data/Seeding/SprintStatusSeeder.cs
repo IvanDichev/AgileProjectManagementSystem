@@ -1,5 +1,5 @@
 ﻿using Data.Models;
-using Shared.Constants;
+using Shared.Constants.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Data.Seeding
                 SprintStatusConstants.Accepted,
                 SprintStatusConstants.Active,
                 SprintStatusConstants.Closed,
-                SprintStatusConstants.Planning
+                SprintStatusConstants.Planning,
             };
             foreach (var status in sprintStatuses)
             {
@@ -34,7 +34,7 @@ namespace Data.Seeding
                 await dbContext.SprintStatuses.AddAsync(new SprintStatus
                 {
                     AddedOn = DateTime.UtcNow,
-                    Status = status
+                    Status = status,
                 });
             }
         }

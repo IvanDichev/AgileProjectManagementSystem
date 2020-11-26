@@ -17,11 +17,11 @@ namespace Services.UserStories
 {
     public class UserStoriesService : IUserStoriesService
     {
-        private readonly IRepository<UserStory> repo;
+        private readonly IRepository<WorkItem> repo;
         private readonly IMapper mapper;
         private readonly ILogger<UserStoriesService> logger;
 
-        public UserStoriesService(IRepository<UserStory> repo, IMapper mapper, ILogger<UserStoriesService> logger)
+        public UserStoriesService(IRepository<WorkItem> repo, IMapper mapper, ILogger<UserStoriesService> logger)
         {
             this.repo = repo;
             this.mapper = mapper;
@@ -40,7 +40,7 @@ namespace Services.UserStories
 
         public async Task CreateAsync(UserStoryInputModel model)
         {
-            var userStory = this.mapper.Map<UserStory>(model);
+            var userStory = this.mapper.Map<WorkItem>(model);
             userStory.AddedOn = DateTime.UtcNow;
 
             await this.repo.AddAsync(userStory);
@@ -79,7 +79,7 @@ namespace Services.UserStories
                     .Select(x => x.AddedOn)
                     .FirstOrDefaultAsync();
 
-                var toUpdate = this.mapper.Map<UserStory>(updateModel);
+                var toUpdate = this.mapper.Map<WorkItem>(updateModel);
 
                 if (updateModel.Comment != null)
                 {
@@ -100,7 +100,7 @@ namespace Services.UserStories
             }
         }
 
-        private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)
+        private static IQueryable<WorkItem> Sort(SortingFilter sortingFilter, IQueryable<WorkItem> query)
         {
             return sortingFilter.SortingParams switch
             {
@@ -108,8 +108,8 @@ namespace Services.UserStories
                 UserStoriesSortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
                 UserStoriesSortingConstants.TitleAsc => query.OrderBy(x => x.Title),
                 UserStoriesSortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
-                UserStoriesSortingConstants.TasksCountAsc => query.OrderBy(x => x.Tasks.Count),
-                UserStoriesSortingConstants.TasksCountDesc => query.OrderByDescending(x => x.Tasks.Count),
+                //UserStoriesSortingConstants.TasksCountAsc => query.OrderBy(x => x.Tasks.Count),
+                //UserStoriesSortingConstants.TasksCountDesc => query.OrderByDescending(x => x.Tasks.Count),
                 UserStoriesSortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),
                 UserStoriesSortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
                 UserStoriesSortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),

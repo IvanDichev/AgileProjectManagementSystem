@@ -5,18 +5,18 @@ using System.Collections.Generic;
 
 namespace Data.Models
 {
-    public class Sprint : BaseModel<int>
+    public class Sprint : BaseEntity<int>
     {
         public Sprint()
         {
-            this.UserStories = new HashSet<UserStory>();
+            this.UserStories = new HashSet<WorkItem>();
         }
 
         public DateTime DueDate { get; set; }
 
         public SprintStatus Status { get; set; }
 
-        public virtual ICollection<UserStory> UserStories { get; set; }
+        public virtual ICollection<WorkItem> UserStories { get; set; }
 
     }
 }

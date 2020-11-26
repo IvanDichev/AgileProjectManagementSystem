@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Data.Models.Base
 {
-    public class BaseDeletableModel<T> : BaseModel<T>, IDeletableEntity
+    public class BaseDeletableModel<T> : BaseEntity<T>, IDeletableEntity
     {
         public bool IsDeleted { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using Shared.Constants;
+﻿using Shared.Constants.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Data.Seeding
                 {BacklogPriorityConstants.LevelTwo, 2},
                 {BacklogPriorityConstants.LevelThree, 3},
                 {BacklogPriorityConstants.LevelFour, 4},
-                { BacklogPriorityConstants.LevelFive, 5},
+                {BacklogPriorityConstants.LevelFive, 5},
             };
             foreach (var kvp in priorities)
             {
@@ -34,7 +34,7 @@ namespace Data.Seeding
                 {
                     AddedOn = DateTime.UtcNow,
                     Priority = priorityName,
-                    Weight = weight
+                    Weight = weight,
                 });
             }
         }

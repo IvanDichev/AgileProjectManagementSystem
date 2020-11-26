@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Data.Models
 {
-    public class TicketSeverity : BaseModel<int>
+    public class TicketSeverity : BaseEntity<int>
     {
         public string Severity { get; set; }
         public int Weight { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace Shared.Constants
+﻿namespace Shared.Constants.Seeding
 {
     public class TeamRolesConstants
     {

@@ -1,5 +1,5 @@
 ﻿using Data.Models;
-using Shared.Constants;
+using Shared.Constants.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,7 +3,7 @@ using Data.Models.Users;
 
 namespace Data.Models
 {
-    public class Comment : BaseModel<int>
+    public class Comment : BaseEntity<int>
     {
         public string Description { get; set; }
 
@@ -11,6 +11,6 @@ namespace Data.Models
         public virtual User AddedBy { get; set; }
 
         public int UserStoryId { get; set; }
-        public virtual UserStory UserStory { get; set; }
+        public virtual WorkItem UserStory { get; set; }
     }
 }

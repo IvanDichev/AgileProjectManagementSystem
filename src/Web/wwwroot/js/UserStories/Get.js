@@ -5,7 +5,6 @@ function myFunction(dropdownnumber) {
     // Close the dropdown menu if the user clicks outside of it
     window.onclick = function (event) {
         if (!event.target.matches(".comment-menu-" + dropdownnumber)) {
-            console.log(event.target);
             var dropdowns = document.getElementsByClassName("dropdown-content-" + dropdownnumber);
             var i;
             for (i = 0; i < dropdowns.length; i++) {

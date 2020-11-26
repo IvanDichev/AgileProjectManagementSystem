@@ -4,7 +4,7 @@ using Data.Models.Base;
 
 namespace Data.Models
 {
-    public class Ticket : BaseModel<int>
+    public class Ticket : BaseEntity<int>
     {
         public int ProjectId { get; set; }
         public virtual Project Project { get; set; }
