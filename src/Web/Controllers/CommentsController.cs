@@ -3,7 +3,6 @@ using DataModels.Models.Comments;
 using DataModels.Models.Comments.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Services.Comments;
-using Services.Projects;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Extentions;
@@ -29,7 +28,7 @@ namespace Web.Controllers
             var commentViewModel = this.mapper.Map<CommentViewModel>
                 (await this.commentsService.GetAsync(commentId));
 
-            return Json(new { html = await this.RenderViewAsStringAsync("Edit", commentViewModel) });
+            return Json(new { html = await this.RenderViewAsStringAsync("Edit", commentViewModel, true) });
         }
 
         [HttpPost]
@@ -40,7 +39,7 @@ namespace Web.Controllers
                 return View(model);
             }
 
-            if(!IsUsersComment(projectId))
+            if(!IsUsersComment(model.Id))
             {
                 return Unauthorized();
             }
@@ -55,7 +54,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int projectId, int commentId, int userStoryId)
         {
-            if (!IsUsersComment(projectId))
+            if (!IsUsersComment(commentId))
             {
                 return Unauthorized();
             }

@@ -1,9 +1,27 @@
-﻿// Toggle comments dropdown menu
+﻿// Toggle comments dropdown menu.
 function myFunction(dropdownnumber) {
     document.getElementById("myDropdown-" + dropdownnumber).classList.toggle("show");
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function (event) {
+        if (!event.target.matches(".comment-menu-" + dropdownnumber)) {
+            console.log(event.target);
+            var dropdowns = document.getElementsByClassName("dropdown-content-" + dropdownnumber);
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
 }
 
-document.getElementById("edit-comment").onclick = function () {
+// Ajax GET to open modal for each comment to edit.
+const commentsEditNavigation = document.querySelectorAll("#edit-comment-a");
+const commentsEditNavigationArr = Array.from(commentsEditNavigation);
+commentsEditNavigationArr.forEach(element => element.onclick = function () {
     $.ajax({
         type: 'GET',
         url: $(this).attr('href'),
@@ -15,4 +33,4 @@ document.getElementById("edit-comment").onclick = function () {
     })
     // prevent default
     return false;
-};
+});
