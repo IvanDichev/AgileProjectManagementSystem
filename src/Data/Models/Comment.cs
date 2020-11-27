@@ -10,7 +10,7 @@ namespace Data.Models
         public int UserId { get; set; }
         public virtual User AddedBy { get; set; }
 
-        public int UserStoryId { get; set; }
-        public virtual WorkItem UserStory { get; set; }
+        public int WorkItemId { get; set; }
+        public virtual WorkItem WorkItem { get; set; }
     }
 }

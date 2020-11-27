@@ -4,7 +4,7 @@ namespace DataModels.Models.Projects
 {
     public class PaginatedProjectViewModel
     {
-        public ICollection<ProjectViewModel> AllProjects { get; set; }
+        public ICollection<ProjectViewModel> PaginatedProjects { get; set; }
 
         public int RecordsPerPage { get; set; }
 

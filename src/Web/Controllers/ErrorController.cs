@@ -27,9 +27,8 @@ namespace Web.Controllers
                 case 401:
                     ViewData["ErrorMessage"] = ErrorConstants.UnauthorizedMessage;
                     return View("Unauthorized");
+                default: return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
-
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201126212802_InitialMigration")]
+    [Migration("20201127093105_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,14 +64,14 @@ namespace Data.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserStoryId")
+                    b.Property<int>("WorkItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserStoryId");
+                    b.HasIndex("WorkItemId");
 
                     b.ToTable("Comments");
                 });
@@ -89,12 +89,12 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserStoryId")
+                    b.Property<int>("WorkItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserStoryId");
+                    b.HasIndex("WorkItemId");
 
                     b.ToTable("Mockup");
                 });
@@ -630,18 +630,18 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.WorkItem", "UserStory")
+                    b.HasOne("Data.Models.WorkItem", "WorkItem")
                         .WithMany("Comments")
-                        .HasForeignKey("UserStoryId")
+                        .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
                 {
-                    b.HasOne("Data.Models.WorkItem", "UserStory")
+                    b.HasOne("Data.Models.WorkItem", "WorkItem")
                         .WithMany("Mockups")
-                        .HasForeignKey("UserStoryId")
+                        .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -733,7 +733,7 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Data.Models.Sprint", null)
-                        .WithMany("UserStories")
+                        .WithMany("WorkItems")
                         .HasForeignKey("SprintId");
 
                     b.HasOne("Data.Models.WorkItem", "ParentWorkItem")

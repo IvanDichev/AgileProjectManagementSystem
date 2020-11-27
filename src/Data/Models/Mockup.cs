@@ -12,7 +12,7 @@ namespace Data.Models
 
         public ICollection<MockupAttachment> MockupAttachments { get; set; }
 
-        public int UserStoryId { get; set; }
-        public virtual WorkItem UserStory { get; set; }
+        public int WorkItemId { get; set; }
+        public virtual WorkItem WorkItem { get; set; }
     }
 }

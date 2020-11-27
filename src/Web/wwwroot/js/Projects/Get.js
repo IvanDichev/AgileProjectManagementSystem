@@ -15,30 +15,27 @@ document.getElementById("edit").onclick = function () {
 
 // Ajax POST to edit project.
 EditAjaxPost = form => {
-    try {
-        $.ajax({
-            type: 'POST',
-            url: form.action,
-            data: new FormData(form),
-            contentType: false,
-            processData: false,
-            success: function (res) {
-                if (res.isValid) {
-                    $('#description').text(res.newDescription)
-                    $('#form-modal .modal-body').html('');
-                    $('#form-modal .modal-title').html('');
-                    $('#form-modal').modal('hide');
-                }
-                else
-                    $('#form-modal .modal-body').html(res.html);
-            },
-            error: function (err) {
-                console.log(err)
+    $.ajax({
+        type: 'POST',
+        url: form.action,
+        data: new FormData(form),
+        contentType: false,
+        processData: false,
+        success: function (res) {
+            if (res.isValid) {
+                $('#description').text(res.newDescription)
+                $('#form-modal .modal-body').html('');
+                $('#form-modal .modal-title').html('');
+                $('#form-modal').modal('hide');
             }
-        })
-        //to prevent default form submit event
-        return false;
-    } catch (ex) {
-        console.log(ex)
-    }
+            else
+                $('#form-modal .modal-body').html(res.html);
+        },
+        error: function (err) {
+            location.reload();
+            alert("An error occured.");
+        }
+    })
+    //to prevent default form submit event
+    return false;
 }

@@ -6,7 +6,7 @@ namespace DataModels.Models.Projects
     {
         public int ProjectId { get; set; }
 
-        [MaxLength(400)]
+        [StringLength(390)]
         public string Description { get; set; }
     }
 }

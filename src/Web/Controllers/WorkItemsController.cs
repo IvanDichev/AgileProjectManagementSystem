@@ -35,7 +35,7 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Index(int projectId, SortingFilter sortingFilter)
         {
-            if (!IsUserInProject(projectId))
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -48,7 +48,7 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Create(int projectId)
         {
-            if (!IsUserInProject(projectId))
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -67,7 +67,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(WorkItemInputModel inputModel, int projectId)
         {
-            if (!IsUserInProject(projectId))
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -82,13 +82,13 @@ namespace Web.Controllers
             }
 
             await this.userStoriesService.CreateAsync(inputModel);
-            return RedirectToAction("Index", new { projectId = projectId });
+            return RedirectToAction(nameof(Index), new { projectId = projectId });
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int projectId, int userStoryId)
         {
-            if (!IsUserInProject(projectId))
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -100,7 +100,7 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Get(int projectId, int userStoryId)
         {
-            if (!IsUserInProject(projectId))
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -125,7 +125,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Get(UpdateWorkItemViewModel model, int projectId)
         {
-            if (!IsUserInProject(projectId))
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -154,7 +154,7 @@ namespace Web.Controllers
             userStory.ProjectId = projectId;
             await this.userStoriesService.UpdateAsync(userStory);
 
-            return RedirectToAction("Index", new { projectId = projectId });
+            return RedirectToAction(nameof(Index), new { projectId = projectId });
         }
     }
 }

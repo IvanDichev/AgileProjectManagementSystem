@@ -9,14 +9,14 @@ namespace Data.Models
     {
         public Sprint()
         {
-            this.UserStories = new HashSet<WorkItem>();
+            this.WorkItems = new HashSet<WorkItem>();
         }
 
         public DateTime DueDate { get; set; }
 
         public SprintStatus Status { get; set; }
 
-        public virtual ICollection<WorkItem> UserStories { get; set; }
+        public virtual ICollection<WorkItem> WorkItems { get; set; }
 
     }
 }

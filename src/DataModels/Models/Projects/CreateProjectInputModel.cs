@@ -5,11 +5,11 @@ namespace DataModels.Models.Projects
     public class CreateProjectInputModel
     {
         [MinLength(3)]
-        [MaxLength(50)]
+        [StringLength(40)]
         [Required]
         public string Name { get; set; }
 
-        [MaxLength(400)]
+        [StringLength(390)]
         public string Description { get; set; }
     }
 }

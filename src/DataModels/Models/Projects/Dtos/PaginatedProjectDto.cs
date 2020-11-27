@@ -5,7 +5,7 @@ namespace DataModels.Models.Projects.Dtos
 {
     public class PaginatedProjectDto
     {
-        public ICollection<ProjectDto> AllProjects { get; set; }
+        public ICollection<ProjectDto> PaginatedProjects { get; set; }
 
         public int RecordsPerPage { get; set; }
 

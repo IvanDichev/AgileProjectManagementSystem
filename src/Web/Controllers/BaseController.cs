@@ -20,7 +20,7 @@ namespace Web.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        protected internal bool IsUserInProject(int projectId)
+        protected internal bool IsCurrentUserInProject(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 

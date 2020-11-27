@@ -15,17 +15,10 @@ namespace Web.Automapper
     {
         public AutomapperProfiles()
         {
-            CreateMap<Project, ProjectDto>().ReverseMap();
-            CreateMap<Project, ProjectViewModel>().ReverseMap();
-            CreateMap<Project, CreateProjectInputModel>().ReverseMap()
-                .ForPath(m => m.Team.Name, opt => opt.MapFrom(x => x.Name + " Team"))
-                .ForPath(m => m.Team.AddedOn, opt => opt.MapFrom(x => DateTime.Now))
-                .ForMember(m => m.AddedOn, opt => opt.MapFrom(x => DateTime.Now));
-
-            CreateMap<ProjectDto, CreateProjectInputModel>().ReverseMap();
-            CreateMap<ProjectDto, ProjectViewModel>().ReverseMap();
-            CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap();
-            CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
+            CreateMap<Project, ProjectDto>().ReverseMap(); //
+            CreateMap<ProjectDto, ProjectViewModel>().ReverseMap(); //
+            CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap(); //
+            CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap(); //
 
             CreateMap<WorkItem, WorkItemDto>().ReverseMap();
             CreateMap<WorkItem, WokrItemAllDto>().ReverseMap();

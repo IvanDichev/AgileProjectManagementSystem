@@ -7,10 +7,10 @@ namespace Services.Projects
 {
     public interface IProjectsService
     {
-        bool IsNameTaken(string name);
+        bool IsNameTaken(string projectName);
         Task<ProjectDto> GetAsync(int id);
         Task<PaginatedProjectDto> GetAllAsync(int userId, PaginationFilter paginationFilter);
-        Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId);
+        Task CreateAsync(CreateProjectInputModel inputModel, int userId);
         Task DeleteAsync(int id);
         Task UpdateAsync(EditProjectInputModel editModel);
 

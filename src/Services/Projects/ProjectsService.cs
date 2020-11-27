@@ -26,26 +26,14 @@ namespace Services.Projects
             this.logger = logger;
         }
 
-        public async Task<int> CreateAsync(CreateProjectInputModel inputModel, int userId)
+        public async Task<ProjectDto> GetAsync(int id)
         {
-            var project = this.mapper.Map<Project>(inputModel);
-            await this.repo.AddAsync(project);
-            project.Team.TeamsUsers.Add(new TeamsUsers() 
-            { 
-                UserId = userId, TeamId = project.Team.Id 
-            });
-            await repo.SaveChangesAsync();
-
-            return await this.repo.AllAsNoTracking()
-                .Where(x => x.Name == inputModel.Name)
-                .Select(x => x.Id)
+            var project = await this.repo.AllAsNoTracking()
+                .Where(x => x.Id == id)
+                .ProjectTo<ProjectDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-        }
 
-        public bool IsNameTaken(string name)
-        {
-            return this.repo.AllAsNoTracking()
-                .Any(x => x.Name == name);
+            return project;
         }
 
         public async Task<PaginatedProjectDto> GetAllAsync(int userId, PaginationFilter paginationFilter)
@@ -54,36 +42,50 @@ namespace Services.Projects
             var allForUser = query.Where(x => x.Team.ProjectId == x.Id)
                 .Where(p => p.Team.TeamsUsers.Any(x => x.TeamId == p.Team.Id && x.UserId == userId));
 
-            var filter = allForUser
+            var paginatedQuery = allForUser
                 .OrderBy(x => x.Id)
                 .Skip(paginationFilter.PageSize * (paginationFilter.PageNumber - 1))
                 .Take(paginationFilter.PageSize);
 
             var paginatedResult = new PaginatedProjectDto()
             {
-                AllProjects = await filter.ProjectTo<ProjectDto>(this.mapper.ConfigurationProvider).ToListAsync(), 
+                PaginatedProjects = await paginatedQuery.ProjectTo<ProjectDto>(this.mapper.ConfigurationProvider).ToListAsync(),
                 RecordsPerPage = paginationFilter.PageSize,
-                TotalPages = (int)Math.Ceiling(await allForUser.CountAsync(x => x.Id == x.Id) / (double)paginationFilter.PageSize)
+                TotalPages = (int)Math.Ceiling(await allForUser.CountAsync(x => x.Id == x.Id) / (double)paginationFilter.PageSize),
             };
 
             return paginatedResult;
         }
 
-        public async Task<int> GetAllPagesAsync(int userId)
+        public async Task CreateAsync(CreateProjectInputModel inputModel, int userId)
         {
-            return await this.repo
-                .AllAsNoTracking()
-                .Where(x => x.Team.ProjectId == x.Id)
-                .Where(p => p.Team.TeamsUsers.Any(x => x.TeamId == p.Team.Id && x.UserId == userId))
-                .CountAsync();
+            var project = new Project()
+            {
+                AddedOn = DateTime.UtcNow,
+                Name = inputModel.Name,
+                Description = inputModel.Description,
+            };
+
+            project.Team = new Team
+            {
+                AddedOn = DateTime.UtcNow,
+                Name = project.Name + " Team"
+            };
+
+            project.Team.TeamsUsers.Add(new TeamsUsers()
+            {
+                UserId = userId,
+                TeamId = project.Team.Id,
+            });
+
+            await this.repo.AddAsync(project);
+            await repo.SaveChangesAsync();
         }
 
-        public async Task<ProjectDto> GetAsync(int id)
+        public bool IsNameTaken(string name)
         {
-            return await this.repo.AllAsNoTracking()
-                .Where(x => x.Id == id)
-                .ProjectTo<ProjectDto>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            return this.repo.AllAsNoTracking()
+                .Any(x => x.Name == name);
         }
 
         public async Task DeleteAsync(int id)
@@ -93,29 +95,21 @@ namespace Services.Projects
                 .FirstOrDefaultAsync();
 
             this.repo.Delete(toRemove);
-
             await this.repo.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(EditProjectInputModel editModel)
         {
-            try
-            {
-                var project = await this.repo.All()
-                    .Where(x => x.Id == editModel.ProjectId)
-                    .FirstOrDefaultAsync();
+            var project = await this.repo.All()
+                .Where(x => x.Id == editModel.ProjectId)
+                .FirstOrDefaultAsync();
 
-                project.Description = editModel.Description;
-                project.ModifiedOn = DateTime.UtcNow;
+            project.Description = editModel.Description;
+            project.ModifiedOn = DateTime.UtcNow;
 
-                this.repo.Update(project);
+            this.repo.Update(project);
 
-                await this.repo.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException e)
-            {
-                this.logger.LogWarning(e, $"Error while updating entity with id {editModel.ProjectId}.");
-            }
+            await this.repo.SaveChangesAsync();
         }
 
         public bool IsUserInProject(int projectId, int userId)

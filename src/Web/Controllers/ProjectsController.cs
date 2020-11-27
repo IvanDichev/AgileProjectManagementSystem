@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using DataModels.Models.Error;
 using DataModels.Models.Projects;
 using DataModels.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
+using Shared.Constants;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Extentions;
@@ -17,7 +20,7 @@ namespace Web.Controllers
         private readonly IProjectsService projectsService;
         private readonly IMapper mapper;
 
-        public ProjectsController(IProjectsService projectsService, 
+        public ProjectsController(IProjectsService projectsService,
             IMapper mapper) : base(projectsService)
         {
             this.projectsService = projectsService;
@@ -26,7 +29,8 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Get(int projectId)
         {
-            if (!IsUserInProject(projectId))
+            // If projectId does not exist or user has no ref to the project.
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -39,10 +43,10 @@ namespace Web.Controllers
         public async Task<IActionResult> GetAll(PaginationFilter paginationFilter)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var model = this.mapper.Map<PaginatedProjectViewModel>
+            var paginatedViewModel = this.mapper.Map<PaginatedProjectViewModel>
                 (await this.projectsService.GetAllAsync(userId, paginationFilter));
 
-            return View(model);
+            return View(paginatedViewModel);
         }
 
         [NoDirectAccess]
@@ -52,73 +56,114 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProjectInputModel inputModel, PaginationFilter paginationFilter)
+        public async Task<IActionResult> Create(CreateProjectInputModel createInputModel, PaginationFilter paginationFilter)
         {
+            bool isValid;
+            string responseHtml;
+
             if (!ModelState.IsValid)
             {
-                return Json(new { isValid = false, html = await this.RenderViewAsStringAsync("Create", inputModel, true) });
+                isValid = false;
+                responseHtml = await this.RenderViewAsStringAsync("Create", createInputModel, true);
+                return Json(new { isValid = isValid, html = responseHtml });
             }
 
-            if (!this.projectsService.IsNameTaken(inputModel.Name))
+            if (this.projectsService.IsNameTaken(createInputModel.Name))
+            {
+                ModelState.AddModelError(string.Empty, $"The project '{createInputModel.Name}' already exists.");
+                isValid = false;
+                responseHtml = await this.RenderViewAsStringAsync("Create", createInputModel, true);
+                return Json(new { isValid = isValid, html = responseHtml });
+            }
+
+            try
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                await this.projectsService.CreateAsync(inputModel, userId);
-                var model = this.mapper.Map<PaginatedProjectViewModel>
+                await this.projectsService.CreateAsync(createInputModel, userId);
+
+                var responseModel = this.mapper.Map<PaginatedProjectViewModel>
                     (await this.projectsService.GetAllAsync(userId, paginationFilter));
 
-                return Json(new { isValid = true, html = await this.RenderViewAsStringAsync("_ViewAll", model, false) });
+                isValid = true;
+                responseHtml = await this.RenderViewAsStringAsync("_ViewAll", responseModel, false);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, ErrorConstants.ContactSupportMessage);
+                isValid = false;
+                responseHtml = await this.RenderViewAsStringAsync("Create", createInputModel, true);
             }
 
-            ModelState.AddModelError("", $"The project '{inputModel.Name}' already exists.");
-
-            return Json(new { isValid = false, html = await this.RenderViewAsStringAsync("Create", inputModel, true) });
+            return Json(new { isValid = isValid, html = responseHtml });
         }
 
         [NoDirectAccess]
         public async Task<IActionResult> Edit(int projectId)
         {
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (!IsUserInProject(userId))
+            // If projectId does not exist or user has no ref to the project.
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            var project = mapper.Map<ProjectViewModel>(await this.projectsService.GetAsync(projectId));
+            var project = mapper.Map<EditProjectInputModel>(await this.projectsService.GetAsync(projectId));
+            var responseHtml = await this.RenderViewAsStringAsync("Edit", project);
 
-            return Json(new { html = await this.RenderViewAsStringAsync("Edit", project) });
+            return Json(new { html = responseHtml });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditProjectInputModel model)
+        public async Task<IActionResult> Edit(EditProjectInputModel editModel)
         {
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (!IsUserInProject(userId))
+            bool isValid;
+
+            // If projectId does not exist or user has no ref to the project.
+            if (!IsCurrentUserInProject(editModel.ProjectId))
             {
                 return Unauthorized();
             }
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                isValid = false;
+                var responseHtml = await this.RenderViewAsStringAsync("Edit", editModel, true);
+                return Json(new { isValid = isValid, html = responseHtml });
             }
 
-            await this.projectsService.UpdateAsync(model);
+            try
+            {
+                await this.projectsService.UpdateAsync(editModel);
+                isValid = true;
 
-            return Json(new { isValid = true, newDescription = model.Description });
+                return Json(new { isValid = isValid, newDescription = editModel.Description });
+            }
+            catch (Exception)
+            {
+                this.ModelState.AddModelError(string.Empty, ErrorConstants.ContactSupportMessage);
+                isValid = false;
+
+                return Json(new { isValid = isValid, newDescription = editModel.Description });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int projectId)
         {
-            var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            if (!IsUserInProject(userId))
+            // If projectId does not exist or user has no ref to the project.
+            if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            await this.projectsService.DeleteAsync(projectId);
-
-            return RedirectToAction("GetAll", "Projects", new PaginationFilter());
+            try
+            {
+                await this.projectsService.DeleteAsync(projectId);
+                return RedirectToAction(nameof(GetAll), new PaginationFilter());
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
     }
 }

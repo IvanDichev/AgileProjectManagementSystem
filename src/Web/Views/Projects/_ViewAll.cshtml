@@ -5,14 +5,14 @@
 }
 
 <div class="row">
-    @foreach (var item in Model.AllProjects)
+    @foreach (var item in Model.PaginatedProjects)
     {
         <div class="project col-md-6">
             <a asp-action="Get" asp-controller="Projects" asp-route-projectId="@item.Id" class="m-2">
                 <div class="card">
                     <div class="card-header">
                         <div style="display:flex;">
-                            <b class="text-dark" style="margin-right:auto;">
+                            <b class="text-dark" style="margin-right:auto;overflow:auto;">
                                 @item.Name
                             </b>
                         </div>

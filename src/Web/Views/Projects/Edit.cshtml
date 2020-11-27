@@ -1,4 +1,4 @@
-﻿@model ProjectViewModel
+﻿@model EditProjectInputModel
 @{
     ViewData["Title"] = "Edit project";
     Layout = null;
@@ -7,14 +7,14 @@
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Edit" asp-controller="Projects" autocomplete="off" onsubmit="return EditAjaxPost(this);">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <textarea asp-for="Description" class="form-control" id="description"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <span asp-validation-for="@Model.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Id" class="form-control" hidden />
+                <input asp-for="@Model.ProjectId" class="form-control" hidden />
             </div>
             <div class="form-group">
                 <input type="submit" value="Edit" class="btn btn-primary" />
