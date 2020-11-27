@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.BacklogPriorities;
 using Services.Projects;
-using Services.UserStories;
-using Services.WorkItemTypesSErvices;
+using Services.WorkItems;
+using Services.WorkItemTypesServices;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,24 +17,24 @@ namespace Web.Controllers
     [Authorize]
     public class WorkItemsController : BaseController
     {
-        private readonly IWorkItemService userStoriesService;
+        private readonly IWorkItemService workItemService;
         private readonly IBacklogPrioritiesService backlogPrioritiesService;
         private readonly IWorkItemTypesService workItemTypesService;
         private readonly IMapper mapper;
 
-        public WorkItemsController(IWorkItemService userStoriesService,
+        public WorkItemsController(IWorkItemService workItemService,
             IBacklogPrioritiesService backlogPrioritiesService,
             IProjectsService projectsService,
             IWorkItemTypesService workItemTypesService,
             IMapper mapper) : base(projectsService)
         {
-            this.userStoriesService = userStoriesService;
+            this.workItemService = workItemService;
             this.backlogPrioritiesService = backlogPrioritiesService;
             this.workItemTypesService = workItemTypesService;
             this.mapper = mapper;
         }
 
-        public async Task<IActionResult> Index(int projectId, SortingFilter sortingFilter)
+        public async Task<IActionResult> GetAll(int projectId, SortingFilter sortingFilter)
         {
             if (!IsCurrentUserInProject(projectId))
             {
@@ -41,7 +42,7 @@ namespace Web.Controllers
             }
 
             var all = this.mapper.Map<IEnumerable<WorkItemAllViewModel>>
-                (await userStoriesService.GetAllAsync(projectId, sortingFilter));
+                (await workItemService.GetAllAsync(projectId, sortingFilter));
 
             return View(all);
         }
@@ -81,45 +82,60 @@ namespace Web.Controllers
                 return View(inputModel);
             }
 
-            await this.userStoriesService.CreateAsync(inputModel);
-            return RedirectToAction(nameof(Index), new { projectId = projectId });
+            try
+            {
+                await this.workItemService.CreateAsync(inputModel);
+
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int projectId, int userStoryId)
+        public async Task<IActionResult> Delete(int projectId, int workItemId)
         {
             if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            await this.userStoriesService.DeleteAsync(userStoryId);
+            try
+            {
+                await this.workItemService.DeleteAsync(workItemId);
 
-            return RedirectToAction("Index", new { projectId = projectId });
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
 
-        public async Task<IActionResult> Get(int projectId, int userStoryId)
+        public async Task<IActionResult> Get(int projectId, int workItemId)
         {
             if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            var userStory = new UpdateWorkItemViewModel()
+            var workItem = new UpdateWorkItemViewModel()
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync()),
-                ViewModel = this.mapper.Map<WorkItemViewModel>(await userStoriesService.GetAsync(userStoryId)),
                 WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
                     (await this.workItemTypesService.GetWorkItemTypesAsync()),
+                ViewModel = this.mapper.Map<WorkItemViewModel>(await workItemService.GetAsync(workItemId)),
             };
 
-            if (userStory.ViewModel == null)
+            if (workItem.ViewModel == null)
             {
                 return NotFound();
             }
 
-            return View(userStory);
+            return View(workItem);
         }
 
         [HttpPost]
@@ -141,20 +157,29 @@ namespace Web.Controllers
                 return View(model);
             }
 
-            var userStory = this.mapper.Map<WorkItemUpdateModel>(model.ViewModel);
+            var workItem = this.mapper.Map<WorkItemUpdateModel>(model.ViewModel);
+            workItem.AcceptanceCriteria = model.ViewModel.SanitizedAcceptanceCriteria;
+            workItem.Description = model.ViewModel.SanitizedDescription;
+            workItem.WorkItemTypeId = model.ViewModel.WorkItemTypeId;
+            workItem.ProjectId = projectId;
 
-            if (!string.IsNullOrWhiteSpace(model.Comment.Description))
+            if (!string.IsNullOrEmpty(model.Comment.Description))
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                userStory.Comment = model.Comment;
-                userStory.Comment.WorkItemId = model.ViewModel.Id;
-                userStory.Comment.AddedById = userId;
+                workItem.Comment = model.Comment;
+                workItem.Comment.WorkItemId = model.ViewModel.Id;
+                workItem.Comment.AddedById = userId;
             }
 
-            userStory.ProjectId = projectId;
-            await this.userStoriesService.UpdateAsync(userStory);
-
-            return RedirectToAction(nameof(Index), new { projectId = projectId });
+            try
+            {
+                await this.workItemService.UpdateAsync(workItem);
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
     }
 }

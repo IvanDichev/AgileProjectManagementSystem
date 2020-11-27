@@ -20,10 +20,13 @@ namespace Services.BacklogPriorities
             this.mapper = map;
         }
 
-        // Return all projectPriorites as dto list
         public async Task<ICollection<BacklogPrioritiesDto>> GetAllAsync()
         {
-            return await this.repo.All().ProjectTo<BacklogPrioritiesDto>(mapper.ConfigurationProvider).ToListAsync();
+            var backlogPrioritiesDto = await this.repo.All()
+                .ProjectTo<BacklogPrioritiesDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return backlogPrioritiesDto;
         }
     }
 }

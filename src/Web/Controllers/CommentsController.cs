@@ -28,7 +28,7 @@ namespace Web.Controllers
             var commentViewModel = this.mapper.Map<CommentViewModel>
                 (await this.commentsService.GetAsync(commentId));
 
-            return Json(new { html = await this.RenderViewAsStringAsync("Edit", commentViewModel, true) });
+            return Json(new { html = await this.RenderViewAsStringAsync(nameof(Edit), commentViewModel, true) });
         }
 
         [HttpPost]
@@ -48,11 +48,11 @@ namespace Web.Controllers
             await this.commentsService.UpdateAsync(updateModel);
             var updated = await this.commentsService.GetAsync(model.Id);
 
-            return RedirectToAction("Get", "UserStories", new { ProjectId = projectId, userStoryId = updated.WorkItemId });
+            return RedirectToAction(nameof(WorkItemsController.Get), "WorkItems", new { ProjectId = projectId, workItemId = updated.WorkItemId });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int projectId, int commentId, int userStoryId)
+        public async Task<IActionResult> Delete(int projectId, int commentId, int workItemId)
         {
             if (!IsUsersComment(commentId))
             {
@@ -61,7 +61,7 @@ namespace Web.Controllers
 
             await this.commentsService.DeleteAsync(commentId);
 
-            return RedirectToAction("Get", "UserStories", new { projectId = projectId, userStoryId = userStoryId });
+            return RedirectToAction(nameof(WorkItemsController.Get), "WorkItems", new { projectId = projectId, workItemId = workItemId });
         }
         
         private bool IsUsersComment(int commentId)

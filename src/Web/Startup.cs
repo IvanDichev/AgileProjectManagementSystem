@@ -15,10 +15,9 @@ using Repo;
 using Services.BacklogPriorities;
 using Services.Comments;
 using Services.Projects;
-using Services.UserStories;
-using Services.WorkItemTypesSErvices;
+using Services.WorkItems;
+using Services.WorkItemTypesServices;
 using Utilities.Mailing;
-using Web.Middlewares;
 
 namespace Web
 {

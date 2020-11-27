@@ -6,8 +6,8 @@
         public const string IdDesc = "IdDesc";
         public const string TitleAsc = "TitleAsc";
         public const string TitleDesc = "TitleDesc";
-        public const string TasksCountAsc = "TasksCountAsc";
-        public const string TasksCountDesc = "TasksCountDesc";
+        public const string TypeAsc = "TypeAsc";
+        public const string TypeDesc = "TypeDesc";
         public const string StoryPointsAsc = "StoryPointsAsc";
         public const string StoryPointsDesc = "StoryPointsDesc";
         public const string PriorityAsc = "PriorityAsc";

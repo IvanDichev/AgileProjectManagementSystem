@@ -7,7 +7,7 @@ using Repo;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Services.WorkItemTypesSErvices
+namespace Services.WorkItemTypesServices
 {
     public class WorkItemTypesService : IWorkItemTypesService
     {
@@ -22,9 +22,11 @@ namespace Services.WorkItemTypesSErvices
 
         public async Task<ICollection<WorkItemTypesDto>> GetWorkItemTypesAsync()
         {
-            return await this.repo.All()
+            var WorkItemTypesDto = await this.repo.All()
                 .ProjectTo<WorkItemTypesDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
+
+            return WorkItemTypesDto;
         }
     }
 }

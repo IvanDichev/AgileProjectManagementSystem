@@ -4,7 +4,7 @@ using DataModels.Models.WorkItems.Dtos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Services.UserStories
+namespace Services.WorkItems
 {
     public interface IWorkItemService
     {

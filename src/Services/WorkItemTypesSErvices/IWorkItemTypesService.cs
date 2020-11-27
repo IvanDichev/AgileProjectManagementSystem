@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Services.WorkItemTypesSErvices
+namespace Services.WorkItemTypesServices
 {
     public interface IWorkItemTypesService
     {

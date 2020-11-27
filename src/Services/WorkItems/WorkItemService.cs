@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Services.UserStories
+namespace Services.WorkItems
 {
     public class WorkItemService : IWorkItemService
     {
@@ -32,10 +32,12 @@ namespace Services.UserStories
         {
             var query = this.repo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId);
-            var sroted = Sort(sortingFilter, query);
+            var srotedQuery = Sort(sortingFilter, query);
 
-            return await sroted.ProjectTo<WokrItemAllDto>(this.mapper.ConfigurationProvider)
+           var sortedWorkItems = await srotedQuery.ProjectTo<WokrItemAllDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
+
+            return sortedWorkItems;
         }
 
         public async Task CreateAsync(WorkItemInputModel model)
@@ -50,11 +52,12 @@ namespace Services.UserStories
 
         public async Task<WorkItemDto> GetAsync(int WorkItemId)
         {
-            var a = await this.repo.All()
+            var workItem = await this.repo.All()
                 .Where(x => x.Id == WorkItemId)
                 .ProjectTo<WorkItemDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-            return a;
+
+            return workItem;
         }
 
         public async Task DeleteAsync(int userStoryId)
@@ -75,10 +78,9 @@ namespace Services.UserStories
         {
             try
             {
-                var toUpdate = this.repo.All()
+                var toUpdate = this.repo.AllAsNoTracking()
                     .Where(x => x.Id == updateModel.Id)
                     .FirstOrDefault();
-                toUpdate = this.mapper.Map<WorkItem>(updateModel);
 
                 toUpdate.ModifiedOn = DateTime.UtcNow;
                 toUpdate.Title = updateModel.Title;
@@ -91,16 +93,18 @@ namespace Services.UserStories
                 if (updateModel.Comment != null)
                 {
                     var comment = this.mapper.Map<Comment>(updateModel.Comment);
+                    comment.Description = updateModel.Comment.SanitizedDescription;
                     comment.AddedOn = DateTime.UtcNow;
+
                     toUpdate.Comments.Add(comment);
                 }
 
                 this.repo.Update(toUpdate);
                 await this.repo.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException e)
+            catch (Exception e)
             {
-                this.logger.LogWarning(e, $"Error while updating entity with id {updateModel.Id}.");
+                this.logger.LogWarning(e, $"Error while updating workitem entity with id {updateModel.Id}.");
             }
         }
 
@@ -112,6 +116,8 @@ namespace Services.UserStories
                 UserStoriesSortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
                 UserStoriesSortingConstants.TitleAsc => query.OrderBy(x => x.Title),
                 UserStoriesSortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
+                UserStoriesSortingConstants.TypeAsc => query.OrderBy(x => x.WorkItemType),
+                UserStoriesSortingConstants.TypeDesc => query.OrderByDescending(x => x.WorkItemType),
                 UserStoriesSortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),
                 UserStoriesSortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
                 UserStoriesSortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),

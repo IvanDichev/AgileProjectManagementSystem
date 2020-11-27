@@ -6,25 +6,25 @@ namespace Web.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly IProjectsService projectsService;
+        private readonly IProjectsService workItemService;
 
         public BaseController() {   }
 
-        public BaseController(IProjectsService projectsService)
+        public BaseController(IProjectsService workItemService)
         {
-            this.projectsService = projectsService;
+            this.workItemService = workItemService;
         }
 
         /// <summary>
         /// Check if project has relation to the project.
         /// </summary>
-        /// <param name="projectId"></param>
+        /// <param name="workItemId"></param>
         /// <returns></returns>
-        protected internal bool IsCurrentUserInProject(int projectId)
+        protected internal bool IsCurrentUserInProject(int workItemId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return this.projectsService.IsUserInProject(projectId, userId);
+            return this.workItemService.IsUserInProject(workItemId, userId);
         }
     }
 }

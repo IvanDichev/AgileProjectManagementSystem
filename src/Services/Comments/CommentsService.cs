@@ -36,10 +36,12 @@ namespace Services.Comments
 
         public async Task<CommentDto> GetAsync(int commentId)
         {
-            return await this.repo.All()
+            var comment = await this.repo.All()
                 .Where(x => x.Id == commentId)
                 .ProjectTo<CommentDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
+
+            return comment;
         }
 
         public bool IsUsersComment(int userId, int commentId)

@@ -15,29 +15,16 @@ namespace Web.Automapper
     {
         public AutomapperProfiles()
         {
-            CreateMap<Project, ProjectDto>().ReverseMap(); //
-            CreateMap<ProjectDto, ProjectViewModel>().ReverseMap(); //
-            CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap(); //
-            CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap(); //
+            CreateMap<Project, ProjectDto>().ReverseMap();
+            CreateMap<ProjectDto, ProjectViewModel>().ReverseMap();
+            CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap();
+            CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
 
-            CreateMap<WorkItem, WorkItemDto>().ReverseMap();
-            CreateMap<WorkItem, WokrItemAllDto>().ReverseMap();
-            CreateMap<WorkItem, WorkItemUpdateModel>().ReverseMap()
-                .ForMember(x => x.AddedOn, opt => opt.Ignore());             
-            CreateMap<WorkItem, WorkItemInputModel>().ReverseMap()
-                .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription))
-                .ForMember(x => x.AcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria))
-                .ForMember(x => x.WorkItemTypeId, opt => opt.MapFrom(x => x.WorkItemTypesId));
-            CreateMap<WorkItemViewModel, WorkItemUpdateModel>().ReverseMap();
-            CreateMap<WorkItemViewModel, WorkItemDto>().ReverseMap();
-            CreateMap<WorkItemAllViewModel, WorkItemDto>().ReverseMap();
-            CreateMap<WorkItemAllViewModel, WokrItemAllDto>().ReverseMap();
-            CreateMap<UpdateWorkItemViewModel, WorkItemDto>().ReverseMap();
-            CreateMap<UpdateWorkItemViewModel, WorkItemUpdateModel>().ReverseMap()
-                .ForPath(x => x.ViewModel.SanitizedAcceptanceCriteria, opt => opt.MapFrom(x => x.AcceptanceCriteria))
-                .ForPath(x => x.ViewModel.SanitizedDescription, opt => opt.MapFrom(x => x.Description))
-                .ForPath(x => x.ViewModel.WorkItemTypeId, opt => opt.MapFrom(x => x.WorkItemTypeId))
-                .ForMember(x => x.Comment, opt => opt.MapFrom(x => x.Comment));
+            CreateMap<WorkItem, WorkItemDto>().ReverseMap(); 
+            CreateMap<WorkItem, WokrItemAllDto>().ReverseMap(); 
+            CreateMap<WorkItemViewModel, WorkItemUpdateModel>().ReverseMap(); 
+            CreateMap<WorkItemViewModel, WorkItemDto>().ReverseMap(); 
+            CreateMap<WorkItemAllViewModel, WokrItemAllDto>().ReverseMap(); 
 
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
 
@@ -49,8 +36,8 @@ namespace Web.Automapper
             CreateMap<Comment, CommentDto>().ReverseMap();
             CreateMap<Comment, CommentViewModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
-            CreateMap<Comment, CommentInputModel>().ReverseMap()
-                .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
+            CreateMap<Comment, CommentInputModel>().ReverseMap(); //
+                //.ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
             CreateMap<CommentViewModel, CommentDto>().ReverseMap();
             CreateMap<CommentViewModel, CommentInputModel>().ReverseMap();
             CreateMap<CommentsUpdateModel, CommentInputModel>().ReverseMap();

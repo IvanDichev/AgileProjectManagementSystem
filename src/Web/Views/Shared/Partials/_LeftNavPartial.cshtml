@@ -7,7 +7,7 @@
     <div id="mySidenav" class="sidenav">
         <a href="#">Wiki</a>
         <a class="nav-link" asp-area="" asp-controller="WorkItems"
-           asp-action="index" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+           asp-action="GetAll" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
             Work Items
         </a>
         <a href="#">Sprints</a>
