@@ -1,0 +1,123 @@
+﻿@{
+    ViewData["Title"] = "Board";
+}
+
+<style>
+    .kanban {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        border: solid 1px black;
+    }
+
+    .kanban-table-header {
+        margin-top: 0px;
+    }
+
+    .kanban-container-draggables {
+        background-color: aliceblue;
+        width: 20vw;
+        height: 20vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .draggable {
+        border: solid 1px black;
+        cursor: move;
+    }
+
+        .draggable.dragging {
+            opacity: 0.5;
+        }
+</style>
+
+<h1 class="text-center">Board</h1>
+<div class="kanban">
+    <div class="kanban-container">
+        <h1 class="text-center kanban-table-header">Backlog</h1>
+        <div class="kanban-container-draggables">
+            <div class="draggable" draggable="true">
+                <p class="text-center">login page</p>
+            </div>
+            <div class="draggable" draggable="true">
+                <p class="text-center">register</p>
+            </div>
+        </div>
+    </div>
+    <div class="kanban-container">
+        <h1 class="text-center kanban-table-header">Doing</h1>
+        <div class="kanban-container-draggables">
+            <div class="draggable" draggable="true">
+                <p class="text-center">kanban table</p>
+            </div>
+            <div class="draggable" draggable="true">
+                <p class="text-center">work items</p>
+            </div>
+        </div>
+    </div>
+    <div class="kanban-container">
+        <h1 class="text-center kanban-table-header">Testing</h1>
+        <div class="kanban-container-draggables">
+            <div class="draggable" draggable="true">
+                <p class="text-center">integrate gmail login</p>
+            </div>
+            <div class="draggable" draggable="true">
+                <p class="text-center">pagination</p>
+            </div>
+        </div>
+    </div>
+    <div class="kanban-container">
+        <h1 class="text-center kanban-table-header">Done</h1>
+        <div class="kanban-container-draggables">
+            <div class="draggable" draggable="true">
+                <p class="text-center">wiki</p>
+            </div>
+            <div class="draggable" draggable="true">
+                <p class="text-center">backlog</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const draggables = document.querySelectorAll(".draggable")
+    const kanbanContainers = document.querySelectorAll(".kanban-container-draggables")
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => {
+            draggable.classList.add('dragging')
+        })
+
+        draggable.addEventListener('dragend', () => {
+            draggable.classList.remove('dragging')
+        })
+    })
+
+    kanbanContainers.forEach(container => {
+        container.addEventListener('dragover', e => {
+            e.preventDefault()
+            const afterElement = getDragAfterElement(container, e.clientY)
+            const dragging = document.querySelector('.dragging')
+            if (afterElement == null) {
+                container.appendChild(dragging)
+            } else {
+                container.insertBefore(dragging, afterElement)
+            }
+        })
+    })
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect()
+            const offset = y - box.top - box.height / 2
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child }
+            } else {
+                return closest
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element
+    }
+</script>
