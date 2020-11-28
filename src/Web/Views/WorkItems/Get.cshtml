@@ -2,13 +2,10 @@
 @using Utilities.CalculateTimeAgo;
 
 @{
-    ViewData["Title"] = "User story Details";
+    ViewData["Title"] = "Wrok items Details";
 
     var priorities = Model.PrioritiesDropDown?
         .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
-
-    var workItemTypes = Model.WorkItemTypesDropDown?
-        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Type });
 
     var commentsCounter = 0;
 }
@@ -69,7 +66,8 @@ alignleft aligncenter alignright alignjustify | code`,
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">Id: @Model.ViewModel.Id</span>
                 </div>
-                <input type="text" class="form-control" asp-for="@Model.ViewModel.Title" aria-label="Title" aria-describedby="basic-addon1">
+                <input type="text" class="form-control" asp-for="@Model.ViewModel.Title" 
+                       aria-label="Title" aria-describedby="basic-addon1">
                 <button class="btn btn-light" type="submit">Save and close</button>
             </div>
             <div class="small-flex">
@@ -77,14 +75,16 @@ alignleft aligncenter alignright alignjustify | code`,
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Story points</span>
                     </div>
-                    <input type="text" class="form-control" asp-for="@Model.ViewModel.StoryPoints" aria-label="Title" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" asp-for="@Model.ViewModel.StoryPoints" 
+                           aria-label="Title" aria-describedby="basic-addon1">
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Priority</span>
                     </div>
-                    <select asp-for="@Model.ViewModel.BacklogPriorityId" id="priorityInputSelect" onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
+                    <select asp-for="@Model.ViewModel.BacklogPriorityId" id="priorityInputSelect" 
+                            onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
                             asp-items="priorities"></select>
                     <span asp-validation-for="@Model.ViewModel.BacklogPriorityPriority" class="text-danger"></span>
                 </div>
@@ -92,9 +92,7 @@ alignleft aligncenter alignright alignjustify | code`,
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Work Item Type</span>
                     </div>
-                    <select asp-for="@Model.ViewModel.WorkItemTypeId" id="priorityInputSelect" onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
-                            asp-items="workItemTypes"></select>
-                    <span asp-validation-for="@Model.ViewModel.WorkItemTypeId" class="text-danger"></span>
+                    <input asp-for="@Model.ViewModel.WorkItemTypeType" id="priorityInputSelect" class="form-control" disabled />
                 </div>
             </div>
             <hr />
@@ -134,7 +132,8 @@ alignleft aligncenter alignright alignjustify | code`,
                                     <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                                 </svg>
                             </a>
-                            <div id="myDropdown-@commentsCounter" class="dropdown-content edit-comment dropdown-content-@commentsCounter">
+                            <div id="myDropdown-@commentsCounter" 
+                                 class="dropdown-content edit-comment dropdown-content-@commentsCounter">
                                 <a asp-action="Edit" asp-controller="Comments"
                                    asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
                                    asp-route-userStoryId="@comment..WorkItemId"

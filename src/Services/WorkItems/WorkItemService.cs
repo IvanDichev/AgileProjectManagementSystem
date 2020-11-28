@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities.DS;
 
 namespace Services.WorkItems
 {
@@ -34,8 +35,8 @@ namespace Services.WorkItems
                 .Where(x => x.ProjectId == projectId);
             var srotedQuery = Sort(sortingFilter, query);
 
-           var sortedWorkItems = await srotedQuery.ProjectTo<WokrItemAllDto>(this.mapper.ConfigurationProvider)
-                .ToListAsync();
+            var sortedWorkItems = await srotedQuery.ProjectTo<WokrItemAllDto>(this.mapper.ConfigurationProvider)
+                 .ToListAsync();
 
             return sortedWorkItems;
         }
@@ -85,7 +86,6 @@ namespace Services.WorkItems
                 toUpdate.ModifiedOn = DateTime.UtcNow;
                 toUpdate.Title = updateModel.Title;
                 toUpdate.StoryPoints = updateModel.StoryPoints;
-                toUpdate.WorkItemTypeId = updateModel.WorkItemTypeId;
                 toUpdate.AcceptanceCriteria = updateModel.AcceptanceCriteria;
                 toUpdate.BacklogPriorityId = updateModel.BacklogPriorityid;
                 toUpdate.Description = updateModel.Description;

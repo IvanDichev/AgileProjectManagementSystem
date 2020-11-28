@@ -160,7 +160,6 @@ namespace Web.Controllers
             var workItem = this.mapper.Map<WorkItemUpdateModel>(model.ViewModel);
             workItem.AcceptanceCriteria = model.ViewModel.SanitizedAcceptanceCriteria;
             workItem.Description = model.ViewModel.SanitizedDescription;
-            workItem.WorkItemTypeId = model.ViewModel.WorkItemTypeId;
             workItem.ProjectId = projectId;
 
             if (!string.IsNullOrEmpty(model.Comment.Description))

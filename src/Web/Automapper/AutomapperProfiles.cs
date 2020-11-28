@@ -22,6 +22,7 @@ namespace Web.Automapper
 
             CreateMap<WorkItem, WorkItemDto>().ReverseMap(); 
             CreateMap<WorkItem, WokrItemAllDto>().ReverseMap(); 
+            CreateMap<WorkItem, WorkItemInputModel>().ReverseMap(); 
             CreateMap<WorkItemViewModel, WorkItemUpdateModel>().ReverseMap(); 
             CreateMap<WorkItemViewModel, WorkItemDto>().ReverseMap(); 
             CreateMap<WorkItemAllViewModel, WokrItemAllDto>().ReverseMap(); 
@@ -37,7 +38,6 @@ namespace Web.Automapper
             CreateMap<Comment, CommentViewModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
             CreateMap<Comment, CommentInputModel>().ReverseMap(); //
-                //.ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
             CreateMap<CommentViewModel, CommentDto>().ReverseMap();
             CreateMap<CommentViewModel, CommentInputModel>().ReverseMap();
             CreateMap<CommentsUpdateModel, CommentInputModel>().ReverseMap();

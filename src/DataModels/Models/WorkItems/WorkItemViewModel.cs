@@ -29,7 +29,7 @@ namespace DataModels.Models.WorkItems
 
         public string Description { get; set; }
 
-        public int WorkItemTypeId { get; set; }
+        public string WorkItemTypeType { get; set; }
 
         public string SanitizedDescription => this.htmlSanitizer.Sanitize(this.Description);
 

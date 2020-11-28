@@ -13,8 +13,6 @@ namespace DataModels.Models.WorkItems
 
         public int BacklogPriorityid { get; set; }
 
-        public int WorkItemTypeId { get; set; }
-
         public string Description { get; set; }
 
         public string AcceptanceCriteria { get; set; }
