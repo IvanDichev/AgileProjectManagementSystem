@@ -21,10 +21,6 @@
     {
       "library": "tinymce@5.5.1",
       "destination": "wwwroot/lib/tinymce/"
-    },
-    {
-      "library": "jqueryui-touch-punch@0.2.3",
-      "destination": "wwwroot/lib/jqueryui-touch-punch/"
     }
   ]
 }

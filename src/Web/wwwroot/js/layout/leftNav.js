@@ -1,21 +1,27 @@
 ﻿// Push main content with leftNav.
 function openNav() {
-    $.cookie('isNavOpen', '1', { path: '/'});
-    document.getElementById("mySidenav").style.width = "250px";
+    $(document).ready(function () {
+        $.cookie('isNavOpen', '1', { path: '/' });
+        document.getElementById("mySidenav").style.width = "250px";
+    })
 }
 
 function closeNav() {
-    $.cookie('isNavOpen', '0', { path: '/' });
-    document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("main-container").style.marginLeft = "0";
+    $(document).ready(function () {
+        $.cookie('isNavOpen', '0', { path: '/' });
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main-container").style.marginLeft = "0";
+    })
 }
 
 function openNav() {
-    $.cookie('isNavOpen', '1', { path: '/' });
-    document.getElementById("mySidenav").style.width = "250px";
-    if (screen.width > 550) {
-        document.getElementById("main-container").style.marginLeft = "250px";
-    }
+    $(document).ready(function () {
+        $.cookie('isNavOpen', '1', { path: '/' });
+        document.getElementById("mySidenav").style.width = "250px";
+        if (screen.width > 550) {
+            document.getElementById("main-container").style.marginLeft = "250px";
+        }
+    })
 }
 
 // Toggle left/rigth arrow icon for open/close leftNav.
@@ -33,7 +39,7 @@ $(document).ready(function () {
 });
 
 // Manage last leftNav state.
-$(function () {
+$(document).ready(function () {
     if ($.cookie('isNavOpen') == '1') {
         $(".sidenav").css("width", "250px").css("transition", "0s");
         if (window.location.pathname.split('/')[1].toLocaleLowerCase() !== 'identity'

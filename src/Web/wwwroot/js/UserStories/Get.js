@@ -18,18 +18,20 @@ function myFunction(dropdownnumber) {
 }
 
 // Ajax GET to open modal for each comment to edit.
-const commentsEditNavigation = document.querySelectorAll("#edit-comment-a");
-const commentsEditNavigationArr = Array.from(commentsEditNavigation);
-commentsEditNavigationArr.forEach(element => element.onclick = function () {
-    $.ajax({
-        type: 'GET',
-        url: $(this).attr('href'),
-        success: function (res) {
-            $('#form-modal .modal-body').html(res.html);
-            $('#form-modal .modal-title').html("Edit Comment");
-            $('#form-modal').modal('show');
-        }
-    })
-    // prevent default
-    return false;
+$(document).ready(function () {
+    const commentsEditNavigation = document.querySelectorAll("#edit-comment-a");
+    const commentsEditNavigationArr = Array.from(commentsEditNavigation);
+    commentsEditNavigationArr.forEach(element => element.onclick = function () {
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr('href'),
+            success: function (res) {
+                $('#form-modal .modal-body').html(res.html);
+                $('#form-modal .modal-title').html("Edit Comment");
+                $('#form-modal').modal('show');
+            }
+        })
+        // prevent default
+        return false;
+    });
 });

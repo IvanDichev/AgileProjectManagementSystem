@@ -4,19 +4,19 @@
 
 @if (SignInManager.IsSignedIn(User) && Url.ActionContext.RouteData.Values["projectId"] != null)
 {
-    <div id="mySidenav" class="sidenav">
-        <a href="#">Wiki</a>
-        <a class="nav-link" asp-area="" asp-controller="WorkItems"
-           asp-action="GetAll" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
-            Work Items
-        </a>
-        <a asp-area="" asp-controller="Sprints"
-           asp-action="Sprints" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
-            Sprints
-        </a>
-        <a asp-area="" asp-controller="Boards"
-           asp-action="Board" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
-            Board
-        </a>
-    </div>
+<div id="mySidenav" class="sidenav">
+    <a href="#">Wiki</a>
+    <a class="nav-link" asp-area="" asp-controller="WorkItems"
+       asp-action="GetAll" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+        Work Items
+    </a>
+    <a asp-area="" asp-controller="Boards"
+       asp-action="Board" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+        Board
+    </a>
+    <a asp-area="" asp-controller="Sprints"
+       asp-action="Sprints" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+        Sprints
+    </a>
+</div>
 }
