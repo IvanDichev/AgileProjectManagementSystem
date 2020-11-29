@@ -10,7 +10,10 @@
            asp-action="GetAll" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
             Work Items
         </a>
-        <a href="#">Sprints</a>
+        <a asp-area="" asp-controller="Sprints"
+           asp-action="Sprints" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+            Sprints
+        </a>
         <a asp-area="" asp-controller="Boards"
            asp-action="Board" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
             Board
