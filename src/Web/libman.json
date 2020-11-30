@@ -3,10 +3,6 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "fontawesome-iconpicker@3.2.0",
-      "destination": "wwwroot/lib/fontawesome-iconpicker/"
-    },
-    {
       "library": "jquery@3.5.1",
       "destination": "wwwroot/lib/jquery/"
     },

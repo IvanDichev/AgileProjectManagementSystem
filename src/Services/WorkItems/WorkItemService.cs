@@ -111,16 +111,16 @@ namespace Services.WorkItems
         {
             return sortingFilter.SortingParams switch
             {
-                UserStoriesSortingConstants.IdAsc => query.OrderBy(x => x.Id),
-                UserStoriesSortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
-                UserStoriesSortingConstants.TitleAsc => query.OrderBy(x => x.Title),
-                UserStoriesSortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
-                UserStoriesSortingConstants.TypeAsc => query.OrderBy(x => x.WorkItemType),
-                UserStoriesSortingConstants.TypeDesc => query.OrderByDescending(x => x.WorkItemType),
-                UserStoriesSortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),
-                UserStoriesSortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
-                UserStoriesSortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),
-                UserStoriesSortingConstants.PriorityDesc => query.OrderByDescending(x => x.BacklogPriority.Weight),
+                WorkItemsSortingConstants.IdAsc => query.OrderBy(x => x.Id),
+                WorkItemsSortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
+                WorkItemsSortingConstants.TitleAsc => query.OrderBy(x => x.Title),
+                WorkItemsSortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
+                WorkItemsSortingConstants.TypeAsc => query.OrderBy(x => x.WorkItemType),
+                WorkItemsSortingConstants.TypeDesc => query.OrderByDescending(x => x.WorkItemType),
+                WorkItemsSortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),
+                WorkItemsSortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
+                WorkItemsSortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),
+                WorkItemsSortingConstants.PriorityDesc => query.OrderByDescending(x => x.BacklogPriority.Weight),
                 _ => query,
             };
         }

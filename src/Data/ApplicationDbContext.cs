@@ -39,7 +39,8 @@ namespace Data
                 entity.HasOne(x => x.ParentWorkItem)
                     .WithMany(x => x.WorkItems)
                     .HasForeignKey(x => x.WorkItemId)
-                    .IsRequired(false);
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             base.OnModelCreating(builder);
