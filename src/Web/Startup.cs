@@ -81,7 +81,6 @@ namespace Web
             services.AddScoped<IWorkItemService, WorkItemService>();
             services.AddScoped<IBacklogPrioritiesService, BacklogPrioritiesService>();
             services.AddScoped<ICommentsService, CommentsService>();
-            services.AddScoped<IWorkItemTypesService, WorkItemTypesService>();
             services.AddScoped<IUserStoryService, UserStoryService>();
 
         }
