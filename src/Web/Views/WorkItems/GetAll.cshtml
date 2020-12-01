@@ -215,9 +215,10 @@
                                    class="btn btn-sm btn-info">
                                     Edit
                                 </a>
-                                @* TODO add route *@
                                 <form method="post" style="display:inline-block;"
-                                      asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+                                      asp-action="DeleteTask"
+                                      asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
+                                      asp-route-taskId="@task.Id">
                                     <button type="submit"
                                             class="btn btn-sm btn-danger" id="delete">
                                         Delete

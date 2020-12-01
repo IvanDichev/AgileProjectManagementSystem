@@ -1,5 +1,6 @@
 ﻿using Data.Models;
 using DataModels.Models.WorkItems.Tasks.Dtos;
+using Microsoft.EntityFrameworkCore;
 using Repo;
 using Services.Projects;
 using System;
@@ -35,6 +36,14 @@ namespace Services.WorkItems.Tasks
             };
 
             await this.repo.AddAsync(taskToCreate);
+            await this.repo.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int taskId)
+        {
+            var toRemove = await this.repo.All().Where(x => x.Id == taskId).FirstOrDefaultAsync();
+
+            this.repo.Delete(toRemove);
             await this.repo.SaveChangesAsync();
         }
     }

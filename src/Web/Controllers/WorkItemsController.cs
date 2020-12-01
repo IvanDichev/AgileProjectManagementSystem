@@ -98,48 +98,8 @@ namespace Web.Controllers
             }
         }
 
-        public async Task<IActionResult> AddTask(int projectId, int userStoryId)
-        {
-            var inputModel = new TaskInputModel()
-            {
-                UserStoryId = userStoryId,
-                UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId),
-            };
-
-            return View(inputModel);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> AddTask(int projectId, TaskInputModel inputModel)
-        {
-            if (!IsCurrentUserInProject(projectId))
-            {
-                return Unauthorized();
-            }
-
-            if(!ModelState.IsValid)
-            {
-                inputModel.UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId);
-                return View(inputModel);
-            }
-
-            try
-            {
-                var inputDto = this.mapper.Map<TaskInputModelDto>(inputModel);
-                inputDto.Description = inputModel.SanitizedDescription;
-                inputDto.AcceptanceCriteria = inputModel.SanitizedDescription;
-
-                await this.tasksService.CreateAsync(inputDto, projectId);
-                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
-            }
-            catch (Exception)
-            {
-                return View();
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteUserStory(int projectId, int UserStoryId) // userStoryId
+        public async Task<IActionResult> DeleteUserStory(int projectId, int userStoryId)
         {
             if (!IsCurrentUserInProject(projectId))
             {
@@ -148,7 +108,7 @@ namespace Web.Controllers
 
             try
             {
-                await this.userStoryService.DeleteAsync(UserStoryId);
+                await this.userStoryService.DeleteAsync(userStoryId);
 
                 return RedirectToAction(nameof(GetAll), new { projectId = projectId });
             }
@@ -218,6 +178,67 @@ namespace Web.Controllers
             {
                 return RedirectToAction("Error", "Error");
             }
+        }
+
+        public async Task<IActionResult> AddTask(int projectId, int userStoryId)
+        {
+            var inputModel = new TaskInputModel()
+            {
+                UserStoryId = userStoryId,
+                UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId),
+            };
+
+            return View(inputModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTask(int projectId, TaskInputModel inputModel)
+        {
+            if (!IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                inputModel.UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId);
+                return View(inputModel);
+            }
+
+            try
+            {
+                var inputDto = this.mapper.Map<TaskInputModelDto>(inputModel);
+                inputDto.Description = inputModel.SanitizedDescription;
+                inputDto.AcceptanceCriteria = inputModel.SanitizedDescription;
+
+                await this.tasksService.CreateAsync(inputDto, projectId);
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Error");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteTask(int projectId, int taskId)
+        {
+            if (!IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await this.tasksService.DeleteAsync(taskId);
+
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Error");
+            }
+
         }
     }
 }
