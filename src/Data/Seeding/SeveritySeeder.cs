@@ -20,14 +20,14 @@ namespace Data.Seeding
 
         private async Task SeedSeverity(ApplicationDbContext dbContext, string severity, int weight)
         {
-            var isSeveritySeeded = dbContext.TicketSeverities.Any(x => x.Severity == severity && x.Weight == weight);
+            var isSeveritySeeded = dbContext.Severities.Any(x => x.SeverityName == severity && x.Weight == weight);
 
             if (!isSeveritySeeded)
             {
-                await dbContext.TicketSeverities.AddAsync(new TicketSeverity
+                await dbContext.Severities.AddAsync(new Severity
                 {
                     AddedOn = DateTime.UtcNow,
-                    Severity = severity,
+                    SeverityName = severity,
                     Weight = weight,
                 });
             }

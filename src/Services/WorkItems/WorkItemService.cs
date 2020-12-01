@@ -17,20 +17,23 @@ namespace Services.WorkItems
 {
     public class WorkItemService : IWorkItemService
     {
-        private readonly IRepository<WorkItem> repo;
+        private readonly IRepository<UserStory> userStoryRepo;
+        private readonly IRepository<Bug> BugRepo;
+        private readonly IRepository<Task> TaskRepo;
+        private readonly IRepository<Test> TestRepo;
         private readonly IMapper mapper;
         private readonly ILogger<WorkItemService> logger;
 
-        public WorkItemService(IRepository<WorkItem> repo, IMapper mapper, ILogger<WorkItemService> logger)
+        public WorkItemService(IRepository<UserStory> repo, IMapper mapper, ILogger<WorkItemService> logger)
         {
-            this.repo = repo;
+            this.userStoryRepo = repo;
             this.mapper = mapper;
             this.logger = logger;
         }
 
         public async Task<IEnumerable<WokrItemAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
         {
-            var query = this.repo.AllAsNoTracking()
+            var query = this.userStoryRepo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId);
             var srotedQuery = Sort(sortingFilter, query);
 
@@ -40,19 +43,19 @@ namespace Services.WorkItems
             return sortedWorkItems;
         }
 
-        public async Task CreateAsync(WorkItemInputModel model)
+        public async Task CreateUserStoryAsync(WorkItemInputModel model)
         {
-            var workItem = this.mapper.Map<WorkItem>(model);
+            var workItem = this.mapper.Map<UserStory>(model);
             workItem.AddedOn = DateTime.UtcNow;
 
-            await this.repo.AddAsync(workItem);
+            await this.userStoryRepo.AddAsync(workItem);
 
-            await this.repo.SaveChangesAsync();
+            await this.userStoryRepo.SaveChangesAsync();
         }
 
         public async Task<WorkItemDto> GetAsync(int WorkItemId)
         {
-            var workItem = await this.repo.All()
+            var workItem = await this.userStoryRepo.All()
                 .Where(x => x.Id == WorkItemId)
                 .ProjectTo<WorkItemDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
@@ -62,15 +65,15 @@ namespace Services.WorkItems
 
         public async Task DeleteAsync(int userStoryId)
         {
-            var toRemove = await this.repo.All()
+            var toRemove = await this.userStoryRepo.All()
                 .Where(x => x.Id == userStoryId)
                 .FirstOrDefaultAsync();
 
             if (toRemove != null)
             {
-                this.repo.Delete(toRemove);
+                this.userStoryRepo.Delete(toRemove);
 
-                await this.repo.SaveChangesAsync();
+                await this.userStoryRepo.SaveChangesAsync();
             }
         }
 
@@ -78,7 +81,7 @@ namespace Services.WorkItems
         {
             try
             {
-                var toUpdate = this.repo.AllAsNoTracking()
+                var toUpdate = this.userStoryRepo.AllAsNoTracking()
                     .Where(x => x.Id == updateModel.Id)
                     .FirstOrDefault();
 
@@ -98,8 +101,8 @@ namespace Services.WorkItems
                     toUpdate.Comments.Add(comment);
                 }
 
-                this.repo.Update(toUpdate);
-                await this.repo.SaveChangesAsync();
+                this.userStoryRepo.Update(toUpdate);
+                await this.userStoryRepo.SaveChangesAsync();
             }
             catch (Exception e)
             {
@@ -107,7 +110,7 @@ namespace Services.WorkItems
             }
         }
 
-        private static IQueryable<WorkItem> Sort(SortingFilter sortingFilter, IQueryable<WorkItem> query)
+        private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)
         {
             return sortingFilter.SortingParams switch
             {
@@ -115,8 +118,6 @@ namespace Services.WorkItems
                 WorkItemsSortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
                 WorkItemsSortingConstants.TitleAsc => query.OrderBy(x => x.Title),
                 WorkItemsSortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
-                WorkItemsSortingConstants.TypeAsc => query.OrderBy(x => x.WorkItemType),
-                WorkItemsSortingConstants.TypeDesc => query.OrderByDescending(x => x.WorkItemType),
                 WorkItemsSortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),
                 WorkItemsSortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
                 WorkItemsSortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),

@@ -18,6 +18,7 @@ using Services.Projects;
 using Services.WorkItems;
 using Services.WorkItemTypesServices;
 using Utilities.Mailing;
+using Web.Middlewares;
 
 namespace Web
 {
@@ -97,7 +98,7 @@ namespace Web
                 app.UseCookiePolicy();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                //app.UseSeedAdminAndRolesMiddleware();
+                app.UseSeedAdminAndRolesMiddleware();
                 app.UseBrowserLink();
             }
             else

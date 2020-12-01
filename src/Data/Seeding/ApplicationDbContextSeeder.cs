@@ -28,7 +28,6 @@ namespace Data.Seeding
                 new SeveritySeeder(),
                 new TeamRolesSeeder(),
                 new SprintStatusSeeder(),
-                new WorkItemTypesSeeder(),
             };
 
             foreach (var seeder in seeders)

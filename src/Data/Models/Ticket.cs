@@ -10,12 +10,11 @@ namespace Data.Models
         public virtual Project Project { get; set; }
 
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        public virtual User AssignedTo { get; set; }
 
         public int SeverityId { get; set; }
-        public virtual TicketSeverity Severity { get; set; }
+        public virtual Severity Severity { get; set; }
 
         public string Description { get; set; }
-        
     }
 }

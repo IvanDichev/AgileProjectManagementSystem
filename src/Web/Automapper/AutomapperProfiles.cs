@@ -20,9 +20,9 @@ namespace Web.Automapper
             CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap();
             CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
 
-            CreateMap<WorkItem, WorkItemDto>().ReverseMap(); 
-            CreateMap<WorkItem, WokrItemAllDto>().ReverseMap(); 
-            CreateMap<WorkItem, WorkItemInputModel>().ReverseMap(); 
+            CreateMap<UserStory, WorkItemDto>().ReverseMap(); 
+            CreateMap<UserStory, WokrItemAllDto>().ReverseMap(); 
+            CreateMap<UserStory, WorkItemInputModel>().ReverseMap(); 
             CreateMap<WorkItemViewModel, WorkItemUpdateModel>().ReverseMap(); 
             CreateMap<WorkItemViewModel, WorkItemDto>().ReverseMap(); 
             CreateMap<WorkItemAllViewModel, WokrItemAllDto>().ReverseMap(); 

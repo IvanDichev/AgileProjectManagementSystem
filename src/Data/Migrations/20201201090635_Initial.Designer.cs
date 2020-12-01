@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201130163409_AddDeleteCascadeOnWorkItems")]
-    partial class AddDeleteCascadeOnWorkItems
+    [Migration("20201201090635_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,12 +45,16 @@ namespace Data.Migrations
                     b.ToTable("BacklogPriorities");
                 });
 
-            modelBuilder.Entity("Data.Models.Comment", b =>
+            modelBuilder.Entity("Data.Models.Bug", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AcceptanceCriteria")
+                        .HasColumnType("nvarchar(3000)")
+                        .HasMaxLength(3000);
 
                     b.Property<DateTime>("AddedOn")
                         .HasColumnType("datetime2");
@@ -61,7 +65,59 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("SeverityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StoryPoints")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserStoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeverityId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserStoryId");
+
+                    b.ToTable("Bugs");
+                });
+
+            modelBuilder.Entity("Data.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("BugId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("TestId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserStoryTaskId")
                         .HasColumnType("int");
 
                     b.Property<int>("WorkItemId")
@@ -69,7 +125,13 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BugId");
+
+                    b.HasIndex("TestId");
+
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserStoryTaskId");
 
                     b.HasIndex("WorkItemId");
 
@@ -86,13 +148,28 @@ namespace Data.Migrations
                     b.Property<DateTime>("AddedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("BugId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("TestId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserStoryTaskId")
+                        .HasColumnType("int");
 
                     b.Property<int>("WorkItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BugId");
+
+                    b.HasIndex("TestId");
+
+                    b.HasIndex("UserStoryTaskId");
 
                     b.HasIndex("WorkItemId");
 
@@ -149,6 +226,30 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Data.Models.Severity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SeverityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Severities");
                 });
 
             modelBuilder.Entity("Data.Models.Sprint", b =>
@@ -267,6 +368,45 @@ namespace Data.Migrations
                     b.ToTable("TeamsUsers");
                 });
 
+            modelBuilder.Entity("Data.Models.Test", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AcceptanceCriteria")
+                        .HasColumnType("nvarchar(3000)")
+                        .HasMaxLength(3000);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserStoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserStoryId");
+
+                    b.ToTable("Tests");
+                });
+
             modelBuilder.Entity("Data.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -303,28 +443,90 @@ namespace Data.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("Data.Models.TicketSeverity", b =>
+            modelBuilder.Entity("Data.Models.UserStory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AcceptanceCriteria")
+                        .HasColumnType("nvarchar(3000)")
+                        .HasMaxLength(3000);
+
                     b.Property<DateTime>("AddedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("BacklogPriorityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Severity")
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SprintId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StoryPoints")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BacklogPriorityId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("SprintId");
+
+                    b.ToTable("UserStories");
+                });
+
+            modelBuilder.Entity("Data.Models.UserStoryTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AcceptanceCriteria")
+                        .HasColumnType("nvarchar(3000)")
+                        .HasMaxLength(3000);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Weight")
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserStoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TicketSeverities");
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserStoryId");
+
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("Data.Models.Users.Role", b =>
@@ -443,84 +645,6 @@ namespace Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Data.Models.WorkItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AcceptanceCriteria")
-                        .HasColumnType("nvarchar(3000)")
-                        .HasMaxLength(3000);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("BacklogPriorityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SprintId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StoryPoints")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
-                    b.Property<int?>("WorkItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkItemTypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BacklogPriorityId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("SprintId");
-
-                    b.HasIndex("WorkItemId");
-
-                    b.HasIndex("WorkItemTypeId");
-
-                    b.ToTable("WorkItems");
-                });
-
-            modelBuilder.Entity("Data.Models.WorkItemType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WorkItemTypes");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -622,15 +746,46 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Data.Models.Bug", b =>
+                {
+                    b.HasOne("Data.Models.Severity", "Severity")
+                        .WithMany()
+                        .HasForeignKey("SeverityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Users.User", "AssignedTo")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("Data.Models.UserStory", "UserStory")
+                        .WithMany()
+                        .HasForeignKey("UserStoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Data.Models.Comment", b =>
                 {
+                    b.HasOne("Data.Models.Bug", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("BugId");
+
+                    b.HasOne("Data.Models.Test", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("TestId");
+
                     b.HasOne("Data.Models.Users.User", "AddedBy")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.WorkItem", "WorkItem")
+                    b.HasOne("Data.Models.UserStoryTask", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("UserStoryTaskId");
+
+                    b.HasOne("Data.Models.UserStory", "WorkItem")
                         .WithMany("Comments")
                         .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -639,7 +794,19 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
                 {
-                    b.HasOne("Data.Models.WorkItem", "WorkItem")
+                    b.HasOne("Data.Models.Bug", null)
+                        .WithMany("Mockups")
+                        .HasForeignKey("BugId");
+
+                    b.HasOne("Data.Models.Test", null)
+                        .WithMany("Mockups")
+                        .HasForeignKey("TestId");
+
+                    b.HasOne("Data.Models.UserStoryTask", null)
+                        .WithMany("Mockups")
+                        .HasForeignKey("UserStoryTaskId");
+
+                    b.HasOne("Data.Models.UserStory", "WorkItem")
                         .WithMany("Mockups")
                         .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -690,6 +857,19 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Data.Models.Test", b =>
+                {
+                    b.HasOne("Data.Models.Users.User", "AssignedTo")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("Data.Models.UserStory", "UserStory")
+                        .WithMany()
+                        .HasForeignKey("UserStoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Data.Models.Ticket", b =>
                 {
                     b.HasOne("Data.Models.Project", "Project")
@@ -698,27 +878,20 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.TicketSeverity", "Severity")
+                    b.HasOne("Data.Models.Severity", "Severity")
                         .WithMany()
                         .HasForeignKey("SeverityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.Users.User", "User")
+                    b.HasOne("Data.Models.Users.User", "AssignedTo")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.Models.Users.User", b =>
-                {
-                    b.HasOne("Data.Models.TeamRole", "TeamRole")
-                        .WithMany()
-                        .HasForeignKey("TeamRoleId");
-                });
-
-            modelBuilder.Entity("Data.Models.WorkItem", b =>
+            modelBuilder.Entity("Data.Models.UserStory", b =>
                 {
                     b.HasOne("Data.Models.BacklogPriority", "BacklogPriority")
                         .WithMany()
@@ -735,17 +908,26 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.Sprint", null)
                         .WithMany("WorkItems")
                         .HasForeignKey("SprintId");
+                });
 
-                    b.HasOne("Data.Models.WorkItem", "ParentWorkItem")
-                        .WithMany("WorkItems")
-                        .HasForeignKey("WorkItemId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Data.Models.WorkItemType", "WorkItemType")
+            modelBuilder.Entity("Data.Models.UserStoryTask", b =>
+                {
+                    b.HasOne("Data.Models.Users.User", "AssignedTo")
                         .WithMany()
-                        .HasForeignKey("WorkItemTypeId")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("Data.Models.UserStory", "UserStory")
+                        .WithMany()
+                        .HasForeignKey("UserStoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Users.User", b =>
+                {
+                    b.HasOne("Data.Models.TeamRole", "TeamRole")
+                        .WithMany()
+                        .HasForeignKey("TeamRoleId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

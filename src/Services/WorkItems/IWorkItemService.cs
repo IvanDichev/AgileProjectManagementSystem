@@ -10,7 +10,7 @@ namespace Services.WorkItems
     {
         Task<IEnumerable<WokrItemAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter);
         Task<WorkItemDto> GetAsync(int WorkItemId);
-        Task CreateAsync(WorkItemInputModel model);
+        Task CreateUserStoryAsync(WorkItemInputModel model);
         Task DeleteAsync(int userStoryId);
         Task UpdateAsync(WorkItemUpdateModel updateModel);
     }

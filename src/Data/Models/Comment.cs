@@ -11,6 +11,6 @@ namespace Data.Models
         public virtual User AddedBy { get; set; }
 
         public int WorkItemId { get; set; }
-        public virtual WorkItem WorkItem { get; set; }
+        public virtual UserStory WorkItem { get; set; }
     }
 }

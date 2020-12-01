@@ -37,10 +37,6 @@ namespace DataModels.Models.WorkItems
 
         public int ProjectId { get; set; }
 
-        public int WorkItemTypeId { get; set; }
-
         public ICollection<BacklogPriorityDropDownModel> PrioritiesDropDown { get; set; }
-
-        public ICollection<WorkItemTypesDropDownModel> WorkItemTypesDropDown { get; set; }
     }
 }

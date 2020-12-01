@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Data.Models
 {
-    public class TicketSeverity : BaseEntity<int>
+    public class Severity : BaseEntity<int>
     {
-        public string Severity { get; set; }
+        public string SeverityName { get; set; }
         public int Weight { get; set; }
     }
 }

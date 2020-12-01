@@ -7,6 +7,7 @@ using Services.BacklogPriorities;
 using Services.Projects;
 using Services.WorkItems;
 using Services.WorkItemTypesServices;
+using Shared.Constants.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -47,7 +48,7 @@ namespace Web.Controllers
             return View(all);
         }
 
-        public async Task<IActionResult> Create(int projectId)
+        public async Task<IActionResult> AddUserStory(int projectId)
         {
             if (!IsCurrentUserInProject(projectId))
             {
@@ -58,15 +59,13 @@ namespace Web.Controllers
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync()),
-                WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
-                    (await this.workItemTypesService.GetWorkItemTypesAsync())
             };
 
             return View(createViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(WorkItemInputModel inputModel, int projectId)
+        public async Task<IActionResult> AddUserStory(WorkItemInputModel inputModel, int projectId)
         {
             if (!IsCurrentUserInProject(projectId))
             {
@@ -77,14 +76,12 @@ namespace Web.Controllers
             {
                 inputModel.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync());
-                inputModel.WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
-                    (await this.workItemTypesService.GetWorkItemTypesAsync());
                 return View(inputModel);
             }
 
             try
             {
-                await this.workItemService.CreateAsync(inputModel);
+                await this.workItemService.CreateUserStoryAsync(inputModel);
 
                 return RedirectToAction(nameof(GetAll), new { projectId = projectId });
             }
