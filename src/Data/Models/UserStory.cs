@@ -1,6 +1,7 @@
 ﻿using Data.Models.Base;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Data.Models
 {
@@ -10,6 +11,9 @@ namespace Data.Models
         {
             this.Mockups = new HashSet<Mockup>();
             this.Comments = new HashSet<Comment>();
+            this.Tasks = new HashSet<UserStoryTask>();
+            this.Tests = new HashSet<Test>();
+            this.Bugs = new HashSet<Bug>();
         }
 
         [MaxLength(200)]
@@ -35,5 +39,11 @@ namespace Data.Models
         public ICollection<Mockup> Mockups { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+
+        public ICollection<UserStoryTask> Tasks { get; set; }
+
+        public ICollection<Bug> Bugs { get; set; }
+
+        public ICollection<Test> Tests { get; set; }
         }
 }

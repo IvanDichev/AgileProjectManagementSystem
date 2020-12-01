@@ -39,9 +39,6 @@ namespace Web.Automapper
 
             CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
 
-            CreateMap<WorkItemTypesDto, WorkItemType>().ReverseMap();
-            CreateMap<WorkItemTypesDto, WorkItemTypesDropDownModel>().ReverseMap();
-
             CreateMap<Comment, CommentDto>().ReverseMap();
             CreateMap<Comment, CommentViewModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));

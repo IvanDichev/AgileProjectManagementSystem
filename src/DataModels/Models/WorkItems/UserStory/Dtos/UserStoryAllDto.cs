@@ -1,4 +1,7 @@
-﻿namespace DataModels.Models.WorkItems.UserStory.Dtos
+﻿using Data.Models;
+using System.Collections.Generic;
+
+namespace DataModels.Models.WorkItems.UserStory.Dtos
 {
     public class UserStoryAllDto
     {
@@ -13,5 +16,7 @@
         public string BacklogPriorityPriority { get; set; }
 
         public int TasksCount { get; set; }
+
+        public ICollection<UserStoryTask> Tasks { get; set; }
     }
 }

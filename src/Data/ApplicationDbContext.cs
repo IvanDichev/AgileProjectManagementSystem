@@ -12,6 +12,7 @@ namespace Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UserStory> UserStories { get; set; }
+        public DbSet<UserStoryTask> UserStoryTasks { get; set; }
         public DbSet<Bug> Bugs { get; set; }
         public DbSet<Test> Tests { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
