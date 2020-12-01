@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using DataModels.Models.Sorting;
 using DataModels.Models.WorkItems;
+using DataModels.Models.WorkItems.Tasks;
+using DataModels.Models.WorkItems.Tasks.Dtos;
 using DataModels.Models.WorkItems.UserStory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.BacklogPriorities;
 using Services.Projects;
 using Services.WorkItems;
+using Services.WorkItems.Tasks;
 using Services.WorkItems.UserStories;
 using System;
 using System.Collections.Generic;
@@ -22,17 +25,20 @@ namespace Web.Controllers
         private readonly IBacklogPrioritiesService backlogPrioritiesService;
         private readonly IMapper mapper;
         private readonly IUserStoryService userStoryService;
+        private readonly ITasksService tasksService;
 
         public WorkItemsController(IWorkItemService workItemService,
             IBacklogPrioritiesService backlogPrioritiesService,
             IProjectsService projectsService,
             IMapper mapper,
-            IUserStoryService userStoryService) : base(projectsService)
+            IUserStoryService userStoryService,
+            ITasksService tasksService) : base(projectsService)
         {
             this.workItemService = workItemService;
             this.backlogPrioritiesService = backlogPrioritiesService;
             this.mapper = mapper;
             this.userStoryService = userStoryService;
+            this.tasksService = tasksService;
         }
 
         public async Task<IActionResult> GetAll(int projectId, SortingFilter sortingFilter)
@@ -89,6 +95,46 @@ namespace Web.Controllers
             catch (Exception)
             {
                 return RedirectToAction("Error", "Error");
+            }
+        }
+
+        public async Task<IActionResult> AddTask(int projectId, int userStoryId)
+        {
+            var inputModel = new TaskInputModel()
+            {
+                UserStoryId = userStoryId,
+                UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId),
+            };
+
+            return View(inputModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTask(int projectId, TaskInputModel inputModel)
+        {
+            if (!IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            if(!ModelState.IsValid)
+            {
+                inputModel.UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId);
+                return View(inputModel);
+            }
+
+            try
+            {
+                var inputDto = this.mapper.Map<TaskInputModelDto>(inputModel);
+                inputDto.Description = inputModel.SanitizedDescription;
+                inputDto.AcceptanceCriteria = inputModel.SanitizedDescription;
+
+                await this.tasksService.CreateAsync(inputDto, projectId);
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch (Exception)
+            {
+                return View();
             }
         }
 

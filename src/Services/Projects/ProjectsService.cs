@@ -119,5 +119,17 @@ namespace Services.Projects
                 .Any(x => x.Team.TeamsUsers
                     .Any(x => x.UserId == userId));
         }
+
+        public async Task<int> GetNextIdForWorkItemAsync(int projectId)
+        {
+            var project = this.repo.All()
+                .Where(x => x.Id == projectId)
+                .FirstOrDefault();
+
+            project.WorkItemsId += 1;
+            this.repo.Update(project);
+            await this.repo.SaveChangesAsync();
+            return project.WorkItemsId;
+        }
     }
 }

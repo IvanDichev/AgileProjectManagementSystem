@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Data.Models;
 using DataModels.Models.Sorting;
+using DataModels.Models.WorkItems;
 using DataModels.Models.WorkItems.UserStory;
 using DataModels.Models.WorkItems.UserStory.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -118,6 +119,16 @@ namespace Services.WorkItems.UserStories
             {
                 this.logger.LogWarning(e, $"Error while updating workitem entity with id {updateModel.Id}.");
             }
+        }
+
+        public async Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId)
+        {
+            var dropdowns = await this.repo.AllAsNoTracking()
+                .Where(x => x.ProjectId == projectId)
+                .ProjectTo<UserStoryDropDownModel>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return dropdowns;
         }
 
         private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)

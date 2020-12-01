@@ -20,5 +20,6 @@ namespace Services.Projects
         /// <param name="projectId"></param>
         /// <returns></returns>
         bool IsUserInProject(int projectId, int userId);
+        public Task<int> GetNextIdForWorkItemAsync(int projectId);
     }
 }

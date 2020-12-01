@@ -1,4 +1,5 @@
 ﻿using DataModels.Models.Sorting;
+using DataModels.Models.WorkItems;
 using DataModels.Models.WorkItems.UserStory;
 using DataModels.Models.WorkItems.UserStory.Dtos;
 using System.Collections.Generic;
@@ -13,5 +14,6 @@ namespace Services.WorkItems.UserStories
         Task CreateAsync(UserStoryInputModel model);
         Task DeleteAsync(int userStoryId);
         Task UpdateAsync(UserStoryUpdateModel updateModel);
+        Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId);
     }
 }
