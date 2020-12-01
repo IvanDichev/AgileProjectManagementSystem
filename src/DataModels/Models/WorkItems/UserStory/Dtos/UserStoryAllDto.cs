@@ -1,4 +1,6 @@
-﻿using Data.Models;
+﻿using DataModels.Models.WorkItems.Bugs.Dtos;
+using DataModels.Models.WorkItems.Tasks.Dtos;
+using DataModels.Models.WorkItems.Tests.Dtos;
 using System.Collections.Generic;
 
 namespace DataModels.Models.WorkItems.UserStory.Dtos
@@ -17,6 +19,10 @@ namespace DataModels.Models.WorkItems.UserStory.Dtos
 
         public int TasksCount { get; set; }
 
-        public ICollection<UserStoryTask> Tasks { get; set; }
+        public ICollection<TaskAllDto> Tasks { get; set; }
+
+        public ICollection<TestAllDto> Tests { get; set; }
+
+        public ICollection<BugAllDto> Bugs { get; set; }
     }
 }

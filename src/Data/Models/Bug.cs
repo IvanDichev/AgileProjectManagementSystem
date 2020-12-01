@@ -13,6 +13,8 @@ namespace Data.Models
             //this.Comments = new HashSet<UserStoryComment>();
         }
 
+        public int IdForProject { get; set; }
+
         [MaxLength(200)]
         public string Title { get; set; }
 

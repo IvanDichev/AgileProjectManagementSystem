@@ -1,4 +1,7 @@
-﻿using Shared.Constants.Seeding;
+﻿using DataModels.Models.WorkItems.Bugs.Dtos;
+using DataModels.Models.WorkItems.Tasks.Dtos;
+using DataModels.Models.WorkItems.Tests.Dtos;
+using System.Collections.Generic;
 
 namespace DataModels.Models.WorkItems.UserStory
 {
@@ -13,5 +16,11 @@ namespace DataModels.Models.WorkItems.UserStory
         public int StoryPoints { get; set; }
 
         public string BacklogPriorityPriority { get; set; }
+
+        public ICollection<TaskAllDto> Tasks { get; set; }
+
+        public ICollection<TestAllDto> Tests { get; set; }
+
+        public ICollection<BugAllDto> Bugs { get; set; }
     }
 }

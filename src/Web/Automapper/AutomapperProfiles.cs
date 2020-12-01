@@ -6,7 +6,9 @@ using DataModels.Models.Comments.Dtos;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.WorkItems;
-using DataModels.Models.WorkItems.Dtos;
+using DataModels.Models.WorkItems.Bugs.Dtos;
+using DataModels.Models.WorkItems.Tasks.Dtos;
+using DataModels.Models.WorkItems.Tests.Dtos;
 using DataModels.Models.WorkItems.UserStory;
 using DataModels.Models.WorkItems.UserStory.Dtos;
 
@@ -27,6 +29,12 @@ namespace Web.Automapper
             CreateMap<UserStoryViewModel, UserStoryUpdateModel>().ReverseMap(); 
             CreateMap<UserStoryViewModel, UserStoryDto>().ReverseMap(); 
             CreateMap<UserStoryAllViewmodel, UserStoryAllDto>().ReverseMap();
+
+            CreateMap<UserStoryTask, TaskAllDto>().ReverseMap();
+
+            CreateMap<Test, TestAllDto>().ReverseMap();
+
+            CreateMap<Bug, BugAllDto>().ReverseMap();
 
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
 

@@ -18,6 +18,8 @@ namespace Data.Models
         [MaxLength(400)]
         public string Description { get; set; }
 
+        public int WorkItemsId { get; set; }
+
         public ICollection<Ticket> Tickets { get; set; }
 
         public ICollection<Sprint> Sprints { get; set; }

@@ -44,11 +44,16 @@ namespace Services.WorkItems.UserStories
             var userStory = this.mapper.Map<UserStory>(model);
             userStory.AddedOn = DateTime.UtcNow;
             // Increment IfForProject TODO Fix separate this column in another table
-            userStory.IdForProject = (this.repo.AllAsNoTracking()
+            var workItemsId = (this.repo.AllAsNoTracking()
                 .Where(x => x.ProjectId == model.ProjectId)
-                .Select(x => x.IdForProject)
-                .OrderByDescending(x => x)
+                .Select(x => x.Project.WorkItemsId)
                 .FirstOrDefault() + 1);
+            
+            userStory.IdForProject = this.repo.AllAsNoTracking()
+                .Where(x => x.ProjectId == model.ProjectId)
+                .Select(x => x.Project.WorkItemsId)
+                .FirstOrDefault();
+
 
             await this.repo.AddAsync(userStory);
 

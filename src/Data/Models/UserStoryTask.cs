@@ -1,6 +1,5 @@
 ﻿using Data.Models.Base;
 using Data.Models.Users;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
@@ -14,6 +13,8 @@ namespace Data.Models
 
         [MaxLength(200)]
         public string Title { get; set; }
+
+        public int IdForProject { get; set; }
 
         public string Description { get; set; }
 
