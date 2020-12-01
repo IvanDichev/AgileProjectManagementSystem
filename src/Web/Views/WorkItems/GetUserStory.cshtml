@@ -128,17 +128,18 @@ alignleft aligncenter alignright alignjustify | code`,
                             </a>
                             <div id="myDropdown-@commentsCounter" 
                                  class="dropdown-content edit-comment dropdown-content-@commentsCounter">
-                                <a asp-action="Edit" asp-controller="Comments"
+                                <a asp-action="Edit" asp-controller="UserStoryComments"
                                    asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
-                                   asp-route-userStoryId="@comment..WorkItemId"
+                                   asp-route-UserStoryId="@comment.UserStoryId"
                                    asp-route-commentId="@comment.Id"
                                    id="edit-comment-a">
                                     Edit
                                 </a>
                                 <form method="post">
-                                    <button class="del-button" type="submit" asp-action="Delete" asp-controller="Comments"
+                                    <button class="del-button" type="submit" 
+                                            asp-action="Delete" asp-controller="UserStoryComments"
                                             asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
-                                            asp-route-workItemId="@comment.WorkItemId"
+                                            asp-route-UserStoryId="@comment.UserStoryId"
                                             asp-route-commentId="@comment.Id"
                                             id="delete">
                                         Delete

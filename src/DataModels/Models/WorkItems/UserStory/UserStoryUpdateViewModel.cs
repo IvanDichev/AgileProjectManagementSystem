@@ -10,7 +10,5 @@ namespace DataModels.Models.WorkItems.UserStory
         public CommentInputModel Comment { get; set; }
 
         public ICollection<BacklogPriorityDropDownModel> PrioritiesDropDown { get; set; }
-
-        public ICollection<WorkItemTypesDropDownModel> WorkItemTypesDropDown { get; set; }
     }
 }

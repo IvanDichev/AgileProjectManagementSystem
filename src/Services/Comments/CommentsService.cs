@@ -12,10 +12,10 @@ namespace Services.Comments
 {
     public class CommentsService : ICommentsService
     {
-        private readonly IRepository<Comment> repo;
+        private readonly IRepository<UserStoryComment> repo;
         private readonly IMapper mapper;
 
-        public CommentsService(IRepository<Comment> repo, IMapper mapper)
+        public CommentsService(IRepository<UserStoryComment> repo, IMapper mapper)
         {
             this.repo = repo;
             this.mapper = mapper;

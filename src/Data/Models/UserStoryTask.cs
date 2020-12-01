@@ -9,7 +9,7 @@ namespace Data.Models
     {
         public UserStoryTask()
         {
-            this.Comments = new HashSet<Comment>();
+            //this.Comments = new HashSet<UserStoryComment>();
         }
 
         [MaxLength(200)]
@@ -28,6 +28,6 @@ namespace Data.Models
 
         public User AssignedTo { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        //public ICollection<UserStoryComment> Comments { get; set; }
     }
 }

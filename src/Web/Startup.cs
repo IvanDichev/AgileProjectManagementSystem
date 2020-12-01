@@ -17,7 +17,6 @@ using Services.Comments;
 using Services.Projects;
 using Services.WorkItems;
 using Services.WorkItems.UserStories;
-using Services.WorkItemTypesServices;
 using Utilities.Mailing;
 using Web.Middlewares;
 

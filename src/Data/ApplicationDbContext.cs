@@ -10,7 +10,7 @@ namespace Data
         public DbSet<Team> Teams { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<UserStoryComment> UserStoryComments { get; set; }
         public DbSet<UserStory> UserStories { get; set; }
         public DbSet<UserStoryTask> UserStoryTasks { get; set; }
         public DbSet<Bug> Bugs { get; set; }
@@ -19,7 +19,6 @@ namespace Data
         public DbSet<TeamRole> TeamRoles { get; set; }
         public DbSet<BacklogPriority> BacklogPriorities { get; set; }
         public DbSet<Severity> Severities { get; set; }
-        public DbSet<WorkItemType> WorkItemTypes { get; set; }
         public DbSet<SprintStatus> SprintStatuses { get; set; }
         public DbSet<MockupAttachment> MockupAttachments { get; set; }
         public DbSet<TeamsUsers> TeamsUsers { get; set; }

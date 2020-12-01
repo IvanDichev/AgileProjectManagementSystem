@@ -10,7 +10,7 @@ namespace Data.Models
         public Bug()
         {
             this.Mockups = new HashSet<Mockup>();
-            this.Comments = new HashSet<Comment>();
+            //this.Comments = new HashSet<UserStoryComment>();
         }
 
         [MaxLength(200)]
@@ -35,6 +35,6 @@ namespace Data.Models
 
         public ICollection<Mockup> Mockups { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        //public ICollection<UserStoryComment> Comments { get; set; }
     }
 }

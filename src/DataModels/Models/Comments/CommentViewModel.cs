@@ -23,6 +23,6 @@ namespace DataModels.Models.Comments
 
         public string AddedByEmail { get; set; }
 
-        public int WorkItemId { get; set; }
+        public int UserStoryId { get; set; }
     }
 }

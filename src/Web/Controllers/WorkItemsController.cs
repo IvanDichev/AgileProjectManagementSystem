@@ -8,7 +8,6 @@ using Services.BacklogPriorities;
 using Services.Projects;
 using Services.WorkItems;
 using Services.WorkItems.UserStories;
-using Services.WorkItemTypesServices;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -21,20 +20,17 @@ namespace Web.Controllers
     {
         private readonly IWorkItemService workItemService;
         private readonly IBacklogPrioritiesService backlogPrioritiesService;
-        private readonly IWorkItemTypesService workItemTypesService;
         private readonly IMapper mapper;
         private readonly IUserStoryService userStoryService;
 
         public WorkItemsController(IWorkItemService workItemService,
             IBacklogPrioritiesService backlogPrioritiesService,
             IProjectsService projectsService,
-            IWorkItemTypesService workItemTypesService,
             IMapper mapper,
             IUserStoryService userStoryService) : base(projectsService)
         {
             this.workItemService = workItemService;
             this.backlogPrioritiesService = backlogPrioritiesService;
-            this.workItemTypesService = workItemTypesService;
             this.mapper = mapper;
             this.userStoryService = userStoryService;
         }
@@ -151,8 +147,6 @@ namespace Web.Controllers
                 // If model is not valid prioritiesDropDown will be null so we need do populated it.
                 model.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync());
-                model.WorkItemTypesDropDown = this.mapper.Map<ICollection<WorkItemTypesDropDownModel>>
-                    (await this.workItemTypesService.GetWorkItemTypesAsync());
 
                 return View(model);
             }
@@ -165,7 +159,7 @@ namespace Web.Controllers
             {
                 var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 userStory.Comment = model.Comment;
-                userStory.Comment.WorkItemId = model.ViewModel.Id;
+                userStory.Comment.UserStoryId = model.ViewModel.Id;
                 userStory.Comment.AddedById = userId;
             }
 

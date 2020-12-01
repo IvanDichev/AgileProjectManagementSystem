@@ -49,6 +49,7 @@ namespace Services.WorkItems.UserStories
                 .Select(x => x.IdForProject)
                 .OrderByDescending(x => x)
                 .FirstOrDefault() + 1);
+
             await this.repo.AddAsync(userStory);
 
             await this.repo.SaveChangesAsync();
@@ -56,7 +57,7 @@ namespace Services.WorkItems.UserStories
 
         public async Task<UserStoryDto> GetAsync(int WorkItemId)
         {
-            var workItem = await this.repo.All()
+            var workItem = await this.repo.AllAsNoTracking()
                 .Where(x => x.Id == WorkItemId)
                 .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
@@ -95,9 +96,12 @@ namespace Services.WorkItems.UserStories
 
                 if (updateModel.Comment != null)
                 {
-                    var comment = this.mapper.Map<Comment>(updateModel.Comment);
-                    comment.Description = updateModel.Comment.SanitizedDescription;
-                    comment.AddedOn = DateTime.UtcNow;
+                    var comment = new UserStoryComment
+                    {
+                        UserId = updateModel.Comment.AddedById,
+                        Description = updateModel.Comment.SanitizedDescription,
+                        AddedOn = DateTime.UtcNow
+                    };
 
                     toUpdate.Comments.Add(comment);
                 }

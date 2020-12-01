@@ -20,13 +20,6 @@ namespace Web.Automapper
             CreateMap<ProjectDto, ProjectViewModel>().ReverseMap();
             CreateMap<ProjectDto, EditProjectInputModel>().ReverseMap();
             CreateMap<PaginatedProjectDto, PaginatedProjectViewModel>().ReverseMap();
-
-            CreateMap<UserStory, WorkItemDto>().ReverseMap(); 
-            CreateMap<UserStory, WokrItemAllDto>().ReverseMap(); 
-            CreateMap<UserStory, WorkItemInputModel>().ReverseMap(); 
-            CreateMap<WorkItemViewModel, WorkItemUpdateModel>().ReverseMap(); 
-            CreateMap<WorkItemViewModel, WorkItemDto>().ReverseMap(); 
-            CreateMap<WorkItemAllViewModel, WokrItemAllDto>().ReverseMap(); 
             
             CreateMap<UserStory, UserStoryDto>().ReverseMap(); 
             CreateMap<UserStory, UserStoryAllDto>().ReverseMap(); 
@@ -39,10 +32,10 @@ namespace Web.Automapper
 
             CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
 
-            CreateMap<Comment, CommentDto>().ReverseMap();
-            CreateMap<Comment, CommentViewModel>().ReverseMap()
+            CreateMap<UserStoryComment, CommentDto>().ReverseMap();
+            CreateMap<UserStoryComment, CommentViewModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
-            CreateMap<Comment, CommentInputModel>().ReverseMap(); //
+            CreateMap<UserStoryComment, CommentInputModel>().ReverseMap(); //
             CreateMap<CommentViewModel, CommentDto>().ReverseMap();
             CreateMap<CommentViewModel, CommentInputModel>().ReverseMap();
             CreateMap<CommentsUpdateModel, CommentInputModel>().ReverseMap();

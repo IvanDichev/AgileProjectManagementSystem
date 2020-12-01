@@ -10,12 +10,12 @@ using Web.Helpers;
 
 namespace Web.Controllers
 {
-    public class CommentsController : BaseController
+    public class UserStoryCommentsController : BaseController
     {
         private readonly ICommentsService commentsService;
         private readonly IMapper mapper;
 
-        public CommentsController(ICommentsService commentsService,
+        public UserStoryCommentsController(ICommentsService commentsService,
             IMapper mapper)
         {
             this.commentsService = commentsService;
@@ -48,11 +48,11 @@ namespace Web.Controllers
             await this.commentsService.UpdateAsync(updateModel);
             var updated = await this.commentsService.GetAsync(model.Id);
 
-            return RedirectToAction(nameof(WorkItemsController.GetUserStory), "WorkItems", new { ProjectId = projectId, workItemId = updated.WorkItemId });
+            return RedirectToAction(nameof(WorkItemsController.GetUserStory), "WorkItems", new { ProjectId = projectId, UserStoryId = updated.UserStoryId });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int projectId, int commentId, int workItemId)
+        public async Task<IActionResult> Delete(int projectId, int commentId, int UserStoryId)
         {
             if (!IsUsersComment(commentId))
             {
@@ -61,7 +61,7 @@ namespace Web.Controllers
 
             await this.commentsService.DeleteAsync(commentId);
 
-            return RedirectToAction(nameof(WorkItemsController.GetUserStory), "WorkItems", new { projectId = projectId, workItemId = workItemId });
+            return RedirectToAction(nameof(WorkItemsController.GetUserStory), "WorkItems", new { projectId = projectId, UserStoryId = UserStoryId });
         }
         
         private bool IsUsersComment(int commentId)

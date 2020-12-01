@@ -10,7 +10,7 @@ namespace Data.Models
         public UserStory()
         {
             this.Mockups = new HashSet<Mockup>();
-            this.Comments = new HashSet<Comment>();
+            this.Comments = new HashSet<UserStoryComment>();
             this.Tasks = new HashSet<UserStoryTask>();
             this.Tests = new HashSet<Test>();
             this.Bugs = new HashSet<Bug>();
@@ -38,7 +38,7 @@ namespace Data.Models
 
         public ICollection<Mockup> Mockups { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<UserStoryComment> Comments { get; set; }
 
         public ICollection<UserStoryTask> Tasks { get; set; }
 

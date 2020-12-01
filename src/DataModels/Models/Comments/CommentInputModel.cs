@@ -4,7 +4,7 @@ namespace DataModels.Models.Comments
 {
     public class CommentInputModel
     {
-        private HtmlSanitizer sanitizer;
+        private readonly HtmlSanitizer sanitizer;
         public CommentInputModel()
         {
             this.sanitizer = new HtmlSanitizer();
@@ -16,7 +16,7 @@ namespace DataModels.Models.Comments
 
         public string SanitizedDescription => this.sanitizer.Sanitize(this.Description);
 
-        public int WorkItemId { get; set; }
+        public int UserStoryId { get; set; }
 
         public int AddedById { get; set; }
     }
