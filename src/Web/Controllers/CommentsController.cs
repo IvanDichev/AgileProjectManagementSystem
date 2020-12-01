@@ -48,7 +48,7 @@ namespace Web.Controllers
             await this.commentsService.UpdateAsync(updateModel);
             var updated = await this.commentsService.GetAsync(model.Id);
 
-            return RedirectToAction(nameof(WorkItemsController.Get), "WorkItems", new { ProjectId = projectId, workItemId = updated.WorkItemId });
+            return RedirectToAction(nameof(WorkItemsController.GetUserStory), "WorkItems", new { ProjectId = projectId, workItemId = updated.WorkItemId });
         }
 
         [HttpPost]
@@ -61,7 +61,7 @@ namespace Web.Controllers
 
             await this.commentsService.DeleteAsync(commentId);
 
-            return RedirectToAction(nameof(WorkItemsController.Get), "WorkItems", new { projectId = projectId, workItemId = workItemId });
+            return RedirectToAction(nameof(WorkItemsController.GetUserStory), "WorkItems", new { projectId = projectId, workItemId = workItemId });
         }
         
         private bool IsUsersComment(int commentId)

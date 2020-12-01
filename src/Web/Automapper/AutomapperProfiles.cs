@@ -7,7 +7,8 @@ using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.WorkItems;
 using DataModels.Models.WorkItems.Dtos;
-using System;
+using DataModels.Models.WorkItems.UserStory;
+using DataModels.Models.WorkItems.UserStory.Dtos;
 
 namespace Web.Automapper
 {
@@ -26,6 +27,13 @@ namespace Web.Automapper
             CreateMap<WorkItemViewModel, WorkItemUpdateModel>().ReverseMap(); 
             CreateMap<WorkItemViewModel, WorkItemDto>().ReverseMap(); 
             CreateMap<WorkItemAllViewModel, WokrItemAllDto>().ReverseMap(); 
+            
+            CreateMap<UserStory, UserStoryDto>().ReverseMap(); 
+            CreateMap<UserStory, UserStoryAllDto>().ReverseMap(); 
+            CreateMap<UserStory, UserStoryInputModel>().ReverseMap();
+            CreateMap<UserStoryViewModel, UserStoryUpdateModel>().ReverseMap(); 
+            CreateMap<UserStoryViewModel, UserStoryDto>().ReverseMap(); 
+            CreateMap<UserStoryAllViewmodel, UserStoryAllDto>().ReverseMap();
 
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
 

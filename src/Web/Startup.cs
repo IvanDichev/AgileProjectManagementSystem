@@ -16,6 +16,7 @@ using Services.BacklogPriorities;
 using Services.Comments;
 using Services.Projects;
 using Services.WorkItems;
+using Services.WorkItems.UserStories;
 using Services.WorkItemTypesServices;
 using Utilities.Mailing;
 using Web.Middlewares;
@@ -81,6 +82,7 @@ namespace Web
             services.AddScoped<IBacklogPrioritiesService, BacklogPrioritiesService>();
             services.AddScoped<ICommentsService, CommentsService>();
             services.AddScoped<IWorkItemTypesService, WorkItemTypesService>();
+            services.AddScoped<IUserStoryService, UserStoryService>();
 
         }
 

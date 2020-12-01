@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Data.Models;
 using DataModels.Models.Sorting;
-using DataModels.Models.WorkItems;
-using DataModels.Models.WorkItems.Dtos;
+using DataModels.Models.WorkItems.UserStory;
+using DataModels.Models.WorkItems.UserStory.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repo;
@@ -13,48 +13,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Services.WorkItems
+namespace Services.WorkItems.UserStories
 {
-    public class WorkItemService : IWorkItemService
+    public class UserStoryService : IUserStoryService
     {
-        private readonly IRepository<UserStory> userStoryRepo;
+        private readonly IRepository<UserStory> repo;
         private readonly IMapper mapper;
-        private readonly ILogger<WorkItemService> logger;
+        private readonly ILogger<UserStoryService> logger;
 
-        public WorkItemService(IRepository<UserStory> repo, IMapper mapper, ILogger<WorkItemService> logger)
+        public UserStoryService(IRepository<UserStory> repo, IMapper mapper, ILogger<UserStoryService> logger)
         {
-            this.userStoryRepo = repo;
+            this.repo = repo;
             this.mapper = mapper;
             this.logger = logger;
         }
-
-        public async Task<IEnumerable<WokrItemAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
+        public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
         {
-            var query = this.userStoryRepo.AllAsNoTracking()
+            var query = this.repo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId);
             var srotedQuery = Sort(sortingFilter, query);
 
-            var sortedWorkItems = await srotedQuery.ProjectTo<WokrItemAllDto>(this.mapper.ConfigurationProvider)
+            var sortedWorkItems = await srotedQuery.ProjectTo<UserStoryAllDto>(this.mapper.ConfigurationProvider)
                  .ToListAsync();
 
             return sortedWorkItems;
         }
 
-        public async Task CreateUserStoryAsync(WorkItemInputModel model)
+        public async Task CreateAsync(UserStoryInputModel model)
         {
-            var workItem = this.mapper.Map<UserStory>(model);
-            workItem.AddedOn = DateTime.UtcNow;
+            var userStory = this.mapper.Map<UserStory>(model);
+            userStory.AddedOn = DateTime.UtcNow;
+            // Increment IfForProject TODO Fix separate this column in another table
+            userStory.IdForProject = (this.repo.AllAsNoTracking()
+                .Where(x => x.ProjectId == model.ProjectId)
+                .Select(x => x.IdForProject)
+                .OrderByDescending(x => x)
+                .FirstOrDefault() + 1);
+            await this.repo.AddAsync(userStory);
 
-            await this.userStoryRepo.AddAsync(workItem);
-
-            await this.userStoryRepo.SaveChangesAsync();
+            await this.repo.SaveChangesAsync();
         }
 
-        public async Task<WorkItemDto> GetAsync(int WorkItemId)
+        public async Task<UserStoryDto> GetAsync(int WorkItemId)
         {
-            var workItem = await this.userStoryRepo.All()
+            var workItem = await this.repo.All()
                 .Where(x => x.Id == WorkItemId)
-                .ProjectTo<WorkItemDto>(this.mapper.ConfigurationProvider)
+                .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
             return workItem;
@@ -62,23 +66,23 @@ namespace Services.WorkItems
 
         public async Task DeleteAsync(int userStoryId)
         {
-            var toRemove = await this.userStoryRepo.All()
+            var toRemove = await this.repo.All()
                 .Where(x => x.Id == userStoryId)
                 .FirstOrDefaultAsync();
 
             if (toRemove != null)
             {
-                this.userStoryRepo.Delete(toRemove);
+                this.repo.Delete(toRemove);
 
-                await this.userStoryRepo.SaveChangesAsync();
+                await this.repo.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateAsync(WorkItemUpdateModel updateModel)
+        public async Task UpdateAsync(UserStoryUpdateModel updateModel)
         {
             try
             {
-                var toUpdate = this.userStoryRepo.AllAsNoTracking()
+                var toUpdate = this.repo.AllAsNoTracking()
                     .Where(x => x.Id == updateModel.Id)
                     .FirstOrDefault();
 
@@ -98,8 +102,8 @@ namespace Services.WorkItems
                     toUpdate.Comments.Add(comment);
                 }
 
-                this.userStoryRepo.Update(toUpdate);
-                await this.userStoryRepo.SaveChangesAsync();
+                this.repo.Update(toUpdate);
+                await this.repo.SaveChangesAsync();
             }
             catch (Exception e)
             {
@@ -111,8 +115,8 @@ namespace Services.WorkItems
         {
             return sortingFilter.SortingParams switch
             {
-                UserStorySortingConstants.IdAsc => query.OrderBy(x => x.Id),
-                UserStorySortingConstants.IdDesc => query.OrderByDescending(x => x.Id),
+                UserStorySortingConstants.IdAsc => query.OrderBy(x => x.IdForProject),
+                UserStorySortingConstants.IdDesc => query.OrderByDescending(x => x.IdForProject),
                 UserStorySortingConstants.TitleAsc => query.OrderBy(x => x.Title),
                 UserStorySortingConstants.TitleDesc => query.OrderByDescending(x => x.Title),
                 UserStorySortingConstants.StoryPointsAsc => query.OrderBy(x => x.StoryPoints),

@@ -1,6 +1,6 @@
 ﻿namespace Shared.Constants
 {
-    public class WorkItemsSortingConstants
+    public class UserStorySortingConstants
     {
         public const string IdAsc = "IdAsc";
         public const string IdDesc = "IdDesc";

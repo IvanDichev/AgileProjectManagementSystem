@@ -1,4 +1,4 @@
-﻿@model UpdateWorkItemViewModel;
+﻿@model UserStoryUpdateViewModel;
 @using Utilities.CalculateTimeAgo;
 
 @{
@@ -57,7 +57,7 @@ alignleft aligncenter alignright alignjustify | code`,
 </script>
 
 <div>
-    <form method="post" asp-action="Get">
+    <form method="post">
         <div asp-validation-summary="All" class="text-danger"></div>
         <span asp-validation-for="@Model.ViewModel.StoryPoints" class="text-danger"></span>
         <input asp-for="@Model.ViewModel.Id" hidden />
@@ -87,12 +87,6 @@ alignleft aligncenter alignright alignjustify | code`,
                             onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
                             asp-items="priorities"></select>
                     <span asp-validation-for="@Model.ViewModel.BacklogPriorityPriority" class="text-danger"></span>
-                </div>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">Work Item Type</span>
-                    </div>
-                    <input asp-for="@Model.ViewModel.WorkItemTypeType" id="priorityInputSelect" class="form-control" disabled />
                 </div>
             </div>
             <hr />
