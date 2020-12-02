@@ -47,7 +47,7 @@
                 <a class="dropdown-item" asp-action="AddTask" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
                     @WorkItemTypesConstants.Task
                 </a>
-                <a class="dropdown-item" asp-action="AddTestCase" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+                <a class="dropdown-item" asp-action="AddTest" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
                     @WorkItemTypesConstants.Test
                 </a>
                 <a class="dropdown-item" asp-action="AddBug" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
@@ -165,10 +165,12 @@
                                    asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]" asp-route-userStoryId="@userStory.Id">
                                     @WorkItemTypesConstants.Task
                                 </a>
-                                <a class="dropdown-item" asp-action="AddTestCase" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+                                <a class="dropdown-item" asp-action="AddTest" 
+                                   asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]" asp-route-userStoryId="@userStory.Id">
                                     @WorkItemTypesConstants.Test
                                 </a>
-                                <a class="dropdown-item" asp-action="AddBug" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+                                <a class="dropdown-item" asp-action="AddBug" 
+                                   asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]" asp-route-userStoryId="@userStory.Id">
                                     @WorkItemTypesConstants.Bug
                                 </a>
                             </div>

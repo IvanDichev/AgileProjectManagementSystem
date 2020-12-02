@@ -8,6 +8,7 @@ using DataModels.Models.WorkItems.UserStory.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repo;
+using Services.Projects;
 using Shared.Constants;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,16 @@ namespace Services.WorkItems.UserStories
         private readonly IRepository<UserStory> repo;
         private readonly IMapper mapper;
         private readonly ILogger<UserStoryService> logger;
+        private readonly IProjectsService projectsService;
 
-        public UserStoryService(IRepository<UserStory> repo, IMapper mapper, ILogger<UserStoryService> logger)
+        public UserStoryService(IRepository<UserStory> repo, IMapper mapper, 
+            ILogger<UserStoryService> logger, 
+            IProjectsService projectsService)
         {
             this.repo = repo;
             this.mapper = mapper;
             this.logger = logger;
+            this.projectsService = projectsService;
         }
         public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
         {
@@ -44,17 +49,7 @@ namespace Services.WorkItems.UserStories
         {
             var userStory = this.mapper.Map<UserStory>(model);
             userStory.AddedOn = DateTime.UtcNow;
-            // Increment IfForProject TODO Fix separate this column in another table
-            var workItemsId = (this.repo.AllAsNoTracking()
-                .Where(x => x.ProjectId == model.ProjectId)
-                .Select(x => x.Project.WorkItemsId)
-                .FirstOrDefault() + 1);
-            
-            userStory.IdForProject = this.repo.AllAsNoTracking()
-                .Where(x => x.ProjectId == model.ProjectId)
-                .Select(x => x.Project.WorkItemsId)
-                .FirstOrDefault();
-
+            userStory.IdForProject = await projectsService.GetNextIdForWorkItemAsync(model.ProjectId);
 
             await this.repo.AddAsync(userStory);
 

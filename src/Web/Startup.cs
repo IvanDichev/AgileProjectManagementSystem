@@ -17,6 +17,7 @@ using Services.Comments;
 using Services.Projects;
 using Services.WorkItems;
 using Services.WorkItems.Tasks;
+using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
 using Utilities.Mailing;
 using Web.Middlewares;
@@ -83,6 +84,7 @@ namespace Web
             services.AddScoped<ICommentsService, CommentsService>();
             services.AddScoped<IUserStoryService, UserStoryService>();
             services.AddScoped<ITasksService, TasksService>();
+            services.AddScoped<ITestsService, TestsService>();
 
         }
 

@@ -3,6 +3,8 @@ using DataModels.Models.Sorting;
 using DataModels.Models.WorkItems;
 using DataModels.Models.WorkItems.Tasks;
 using DataModels.Models.WorkItems.Tasks.Dtos;
+using DataModels.Models.WorkItems.Tests;
+using DataModels.Models.WorkItems.Tests.Dtos;
 using DataModels.Models.WorkItems.UserStory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,7 @@ using Services.BacklogPriorities;
 using Services.Projects;
 using Services.WorkItems;
 using Services.WorkItems.Tasks;
+using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
 using System;
 using System.Collections.Generic;
@@ -26,19 +29,22 @@ namespace Web.Controllers
         private readonly IMapper mapper;
         private readonly IUserStoryService userStoryService;
         private readonly ITasksService tasksService;
+        private readonly ITestsService testsService;
 
         public WorkItemsController(IWorkItemService workItemService,
             IBacklogPrioritiesService backlogPrioritiesService,
             IProjectsService projectsService,
             IMapper mapper,
             IUserStoryService userStoryService,
-            ITasksService tasksService) : base(projectsService)
+            ITasksService tasksService,
+            ITestsService testsService) : base(projectsService)
         {
             this.workItemService = workItemService;
             this.backlogPrioritiesService = backlogPrioritiesService;
             this.mapper = mapper;
             this.userStoryService = userStoryService;
             this.tasksService = tasksService;
+            this.testsService = testsService;
         }
 
         public async Task<IActionResult> GetAll(int projectId, SortingFilter sortingFilter)
@@ -239,6 +245,45 @@ namespace Web.Controllers
                 return RedirectToAction("Error", "Error");
             }
 
+        }
+
+        public async Task<IActionResult> AddTest(int projectId, int userStoryId)
+        {
+            var testInputModel = new TestInputModel()
+            {
+                UserStoryId = userStoryId,
+                UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId),
+            };
+
+            return View(testInputModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTest(int projectId, TestInputModel testInputModel)
+        {
+            if(!this.IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            if(!ModelState.IsValid)
+            {
+                testInputModel.UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId);
+
+                return View(testInputModel);
+            }
+
+            try
+            {
+                var inputDto = this.mapper.Map<TestInputModelDto>(testInputModel);
+                await this.testsService.CreateAsync(projectId, inputDto);
+
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
     }
 }
