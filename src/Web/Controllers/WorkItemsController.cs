@@ -292,6 +292,7 @@ namespace Web.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteTest(int projectId, int testId)
         {
             if(!this.IsCurrentUserInProject(projectId))
@@ -351,6 +352,26 @@ namespace Web.Controllers
                 return RedirectToAction("Error", "Error");
             }
             
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBug(int projectId, int bugId)
+        {
+            if(!this.IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await this.bugsService.DeleteAsync(bugId);
+
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
     }
 }

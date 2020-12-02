@@ -8,6 +8,7 @@ using Repo;
 using Services.Projects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.WorkItems.Bugs
@@ -46,6 +47,14 @@ namespace Services.WorkItems.Bugs
             };
 
             await this.bugsRepo.AddAsync(toCreate);
+            await this.bugsRepo.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int bugId)
+        {
+            var toRemove = await this.bugsRepo.All().Where(x => x.Id == bugId).FirstOrDefaultAsync();
+
+            this.bugsRepo.Delete(toRemove);
             await this.bugsRepo.SaveChangesAsync();
         }
 
