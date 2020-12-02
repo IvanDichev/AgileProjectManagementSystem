@@ -5,7 +5,9 @@ using DataModels.Models.Comments;
 using DataModels.Models.Comments.Dtos;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Models.Severity;
 using DataModels.Models.WorkItems;
+using DataModels.Models.WorkItems.Bugs;
 using DataModels.Models.WorkItems.Bugs.Dtos;
 using DataModels.Models.WorkItems.Tasks;
 using DataModels.Models.WorkItems.Tasks.Dtos;
@@ -45,6 +47,7 @@ namespace Web.Automapper
 
             // Bugs
             CreateMap<Bug, BugAllDto>().ReverseMap();
+            CreateMap<BugInputModel, BugInputModelDto>().ReverseMap();
 
             // Backlog priorities
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
@@ -54,10 +57,13 @@ namespace Web.Automapper
             CreateMap<UserStoryComment, CommentDto>().ReverseMap();
             CreateMap<UserStoryComment, CommentViewModel>().ReverseMap()
                 .ForMember(x => x.Description, opt => opt.MapFrom(x => x.SanitizedDescription));
-            CreateMap<UserStoryComment, CommentInputModel>().ReverseMap(); //
+            CreateMap<UserStoryComment, CommentInputModel>().ReverseMap(); 
             CreateMap<CommentViewModel, CommentDto>().ReverseMap();
             CreateMap<CommentViewModel, CommentInputModel>().ReverseMap();
             CreateMap<CommentsUpdateModel, CommentInputModel>().ReverseMap();
+
+            // Severity
+            CreateMap<Severity, SeverityDropDownModel>().ReverseMap();
         }
     }
 }

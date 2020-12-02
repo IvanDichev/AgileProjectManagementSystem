@@ -18,13 +18,13 @@ namespace Web.Controllers
         /// <summary>
         /// Check if project has relation to the project.
         /// </summary>
-        /// <param name="workItemId"></param>
+        /// <param name="projectId"></param>
         /// <returns></returns>
-        protected internal bool IsCurrentUserInProject(int workItemId)
+        protected internal bool IsCurrentUserInProject(int projectId)
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return this.workItemService.IsUserInProject(workItemId, userId);
+            return this.workItemService.IsUserInProject(projectId, userId);
         }
     }
 }

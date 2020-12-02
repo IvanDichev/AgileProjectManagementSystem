@@ -16,6 +16,7 @@ using Services.BacklogPriorities;
 using Services.Comments;
 using Services.Projects;
 using Services.WorkItems;
+using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
 using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
@@ -85,6 +86,7 @@ namespace Web
             services.AddScoped<IUserStoryService, UserStoryService>();
             services.AddScoped<ITasksService, TasksService>();
             services.AddScoped<ITestsService, TestsService>();
+            services.AddScoped<IBugsService, BugsService>();
 
         }
 

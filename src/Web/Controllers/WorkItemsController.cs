@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DataModels.Models.Sorting;
 using DataModels.Models.WorkItems;
+using DataModels.Models.WorkItems.Bugs;
+using DataModels.Models.WorkItems.Bugs.Dtos;
 using DataModels.Models.WorkItems.Tasks;
 using DataModels.Models.WorkItems.Tasks.Dtos;
 using DataModels.Models.WorkItems.Tests;
@@ -11,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.BacklogPriorities;
 using Services.Projects;
 using Services.WorkItems;
+using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
 using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
@@ -30,6 +33,7 @@ namespace Web.Controllers
         private readonly IUserStoryService userStoryService;
         private readonly ITasksService tasksService;
         private readonly ITestsService testsService;
+        private readonly IBugsService bugsService;
 
         public WorkItemsController(IWorkItemService workItemService,
             IBacklogPrioritiesService backlogPrioritiesService,
@@ -37,7 +41,8 @@ namespace Web.Controllers
             IMapper mapper,
             IUserStoryService userStoryService,
             ITasksService tasksService,
-            ITestsService testsService) : base(projectsService)
+            ITestsService testsService,
+            IBugsService bugsService) : base(projectsService)
         {
             this.workItemService = workItemService;
             this.backlogPrioritiesService = backlogPrioritiesService;
@@ -45,6 +50,7 @@ namespace Web.Controllers
             this.userStoryService = userStoryService;
             this.tasksService = tasksService;
             this.testsService = testsService;
+            this.bugsService = bugsService;
         }
 
         public async Task<IActionResult> GetAll(int projectId, SortingFilter sortingFilter)
@@ -284,6 +290,48 @@ namespace Web.Controllers
             {
                 return RedirectToAction("Error", "Error");
             }
+        }
+
+        public async Task<IActionResult> AddBug(int projectId, int userStoryId)
+        {
+            var inputModel = new BugInputModel()
+            {
+                UserStoryId = userStoryId,
+                UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId),
+                SeverityDropDown = await this.bugsService.GetSeverityDropDown(),
+            };
+
+            return View(inputModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddBug(int projectId, BugInputModel inputModel)
+        {
+            if(!this.IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            if(!ModelState.IsValid)
+            {
+                inputModel.UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId);
+                inputModel.SeverityDropDown = await this.bugsService.GetSeverityDropDown();
+
+                return View(inputModel);
+            }
+
+            try
+            {
+                var inputDto = this.mapper.Map<BugInputModelDto>(inputModel);
+                await this.bugsService.CreateBugAsync(projectId, inputDto);
+
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Error");
+            }
+            
         }
     }
 }

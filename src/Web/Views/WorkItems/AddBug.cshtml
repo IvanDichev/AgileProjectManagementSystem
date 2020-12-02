@@ -1,10 +1,13 @@
-﻿@model TestInputModel
+﻿@model BugInputModel
 
 @{
-    ViewData["Title"] = "Create test case";
+    ViewData["Title"] = "Create Bug";
 
-    var userStoriesDropDown = Model.UserStoryDropDown
-        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title });
+    var userStoriesDropDown = Model?.UserStoryDropDown
+       .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Title });
+
+    var severityDropDown = Model?.SeverityDropDown.OrderBy(x => x.Weight)
+        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.SeverityName });
 }
 
 <script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
@@ -34,16 +37,18 @@ alignleft aligncenter alignright alignjustify | code`,
 @if (userStoriesDropDown.Count(x => x.Value.Any()) == 0)
 {
     <h2 class="text-center">There are no user stories. Please consider adding one first.</h2>
-    <a class="btn btn-primary" asp-action="AddUserStory" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">+ Add user story</a>
+    <a class="btn btn-primary" asp-action="AddUserStory" 
+       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">+ Add user story</a>
 }
 else
 {
-    <h4>Create Test Case</h4>
+    <h4>Create Bug</h4>
     <hr />
     <div class="row">
         <div class="col-md-12">
-            <form asp-action="AddTest">
+            <form asp-action="AddBug">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <div class="form-group">
                     <label asp-for="Title" class="control-label"></label>
                     <input asp-for="Title" class="form-control" />
@@ -67,6 +72,12 @@ else
                 {
                     <input hidden asp-for="UserStoryId" />
                 }
+                <div class="form-group">
+                    <label asp-for="SeverityId" class="control-label"></label>
+                    <select asp-for="SeverityId" class="form-control"
+                            asp-items="severityDropDown"></select>
+                    <span asp-validation-for="SeverityId" class="text-danger"></span>
+                </div>
                 <div class="form-group">
                     <label asp-for="Description" class="control-label"></label>
                     <textarea id="textarea-tinemce" asp-for="Description" class="form-control"></textarea>

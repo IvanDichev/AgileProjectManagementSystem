@@ -2,7 +2,7 @@
 {
     public enum SeverityEnum
     {
-        Default = 0,
+        None = 0,
         Low = 1,
             // No loss of service. The result does not prevent the operation of the software.
         Normal = 2,
