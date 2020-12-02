@@ -6,5 +6,6 @@ namespace Services.WorkItems.Tests
     public interface ITestsService
     {
         Task CreateAsync(int projectId, TestInputModelDto inputModel);
+        Task DeleteAsync(int testId);
     }
 }

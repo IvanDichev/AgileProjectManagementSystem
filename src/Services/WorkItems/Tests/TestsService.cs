@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Data.Models;
 using DataModels.Models.WorkItems.Tests.Dtos;
+using Microsoft.EntityFrameworkCore;
 using Repo;
 using Services.Projects;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.WorkItems.Tests
@@ -34,6 +36,16 @@ namespace Services.WorkItems.Tests
             };
 
             await this.repo.AddAsync(testToCreate);
+            await this.repo.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int testId)
+        {
+            var toRemove = await this.repo.AllAsNoTracking()
+                .Where(x => x.Id == testId)
+                .FirstOrDefaultAsync();
+
+            this.repo.Delete(toRemove);
             await this.repo.SaveChangesAsync();
         }
     }

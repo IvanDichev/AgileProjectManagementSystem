@@ -292,6 +292,25 @@ namespace Web.Controllers
             }
         }
 
+        public async Task<IActionResult> DeleteTest(int projectId, int testId)
+        {
+            if(!this.IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await this.testsService.DeleteAsync(testId);
+
+                return RedirectToAction(nameof(GetAll), new { projectId = projectId });
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Error");
+            }
+        }
+
         public async Task<IActionResult> AddBug(int projectId, int userStoryId)
         {
             var inputModel = new BugInputModel()

@@ -292,6 +292,8 @@
                                 </a>
                                 @* TODO add route *@
                                 <form method="post" style="display:inline-block;"
+                                      asp-action="DeleteTest"
+                                      asp-route-testId="@test.Id"
                                       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
                                     <button type="submit"
                                             class="btn btn-sm btn-danger" id="delete">
