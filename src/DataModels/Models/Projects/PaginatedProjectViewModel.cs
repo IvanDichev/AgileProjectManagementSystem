@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DataModels.Models.Pagination;
+using System.Collections.Generic;
 
 namespace DataModels.Models.Projects
 {
