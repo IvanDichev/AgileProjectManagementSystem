@@ -6,6 +6,8 @@ using DataModels.Models.Comments.Dtos;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.Severity;
+using DataModels.Models.Sprints;
+using DataModels.Models.Sprints.Dto;
 using DataModels.Models.WorkItems;
 using DataModels.Models.WorkItems.Bugs;
 using DataModels.Models.WorkItems.Bugs.Dtos;
@@ -48,6 +50,11 @@ namespace Web.Automapper
             // Bugs
             CreateMap<Bug, BugAllDto>().ReverseMap();
             CreateMap<BugInputModel, BugInputModelDto>().ReverseMap();
+
+            // Sprints
+            CreateMap<Sprint, SprintDto>().ReverseMap();
+            CreateMap<SprintAllViewModel, SprintDto>().ReverseMap();
+            CreateMap<SprintInputModel, SprintInputDto>().ReverseMap();
 
             // Backlog priorities
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();

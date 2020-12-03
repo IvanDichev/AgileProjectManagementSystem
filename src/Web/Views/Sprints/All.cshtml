@@ -1,31 +1,50 @@
-﻿@{
+﻿@model ICollection<SprintAllViewModel>
+
+@{
     ViewData["Title"] = "Sprints overview";
 }
 
 <h3 class="text-center">Sprints</h3>
 
-<style>
-    .table {
-        min-width: 45rem;
-        box-shadow: 0 0.01rem 0.25rem rgba(0, 0, 0, 0.1);
-        border-bottom: solid 1px rgba(0, 0, 0, 0.1);
-    }
-</style>
+<link rel="stylesheet" href="~/css/Sprints/All.css" />
 
 <div class="sprint" id="sprints-container">
-    <div><a class="btn btn-info">+ Add Sprint</a></div>
+    <div>
+        <a class="btn btn-info"
+           asp-action="Create"
+           asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+            + Add Sprint
+        </a>
+    </div>
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col" class="col-sm-8 col-md-5">Name</th>
+                <th scope="col">Name</th>
                 <th scope="col">Project</th>
                 <th scope="col">Team</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
+            @foreach (var sprint in Model)
+            {
+                <tr class="clickable-row">
+                    <th scope="row">ID..</th>
+                    <td>@sprint.Name</td>
+                    <td>@sprint.ProjectTitle</td>
+                    <td>@sprint.ProjectTeamName</td>
+                    <td>@sprint.StartDate.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@sprint.DueDate.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <a id="clickable-row-1" href="https://www.google.com/">
+                            google
+                        </a>
+                    </td>
+                </tr>
+            }
             <tr class="clickable-row">
                 <th scope="row">1</th>
                 <td>Initial</td>
@@ -35,7 +54,7 @@
                 <td>15.11.2020</td>
                 <td>
                     <a id="clickable-row-1" href="https://www.google.com/">
-                        gg
+                        google
                     </a>
                 </td>
             </tr>

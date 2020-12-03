@@ -1,7 +1,7 @@
 ﻿using Data.Models.Base;
-using Shared.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
 {
@@ -9,14 +9,24 @@ namespace Data.Models
     {
         public Sprint()
         {
-            this.WorkItems = new HashSet<UserStory>();
+            this.UserStories = new HashSet<UserStory>();
         }
+
+        [MaxLength(75)]
+        public string Name { get; set; }
+
+        public DateTime StartDate { get; set; }
 
         public DateTime DueDate { get; set; }
 
+        public int StatusId { get; set; }
+
         public SprintStatus Status { get; set; }
 
-        public virtual ICollection<UserStory> WorkItems { get; set; }
+        public int ProjectId { get; set; }
 
+        public Project Project { get; set; }
+
+        public virtual ICollection<UserStory> UserStories { get; set; }
     }
 }

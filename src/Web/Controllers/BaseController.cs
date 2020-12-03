@@ -6,13 +6,13 @@ namespace Web.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly IProjectsService workItemService;
+        private readonly IProjectsService projectsService;
 
         public BaseController() {   }
 
-        public BaseController(IProjectsService workItemService)
+        public BaseController(IProjectsService projectsService)
         {
-            this.workItemService = workItemService;
+            this.projectsService = projectsService;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Web.Controllers
         {
             var userId = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return this.workItemService.IsUserInProject(projectId, userId);
+            return this.projectsService.IsUserInProject(projectId, userId);
         }
     }
 }
