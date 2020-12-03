@@ -5,37 +5,13 @@
 @{
     ViewData["Title"] = "Wrok items overview";
 }
-<link rel="stylesheet" href="~/css/UserStories/Index.css" asp-append-version="true" />
-<style>
-    .tooltips {
-        position: relative;
-        display: inline-block;
-    }
+<link rel="stylesheet" href="~/css/WorkItems/GetAll.css" asp-append-version="true" />
 
-        .tooltips .tooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 1;
-            top: 100%;
-            left: 50%;
-            margin-left: -60px;
-        }
-
-        .tooltips:hover .tooltiptext {
-            visibility: visible;
-        }
-</style>
 <script src="~/js/UserStories/Index.js" asp-append-version="true"></script>
 <div class="container">
     <div class="overflow-auto">
         <h2 class="text-center">Work Items</h2>
-        <div class="dropdown" style="display:inline-block">
+        <div class="dropdown dropdown-add-button">
             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 + Add
@@ -58,7 +34,7 @@
         <table class="table table-responsive-md table-bordered table-striped table-hover">
             <thead class="thead-light">
                 <tr>
-                    <th style="width: 7%">
+                    <th class="th-1">
                         <div class="center-after-filter">
                             <div class="th-header">
                                 <div class="th-header-title">
@@ -79,7 +55,7 @@
                             </div>
                         </div>
                     </th>
-                    <th style="width: 46%">
+                    <th class="th-2">
                         <div class="th-header">
                             <div class="th-header-title">
                                 Title
@@ -98,7 +74,7 @@
                             </div>
                         </div>
                     </th>
-                    <th style="width: 10%">
+                    <th class="th-3">
                         <div class="th-header">
                             <div class="th-header-title">
                                 Story Points
@@ -117,7 +93,7 @@
                             </div>
                         </div>
                     </th>
-                    <th style="width: 15%">
+                    <th class="th-4">
                         <div class="th-header">
                             <div class="th-header-title">
                                 Priority
@@ -136,7 +112,7 @@
                             </div>
                         </div>
                     </th>
-                    <th style="width: 22%"></th>
+                    <th class="th-5"></th>
                 </tr>
             </thead>
             <tbody>
@@ -180,7 +156,7 @@
                                class="btn btn-sm btn-info">
                                 Edit
                             </a>
-                            <form method="post" style="display:inline-block;"
+                            <form method="post" class="deleted-form"
                                   asp-action="DeleteUserStory"
                                   asp-route-UserStoryId="@userStory.Id"
                                   asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
@@ -217,7 +193,7 @@
                                    class="btn btn-sm btn-info">
                                     Edit
                                 </a>
-                                <form method="post" style="display:inline-block;"
+                                <form method="post" class="deleted-form"
                                       asp-action="DeleteTask"
                                       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
                                       asp-route-taskId="@task.Id">
@@ -254,7 +230,7 @@
                                    class="btn btn-sm btn-info">
                                     Edit
                                 </a>
-                                <form method="post" style="display:inline-block;"
+                                <form method="post" class="deleted-form"
                                       asp-action="DeleteBug"
                                       asp-route-bugId="@bug.Id"
                                       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
@@ -291,7 +267,7 @@
                                    class="btn btn-sm btn-info">
                                     Edit
                                 </a>
-                                <form method="post" style="display:inline-block;"
+                                <form method="post" class="deleted-form"
                                       asp-action="DeleteTest"
                                       asp-route-testId="@test.Id"
                                       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">

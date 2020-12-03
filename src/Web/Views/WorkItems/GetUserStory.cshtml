@@ -10,51 +10,7 @@
     var commentsCounter = 0;
 }
 
-<link rel="stylesheet" href="~/css/UserStories/Get.css" asp-append-version="true" />
-<script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
-<script type="text/javascript" asp-append-version="true">
-    tinyMCE.init({
-        selector: '#textarea-tinemce-description',
-        plugins: 'image paste table link code media lists',
-        toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
-alignleft aligncenter alignright alignjustify | code`,
-        themes: 'advanced',
-        menubar: false,
-        languages: 'en',
-        height: '480',
-    });
-</script>
-<script type="text/javascript" asp-append-version="true">
-    tinyMCE.init({
-        selector: '#textarea-tinemce-acceptanceCriteria',
-        plugins: 'image paste table link code media lists',
-        toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
-alignleft aligncenter alignright alignjustify | code`,
-        themes: 'advanced',
-        menubar: false,
-        languages: 'en',
-        height: '380',
-    });
-</script>
-<script type="text/javascript" asp-append-version="true">
-    tinyMCE.init({
-        selector: '#textarea-tinemce-comment',
-        plugins: 'image paste table link code media lists',
-        toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
-alignleft aligncenter alignright alignjustify | code`,
-        themes: 'advanced',
-        menubar: false,
-        languages: 'en',
-    });
-</script>
-<script type="text/javascript">
-    function updateInputFromSelect(fromElId, toElId) {
-        var e = document.getElementById(fromElId);
-        var catSelected = e.options[e.selectedIndex].text;
-
-        document.getElementById(toElId).value = catSelected;
-    }
-</script>
+<link rel="stylesheet" href="~/css/WorkItems/GetUserStory.css" asp-append-version="true" />
 
 <div>
     <form method="post">
@@ -66,16 +22,17 @@ alignleft aligncenter alignright alignjustify | code`,
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">Id: @Model.ViewModel.Id</span>
                 </div>
-                <input type="text" class="form-control" asp-for="@Model.ViewModel.Title" 
+                <input type="text" class="form-control" asp-for="@Model.ViewModel.Title"
                        aria-label="Title" aria-describedby="basic-addon1">
                 <button class="btn btn-light" type="submit">Save and close</button>
             </div>
+            <div class="sm"></div>
             <div class="small-flex">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Story points</span>
                     </div>
-                    <input type="text" class="form-control" asp-for="@Model.ViewModel.StoryPoints" 
+                    <input type="text" class="form-control" asp-for="@Model.ViewModel.StoryPoints"
                            aria-label="Title" aria-describedby="basic-addon1">
                 </div>
 
@@ -83,8 +40,7 @@ alignleft aligncenter alignright alignjustify | code`,
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Priority</span>
                     </div>
-                    <select asp-for="@Model.ViewModel.BacklogPriorityId" id="priorityInputSelect" 
-                            onchange="updateInputFromSelect('priorityInputSelect', 'priorityInput');" class="form-control"
+                    <select asp-for="@Model.ViewModel.BacklogPriorityId" id="priorityInputSelect" class="form-control"
                             asp-items="priorities"></select>
                     <span asp-validation-for="@Model.ViewModel.BacklogPriorityPriority" class="text-danger"></span>
                 </div>
@@ -126,7 +82,7 @@ alignleft aligncenter alignright alignjustify | code`,
                                     <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                                 </svg>
                             </a>
-                            <div id="myDropdown-@commentsCounter" 
+                            <div id="myDropdown-@commentsCounter"
                                  class="dropdown-content edit-comment dropdown-content-@commentsCounter">
                                 <a asp-action="Edit" asp-controller="UserStoryComments"
                                    asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
@@ -136,7 +92,7 @@ alignleft aligncenter alignright alignjustify | code`,
                                     Edit
                                 </a>
                                 <form method="post">
-                                    <button class="del-button" type="submit" 
+                                    <button class="del-button" type="submit"
                                             asp-action="Delete" asp-controller="UserStoryComments"
                                             asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
                                             asp-route-UserStoryId="@comment.UserStoryId"
@@ -161,5 +117,41 @@ alignleft aligncenter alignright alignjustify | code`,
 </div>
 
 @section Scripts{
+    <script type="text/javascript" src="~/lib/tinymce/tinymce.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" asp-append-version="true">
+        tinyMCE.init({
+            selector: '#textarea-tinemce-description',
+            plugins: 'image paste table link code media lists',
+            toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
+alignleft aligncenter alignright alignjustify | code`,
+            themes: 'advanced',
+            menubar: false,
+            languages: 'en',
+            height: '480',
+        });
+    </script>
+    <script type="text/javascript" asp-append-version="true">
+        tinyMCE.init({
+            selector: '#textarea-tinemce-acceptanceCriteria',
+            plugins: 'image paste table link code media lists',
+            toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
+alignleft aligncenter alignright alignjustify | code`,
+            themes: 'advanced',
+            menubar: false,
+            languages: 'en',
+            height: '380',
+        });
+    </script>
+    <script type="text/javascript" asp-append-version="true">
+        tinyMCE.init({
+            selector: '#textarea-tinemce-comment',
+            plugins: 'image paste table link code media lists',
+            toolbar: `undo redo | numlist bullist styleselect | forecolor | bold italic |
+alignleft aligncenter alignright alignjustify | code`,
+            themes: 'advanced',
+            menubar: false,
+            languages: 'en',
+        });
+    </script>
     <script src="~/js/UserStories/Get.js" asp-append-version="true"></script>
 }

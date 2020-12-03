@@ -1,0 +1,10 @@
+﻿.storyPoints-backlog-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+    .storyPoints-backlog-flex .form-group {
+        width: 45%
+    }
