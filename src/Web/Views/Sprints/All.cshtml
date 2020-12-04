@@ -19,7 +19,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Project</th>
                 <th scope="col">Team</th>
@@ -32,9 +31,8 @@
             @foreach (var sprint in Model)
             {
                 <tr class="clickable-row">
-                    <th scope="row">ID..</th>
                     <td>@sprint.Name</td>
-                    <td>@sprint.ProjectTitle</td>
+                    <td>@sprint.ProjectName</td>
                     <td>@sprint.ProjectTeamName</td>
                     <td>@sprint.StartDate.Date.ToString("dd/MM/yyyy")</td>
                     <td>@sprint.DueDate.ToString("dd/MM/yyyy")</td>
@@ -46,7 +44,6 @@
                 </tr>
             }
             <tr class="clickable-row">
-                <th scope="row">1</th>
                 <td>Initial</td>
                 <td>AgileMs</td>
                 <td>AgileMsTeam</td>
@@ -59,7 +56,6 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row">2</th>
                 <td>Some work done</td>
                 <td>AgileMs</td>
                 <td>AgileMsTeam</td>
@@ -67,7 +63,6 @@
                 <td>22.11.2020</td>
             </tr>
             <tr>
-                <th scope="row">3</th>
                 <td>Getting thing nice and clean</td>
                 <td>AgileMs</td>
                 <td>AgileMsTeam</td>

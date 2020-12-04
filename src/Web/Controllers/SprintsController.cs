@@ -64,9 +64,9 @@ namespace Web.Controllers
 
             try
             {
-                if(DateTime.Compare(inputModel.StartDate, DateTime.Now.Date) < 0)
+                if(DateTime.Compare(inputModel.StartDate, inputModel.DueDate) > 0)
                 {
-                    this.ModelState.AddModelError(string.Empty, "Start date cannot be earlier than today.");
+                    this.ModelState.AddModelError(string.Empty, "Start date cannot be earlier than end date.");
 
                     return View(inputModel);
                 }
@@ -76,7 +76,7 @@ namespace Web.Controllers
 
                 await this.sprintsService.CreateSprintAsync(inputDto);
 
-                return RedirectToAction(nameof(All));
+                return RedirectToAction(nameof(All), new { projectId = projectId });
             }
             catch
             {

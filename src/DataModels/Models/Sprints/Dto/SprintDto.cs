@@ -4,6 +4,8 @@ namespace DataModels.Models.Sprints.Dto
 {
     public class SprintDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -18,7 +20,7 @@ namespace DataModels.Models.Sprints.Dto
 
         public int UserStoriesCount { get; set; }
 
-        public string ProjectTitle { get; set; }
+        public string ProjectName { get; set; }
 
         public string ProjectTeamName { get; set; }
     }

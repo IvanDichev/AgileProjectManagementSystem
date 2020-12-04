@@ -4,6 +4,8 @@ namespace DataModels.Models.Sprints
 {
     public class SprintAllViewModel
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -16,7 +18,7 @@ namespace DataModels.Models.Sprints
 
         public int ProjectId { get; set; }
 
-        public string ProjectTitle { get; set; }
+        public string ProjectName { get; set; }
 
         public int UserStoriesCount { get; set; }
 
