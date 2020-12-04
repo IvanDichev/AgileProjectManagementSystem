@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
 using DataModels.Models.BacklogPriorities;
+using DataModels.Models.Board.Dtos;
 using DataModels.Models.Comments;
 using DataModels.Models.Comments.Dtos;
 using DataModels.Models.Projects;
@@ -59,6 +60,9 @@ namespace Web.Automapper
             // Backlog priorities
             CreateMap<BacklogPriority, BacklogPrioritiesDto>().ReverseMap();
             CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
+
+            // Board columns
+            CreateMap<BoardColumn, BoardColumnAllDto>().ReverseMap();
 
             // User story comments
             CreateMap<UserStoryComment, CommentDto>().ReverseMap();
