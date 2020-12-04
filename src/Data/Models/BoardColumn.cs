@@ -1,5 +1,6 @@
 ﻿using Data.Models.Base;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.Models
 {
@@ -10,6 +11,7 @@ namespace Data.Models
             this.UserStories = new HashSet<UserStory>();
         }
 
+        [MaxLength(75)]
         public string ColumnName { get; set; }
         
         public ushort MaxItems { get; set; }
