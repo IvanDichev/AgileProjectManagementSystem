@@ -36,40 +36,11 @@ namespace Services.Sprints
                 ProjectId = inputDto.ProjectId,
                 StartDate = inputDto.StartDate,
                 DueDate = inputDto.DueDate,
-                //StatusId = inputDto.StatusId,
-                //StatusId = inputDto.StatusId == 0 ? 1 : inputDto.StatusId
                 StatusId = GetSprintStatus(inputDto.StartDate, inputDto.DueDate)
             };
 
             await this.repo.AddAsync(sprint);
             await this.repo.SaveChangesAsync();
-        }
-
-        private int GetSprintStatus(DateTime startDate, DateTime dueDate)
-        {
-            var now = DateTime.Now.Date;
-            var relativeToStart = DateTime.Compare(now, startDate);
-            var relativeToEnd = DateTime.Compare(now, dueDate);
-
-            return (relativeToStart, relativeToEnd) switch
-            {
-                    // If current date is before start date -> planning
-                (-1, _) => this.sprintStatusRepo.AllAsNoTracking()
-                    .Where(x => x.Status == SprintStatusConstants.Planning)
-                    .FirstOrDefault().Id,
-                    // Else if current date is before end date -> Active
-                (_, -1) => this.sprintStatusRepo.AllAsNoTracking()
-                    .Where(x => x.Status == SprintStatusConstants.Active)
-                    .FirstOrDefault().Id,
-                    // Its last day of sprint
-                (_, 0) => this.sprintStatusRepo.AllAsNoTracking()
-                .Where(x => x.Status == SprintStatusConstants.Active)
-                .FirstOrDefault().Id,
-                    // Else -> closed
-                _ => this.sprintStatusRepo.AllAsNoTracking()
-                    .Where(x => x.Status == SprintStatusConstants.Closed)
-                    .FirstOrDefault().Id
-            };
         }
 
         public async Task<ICollection<SprintDto>> GetAllForProjectAsync(int projectId)
@@ -110,13 +81,31 @@ namespace Services.Sprints
             return areUserStoriesInSprint;
         }
 
-        public async Task<ICollection<SprintStatusDto>> GetSprintStatusDropDownAsync()
+        private int GetSprintStatus(DateTime startDate, DateTime dueDate)
         {
-            var sprintStatuses = await this.sprintStatusRepo.AllAsNoTracking()
-                .ProjectTo<SprintStatusDto>(this.mapper.ConfigurationProvider)
-                .ToListAsync();
+            var now = DateTime.Now.Date;
+            var relativeToStart = DateTime.Compare(now, startDate);
+            var relativeToEnd = DateTime.Compare(now, dueDate);
 
-            return sprintStatuses;
+            return (relativeToStart, relativeToEnd) switch
+            {
+                // If current date is before start date -> planning
+                (-1, _) => this.sprintStatusRepo.AllAsNoTracking()
+                    .Where(x => x.Status == SprintStatusConstants.Planning)
+                    .FirstOrDefault().Id,
+                // Else if current date is before end date -> Active
+                (_, -1) => this.sprintStatusRepo.AllAsNoTracking()
+                    .Where(x => x.Status == SprintStatusConstants.Active)
+                    .FirstOrDefault().Id,
+                // Its last day of sprint
+                (_, 0) => this.sprintStatusRepo.AllAsNoTracking()
+                .Where(x => x.Status == SprintStatusConstants.Active)
+                .FirstOrDefault().Id,
+                // Else -> closed
+                _ => this.sprintStatusRepo.AllAsNoTracking()
+                    .Where(x => x.Status == SprintStatusConstants.Closed)
+                    .FirstOrDefault().Id
+            };
         }
     }
 }
