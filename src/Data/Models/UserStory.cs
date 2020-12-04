@@ -36,6 +36,10 @@ namespace Data.Models
 
         public virtual Project Project { get; set; }
 
+        public int? BoardColumnId { get; set; }
+
+        public BoardColumn BoardColumn { get; set; }
+
         public ICollection<Mockup> Mockups { get; set; }
 
         public ICollection<UserStoryComment> Comments { get; set; }
