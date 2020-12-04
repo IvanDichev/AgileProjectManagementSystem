@@ -17,6 +17,10 @@
     {
       "library": "tinymce@5.5.1",
       "destination": "wwwroot/lib/tinymce/"
+    },
+    {
+      "library": "bootstrap-datepicker@1.9.0",
+      "destination": "wwwroot/lib/bootstrap-datepicker/"
     }
   ]
 }

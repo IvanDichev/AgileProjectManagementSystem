@@ -14,10 +14,10 @@
     </div>
 }
 
-@if (TempData["SprintDeleteSuccess"] != null)
+@if (TempData["SprintSuccess"] != null)
 {
     <div class="alert alert-success" role="alert">
-        @TempData["SprintDeleteSuccess"].ToString()
+        @TempData["SprintSuccess"].ToString()
     </div>
 }
 <div class="sprint" id="sprints-container">
@@ -36,6 +36,7 @@
                 <th scope="col">Team</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
+                <th scope="col">Status</th>
                 <th></th>
             </tr>
         </thead>
@@ -48,6 +49,7 @@
                     <td>@sprint.ProjectTeamName</td>
                     <td>@sprint.StartDate.Date.ToString("dd/MM/yyyy")</td>
                     <td>@sprint.DueDate.ToString("dd/MM/yyyy")</td>
+                    <td>@sprint.StatusStatus</td>
                     <td>
                         <form asp-action="Delete">
                            <input type="hidden" name="sprintName" asp-for="@sprint.Name"/>

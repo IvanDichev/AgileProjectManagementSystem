@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/leftNav.css" asp-append-version="true" />
 </head>
@@ -50,6 +51,7 @@
     <script src="~/lib/jquery-cookie/jquery.cookie.min.js" asp-append-version="true"></script>
     <script src="~/js/layout/leftNav.js" asp-append-version="true"></script>
     <script src="~/js/Shared/Shared.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js" asp-append-version="true"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     @RenderSection("Scripts", required: false)
 </body>

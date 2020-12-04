@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace DataModels.Models.Sprints
 {
@@ -12,10 +13,14 @@ namespace DataModels.Models.Sprints
         public string Name { get; set; }
 
         [Required]
-        public DateTime StartDate { get; set; }
+        public string InputStartDate { get; set; }
+
+        public DateTime ParsedStartDate => DateTime.ParseExact(this.InputStartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
         [Required]
-        public DateTime DueDate { get; set; }
+        public string InputDueDate { get; set; }
+
+        public DateTime ParsedDueDate => DateTime.ParseExact(this.InputDueDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
         public int StatusId { get; set; }
 

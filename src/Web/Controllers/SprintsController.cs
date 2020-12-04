@@ -7,6 +7,7 @@ using Services.Projects;
 using Services.Sprints;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -64,7 +65,7 @@ namespace Web.Controllers
 
             try
             {
-                if (DateTime.Compare(inputModel.StartDate, inputModel.DueDate) > 0)
+                if (DateTime.Compare(inputModel.ParsedStartDate, inputModel.ParsedDueDate) > 0)
                 {
                     this.ModelState.AddModelError(string.Empty, "Start date cannot be earlier than end date.");
 
@@ -73,8 +74,11 @@ namespace Web.Controllers
 
                 var inputDto = this.mapper.Map<SprintInputDto>(inputModel);
                 inputDto.ProjectId = projectId;
+                inputDto.StartDate = inputModel.ParsedStartDate;
+                inputDto.DueDate = inputModel.ParsedDueDate;
 
                 await this.sprintsService.CreateSprintAsync(inputDto);
+                TempData["SprintSuccess"] = $"Successfully created sprint: {inputModel.Name}.";
 
                 return RedirectToAction(nameof(All), new { projectId = projectId });
             }
@@ -98,7 +102,7 @@ namespace Web.Controllers
                 try
                 {
                     await this.sprintsService.DeleteAsync(sprintId);
-                    TempData["SprintDeleteSuccess"] = $"Sprint {sprintName} was successfully deleted.";
+                    TempData["SprintSuccess"] = $"Sprint {sprintName} was successfully deleted.";
 
                     return RedirectToAction(nameof(All), new { projectId = projectId });
                 }
