@@ -17,7 +17,7 @@ namespace Web.Controllers
         private readonly ISprintsService sprintsService;
         private readonly IMapper mapper;
 
-        public SprintsController(ISprintsService sprintsService, 
+        public SprintsController(ISprintsService sprintsService,
             IProjectsService projectsService,
             IMapper mapper)
             : base(projectsService)
@@ -41,7 +41,7 @@ namespace Web.Controllers
 
         public IActionResult Create(int projectId)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -52,7 +52,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(int projectId, SprintInputModel inputModel)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -64,7 +64,7 @@ namespace Web.Controllers
 
             try
             {
-                if(DateTime.Compare(inputModel.StartDate, inputModel.DueDate) > 0)
+                if (DateTime.Compare(inputModel.StartDate, inputModel.DueDate) > 0)
                 {
                     this.ModelState.AddModelError(string.Empty, "Start date cannot be earlier than end date.");
 
@@ -82,6 +82,32 @@ namespace Web.Controllers
             {
                 return RedirectToAction("Error", "Error");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int projectId, int sprintId, string sprintName)
+        {
+            //TODO enable delete only if team member is project manager or scrum master
+            if (!this.IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            if (await this.sprintsService.AreUserStoriesInSprintAsync(sprintId))
+            {
+                try
+                {
+                    await this.sprintsService.DeleteAsync(sprintId);
+                    TempData["SprintDeleteSuccess"] = $"Sprint {sprintName} was successfully deleted.";
+
+                    return RedirectToAction(nameof(All), new { projectId = projectId });
+                }
+                catch { }
+            }
+
+            TempData["SprintDeleteError"] = "Sprint with assigned user stories cannot be deleted.";
+
+            return RedirectToAction(nameof(All), new { projectId = projectId });
         }
     }
 }

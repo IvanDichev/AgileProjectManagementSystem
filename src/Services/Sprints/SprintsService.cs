@@ -58,5 +58,23 @@ namespace Services.Sprints
 
             return sprint;
         }
+
+        public async Task DeleteAsync(int sprintId)
+        {
+            var toRemove = await this.repo.All()
+                .FirstOrDefaultAsync(x => x.Id == sprintId);
+
+            this.repo.Delete(toRemove);
+            await this.repo.SaveChangesAsync();
+        }
+
+        public async Task<bool> AreUserStoriesInSprintAsync(int sprintId)
+        {
+            var areUserStoriesInSprint = await this.repo.AllAsNoTracking()
+                .Where(x => x.Id == sprintId)
+                .AnyAsync(x => x.UserStories != null);
+
+            return areUserStoriesInSprint;
+        }
     }
 }

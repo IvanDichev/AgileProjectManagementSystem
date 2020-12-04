@@ -4,10 +4,22 @@
     ViewData["Title"] = "Sprints overview";
 }
 
-<h3 class="text-center">Sprints</h3>
-
 <link rel="stylesheet" href="~/css/Sprints/All.css" />
 
+<h3 class="text-center">Sprints</h3>
+@if (TempData["SprintDeleteError"] != null)
+{
+    <div class="alert alert-warning" role="alert">
+        @TempData["SprintDeleteError"].ToString()
+    </div>
+}
+
+@if (TempData["SprintDeleteSuccess"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SprintDeleteSuccess"].ToString()
+    </div>
+}
 <div class="sprint" id="sprints-container">
     <div>
         <a class="btn btn-info"
@@ -30,45 +42,24 @@
         <tbody>
             @foreach (var sprint in Model)
             {
-                <tr class="clickable-row">
+                <tr>
                     <td>@sprint.Name</td>
                     <td>@sprint.ProjectName</td>
                     <td>@sprint.ProjectTeamName</td>
                     <td>@sprint.StartDate.Date.ToString("dd/MM/yyyy")</td>
                     <td>@sprint.DueDate.ToString("dd/MM/yyyy")</td>
                     <td>
-                        <a id="clickable-row-1" href="https://www.google.com/">
-                            google
-                        </a>
+                        <form asp-action="Delete">
+                           <input type="hidden" name="sprintName" asp-for="@sprint.Name"/>
+                           <input type="hidden" name="projectId" value="@this.ViewContext.RouteData.Values["projectId"]"/>
+                           <input type="hidden" name="sprintId" asp-for="@sprint.Id"/>
+                            <button type="submit" id="delete" class="btn btn-danger btn-sm">
+                                Delete
+                            </button>
+                        </form>
                     </td>
                 </tr>
             }
-            <tr class="clickable-row">
-                <td>Initial</td>
-                <td>AgileMs</td>
-                <td>AgileMsTeam</td>
-                <td>09.11.2020</td>
-                <td>15.11.2020</td>
-                <td>
-                    <a id="clickable-row-1" href="https://www.google.com/">
-                        google
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td>Some work done</td>
-                <td>AgileMs</td>
-                <td>AgileMsTeam</td>
-                <td>16.11.2020</td>
-                <td>22.11.2020</td>
-            </tr>
-            <tr>
-                <td>Getting thing nice and clean</td>
-                <td>AgileMs</td>
-                <td>AgileMsTeam</td>
-                <td>23.11.2020</td>
-                <td>29.11.2020</td>
-            </tr>
         </tbody>
     </table>
 </div>

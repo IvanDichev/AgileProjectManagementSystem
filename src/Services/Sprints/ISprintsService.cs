@@ -9,5 +9,7 @@ namespace Services.Sprints
         Task<ICollection<SprintDto>> GetAllForProjectAsync(int projectId);
         Task<SprintDto> GetByIdAsync(int sprintId);
         Task CreateSprintAsync(SprintInputDto inputDto);
+        Task DeleteAsync(int sprintId);
+        Task<bool> AreUserStoriesInSprintAsync(int sprintId);
     }
 }
