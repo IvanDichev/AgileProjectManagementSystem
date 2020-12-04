@@ -1,0 +1,60 @@
+﻿.col-md-3 {
+    padding-left: 5px;
+    padding-right: 5px;
+    min-width: 300px;
+}
+
+.row {
+    justify-content: center;
+}
+
+.kanban {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    box-shadow: 0 0.25rem 1.75rem rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    max-height: 80vh;
+}
+
+.kanban-table-header {
+    margin-top: 0px;
+}
+
+.kanban-container-draggables {
+    background-color: rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: auto;
+    overflow-y: auto;
+    min-height: 65vh;
+}
+
+.draggable {
+    cursor: move;
+    margin-bottom: 1rem;
+    background-color: white;
+}
+
+    .draggable.dragging {
+        opacity: 0.5;
+    }
+
+.max-elements {
+    display: inline-block;
+    margin: 1rem 0px 0px auto;
+}
+
+.table-name {
+    display: inline-block;
+}
+
+.kanban-container-header {
+    display: flex;
+}
+
+.assigned-to {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
