@@ -1,0 +1,73 @@
+﻿@model BoardOptionsInputModel
+
+@{
+    ViewData["Title"] = "Board options";
+
+    var positionDropDown = Model.AlreadyColumns.OrderBy(x => x.ColumnOrder).Take(Model.AlreadyColumns.Count - 1)
+        .Select(x => new SelectListItem() { Text = x.ColumnName, Value = x.ColumnOrder.ToString() });
+}
+<link rel="stylesheet" href="~/css/Boards/Board.css" asp-append-version="true" />
+
+<div class="row">
+    <form asp-action="AddColumn">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="ColumnName" class="control-label"></label>
+            <input asp-for="ColumnName" class="form-control" />
+            <span asp-validation-for="ColumnName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ColumnOrder" class="control-label"></label>
+            <select asp-for="ColumnOrder"
+                    asp-items="positionDropDown" class="form-control"></select>
+            <span asp-validation-for="ColumnOrder" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MaxItems" class="control-label"></label>
+            <input asp-for="MaxItems" class="form-control" />
+            <span asp-validation-for="MaxItems" class="text-danger"></span>
+        </div>
+
+        <input hidden name="projectId" value="@this.ViewContext.RouteData.Values["projectId"]" />
+
+        <button type="submit">Add column</button>
+    </form>
+
+    <div class="container">
+        <h5>Current Board</h5>
+        <div class="row">
+            <div class="kanban">
+                @foreach (var column in Model.AlreadyColumns.OrderBy(x => x.ColumnOrder))
+                {
+                <div class="col-md-3" style="height:25vh;background-color:aliceblue">
+                    <h6 class="text-center kanban-table-header mt-3 talbe-name">@column.ColumnName</h6>
+                    <form asp-action="AddTask">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <input asp-for="@column.ColumnName" class="form-control" />
+                            <span asp-validation-for="@column.ColumnName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MaxItems" class="control-label"></label>
+                            <input asp-for="MaxItems" class="form-control" />
+                            <span asp-validation-for="MaxItems" class="text-danger"></span>
+                        </div>
+
+                        <input asp-for="@column.ColumnOrder" class="form-control" hidden />
+                        <input asp-for="@column.Id" class="form-control" hidden />
+                    </form>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+    </script>
+}

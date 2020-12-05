@@ -11,6 +11,7 @@ namespace Data.Models
             this.UserStories = new HashSet<UserStory>();
         }
 
+        [Required]
         [MaxLength(75)]
         public string ColumnName { get; set; }
         

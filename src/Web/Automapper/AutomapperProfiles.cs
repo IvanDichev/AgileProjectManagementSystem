@@ -63,6 +63,7 @@ namespace Web.Automapper
 
             // Board columns
             CreateMap<BoardColumn, BoardColumnAllDto>().ReverseMap();
+            CreateMap<BoardColumn, BoardColumnAllNamePositionDto>().ReverseMap();
 
             // User story comments
             CreateMap<UserStoryComment, CommentDto>().ReverseMap();

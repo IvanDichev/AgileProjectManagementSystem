@@ -13,7 +13,11 @@
 
 <h3 class="text-center">Board</h3>
 <div>
-    <button class="btn btn-info">Settings</button>
+    <a class="btn btn-info" 
+       asp-action="Options" 
+       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+        Settings
+    </a>
     <div class="dropdown" style="display:inline-block">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,6 +37,11 @@
                     <div class="kanban-container">
                         <div class="kanban-container-header">
                             <h6 class="text-center kanban-table-header mt-3 talbe-name">@column.ColumnName</h6>
+                            @* Visualize current elements in column / max elements allowed *@
+                            @if (column.ColumnOrder != 1 && column.ColumnOrder != byte.MaxValue)
+                            {
+                                <h6 class="ml-auto">0/@column.MaxItems</h6>
+                            }
                         </div>
                         <div class="kanban-container-draggables">
                             @foreach (var userStory in column.UserStories)
