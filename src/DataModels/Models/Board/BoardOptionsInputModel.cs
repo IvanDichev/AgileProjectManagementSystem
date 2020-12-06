@@ -11,11 +11,11 @@ namespace DataModels.Models.Board
         [Display(Name = "Column Name")]
         public string ColumnName { get; set; }
 
-        [Range(0, ushort.MaxValue)]
+        [Range(1, ushort.MaxValue)]
         public ushort MaxItems { get; set; }
 
         [Range(1, byte.MaxValue)]
-        [Display(Name = "Position")]
+        [Display(Name = "Position after")]
         public byte ColumnOrder { get; set; }
 
         public int ProjectId { get; set; }

@@ -6,11 +6,6 @@
 
 <link rel="stylesheet" href="~/css/Boards/Board.css" asp-append-version="true" />
 
-@foreach (var userStory in Model)
-{
-    <p>--</p>
-}
-
 <h3 class="text-center">Board</h3>
 <div>
     <a class="btn btn-info" 
@@ -38,7 +33,7 @@
                         <div class="kanban-container-header">
                             <h6 class="text-center kanban-table-header mt-3 talbe-name">@column.ColumnName</h6>
                             @* Visualize current elements in column / max elements allowed *@
-                            @if (column.ColumnOrder != 1 && column.ColumnOrder != byte.MaxValue)
+                            @if (column.ColumnOrder > 1 && column.ColumnOrder < byte.MaxValue)
                             {
                                 <h6 class="ml-auto">0/@column.MaxItems</h6>
                             }

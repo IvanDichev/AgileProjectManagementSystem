@@ -35,36 +35,39 @@
 
         <button type="submit">Add column</button>
     </form>
-
+</div>
     <div class="container">
         <h5>Current Board</h5>
         <div class="row">
             <div class="kanban">
                 @foreach (var column in Model.AlreadyColumns.OrderBy(x => x.ColumnOrder))
                 {
-                <div class="col-md-3" style="height:25vh;background-color:aliceblue">
-                    <h6 class="text-center kanban-table-header mt-3 talbe-name">@column.ColumnName</h6>
-                    <form asp-action="AddTask">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group">
-                            <input asp-for="@column.ColumnName" class="form-control" />
-                            <span asp-validation-for="@column.ColumnName" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="MaxItems" class="control-label"></label>
-                            <input asp-for="MaxItems" class="form-control" />
-                            <span asp-validation-for="MaxItems" class="text-danger"></span>
-                        </div>
-
-                        <input asp-for="@column.ColumnOrder" class="form-control" hidden />
-                        <input asp-for="@column.Id" class="form-control" hidden />
-                    </form>
-                </div>
+                    <div class="col-md-3" style="height:35vh;background-color:aliceblue">
+                        <h6 class="text-center kanban-table-header mt-3 talbe-name">@column.ColumnName</h6>
+                        <form asp-action="AddTask" style="display:inline-block">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <input asp-for="@column.ColumnName" class="form-control" />
+                                <span asp-validation-for="@column.ColumnName" class="text-danger"></span>
+                            </div>
+                            @if (column.ColumnOrder > 1 && column.ColumnOrder < byte.MaxValue)
+                            {
+                                <div class="form-group">
+                                    <label asp-for="@column.MaxItems" class="control-label"></label>
+                                    <input asp-for="@column.MaxItems" class="form-control" />
+                                    <span asp-validation-for="@column.MaxItems" class="text-danger"></span>
+                                </div>
+                            }
+                            <input asp-for="@column.ColumnOrder" class="form-control" hidden />
+                            <input asp-for="@column.Id" class="form-control" hidden />
+                            <button type="submit" class="btn btn-success">Edit</button>
+                        </form>
+                    </div>
                 }
             </div>
         </div>
     </div>
-</div>
+
 
 @section Scripts{
     <script>

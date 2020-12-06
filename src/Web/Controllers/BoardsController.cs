@@ -53,6 +53,7 @@ namespace Web.Controllers
             return View(board);
         }
 
+        [HttpPost]
         public async Task<IActionResult> AddColumn(int projectId, BoardOptionsInputModel inputModel)
         {
             if (!this.IsCurrentUserInProject(projectId))
@@ -62,7 +63,7 @@ namespace Web.Controllers
 
             await this.boardColumnsService.AddcolumnToTheLeftAsync(inputModel);
 
-            return RedirectToAction(nameof(AddColumn));
+            return RedirectToAction(nameof(Options), new { projectId = projectId });
         }
     }
 }
