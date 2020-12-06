@@ -12,22 +12,26 @@ using System.Threading.Tasks;
 
 namespace Services.BoardColumns
 {
-    public class BoardColumnsService : IBoardColumnsService
+    public class BoardsService : IBoardColumnsService
     {
-        private readonly IRepository<KanbanBoardColumnOption> repo;
+        private readonly IRepository<KanbanBoardColumnOption> columnOptionsRepo;
         private readonly IMapper mapper;
+        private readonly IRepository<KanbanBoardColumn> columnRepo;
 
-        public BoardColumnsService(IRepository<KanbanBoardColumnOption> repo, IMapper mapper)
+        public BoardsService(IRepository<KanbanBoardColumnOption> columnOptionsRepo, 
+            IMapper mapper,
+            IRepository<KanbanBoardColumn> columnRepo)
         {
-            this.repo = repo;
+            this.columnOptionsRepo = columnOptionsRepo;
             this.mapper = mapper;
+            this.columnRepo = columnRepo;
         }
 
         public async Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId)
-        {
-            var columns = await this.repo.AllAsNoTracking()
-                //.Where(x => x.ProjectId == projectId)
-                .OrderBy(x => x.PositionLTR)
+        {            
+            var columns = await this.columnRepo.AllAsNoTracking()
+                .Where(x => x.ProjectId == projectId)
+                .OrderBy(x => x.KanbanBoardColumnOption.PositionLTR)
                 .ProjectTo<BoardColumnAllDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -36,8 +40,8 @@ namespace Services.BoardColumns
 
         public async Task<ICollection<BoardColumnAllNamePositionDto>> GetColumnsNamesPositionAsync(int projectId)
         {
-            var columns = await this.repo.AllAsNoTracking()
-                //.Where(x => x.ProjectId == projectId)
+            var columns = await this.columnRepo.AllAsNoTracking()
+                .Where(x => x.ProjectId == projectId)
                 .ProjectTo<BoardColumnAllNamePositionDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -46,20 +50,29 @@ namespace Services.BoardColumns
 
         public async Task AddcolumnToTheLeftAsync(BoardOptionsInputModel inputModel)
         {
-            var boardColumn = new KanbanBoardColumnOption()
+            var boardColumnOption = new KanbanBoardColumnOption()
             {
                 AddedOn = DateTime.UtcNow,
                 ColumnName = inputModel.ColumnName,
                 MaxItems = inputModel.MaxItems,
-                //ProjectId = inputModel.ProjectId,
                 PositionLTR = ++inputModel.ColumnOrder,
+            };
+
+            var column = new KanbanBoardColumn()
+            {
+                AddedOn = DateTime.UtcNow,
+                KanbanBoardColumnOption = boardColumnOption,
+                ProjectId = inputModel.ProjectId,
             };
 
             // Shift already existing columns to the left so there are no collisions in the order.
             await ShiftColumnPositionMatchesLeft(inputModel.ColumnOrder, inputModel.ProjectId);
 
-            await this.repo.AddAsync(boardColumn);
-            await this.repo.SaveChangesAsync();
+            await this.columnOptionsRepo.AddAsync(boardColumnOption);
+            await this.columnRepo.AddAsync(column);
+
+            await this.columnOptionsRepo.SaveChangesAsync();
+            await this.columnRepo.SaveChangesAsync();
         }
 
         private async Task ShiftColumnPositionMatchesLeft(int columnOrder, int projectId)
@@ -68,11 +81,11 @@ namespace Services.BoardColumns
             var n = columnOrder;
             foreach (var column in alreadyColumns)
             {
-                if (column.ColumnOrder == n)
+                if (column.KanbanBoardColumnOptionPositionLTR == n)
                 {
-                    var oldColumn = await this.repo.All().Where(x => x.Id == column.Id).FirstOrDefaultAsync();
+                    var oldColumn = await this.columnOptionsRepo.All().Where(x => x.Id == column.Id).FirstOrDefaultAsync();
                     oldColumn.PositionLTR++;
-                    this.repo.Update(oldColumn);
+                    this.columnOptionsRepo.Update(oldColumn);
                     n++;
                 }
             }

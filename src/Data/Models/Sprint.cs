@@ -29,6 +29,6 @@ namespace Data.Models
 
         public virtual ICollection<UserStory> UserStories { get; set; }
 
-        public virtual KanbanBoard KanbanBoard { get; set; }
+        public virtual KanbanBoardColumn KanbanBoard { get; set; }
     }
 }

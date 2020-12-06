@@ -118,15 +118,8 @@ namespace Services.Projects
                 KanbanBoardColumnOption = defaultDoneColumnOptions,
             };
 
-            var kanbanBoard = new KanbanBoard
-            {
-                AddedOn = DateTime.UtcNow
-            };
-
-            kanbanBoard.KanbanBoardColumns.Add(BacklogkanbanBoardColumn);
-            kanbanBoard.KanbanBoardColumns.Add(DonekanbanBoardColumn);
-
-            project.KanbanBoards.Add(kanbanBoard);
+            project.KanbanBoardColumns.Add(BacklogkanbanBoardColumn);
+            project.KanbanBoardColumns.Add(DonekanbanBoardColumn);
         }
 
         public bool IsNameTaken(string name)

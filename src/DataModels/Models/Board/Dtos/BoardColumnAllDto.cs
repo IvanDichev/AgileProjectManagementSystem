@@ -7,11 +7,11 @@ namespace DataModels.Models.Board.Dtos
     {
         public int Id { get; set; }
 
-        public string ColumnName { get; set; }
+        public string KanbanBoardColumnOptionColumnName { get; set; }
 
-        public ushort MaxItems { get; set; }
+        public ushort KanbanBoardColumnOptionMaxItems { get; set; }
 
-        public byte ColumnOrder { get; set; }
+        public byte KanbanBoardColumnOptionPositionLTR { get; set; }
 
         public int ProjectId { get; set; }
 

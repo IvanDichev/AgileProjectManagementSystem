@@ -31,11 +31,11 @@
                 <div class="col-md-3">
                     <div class="kanban-container">
                         <div class="kanban-container-header">
-                            <h6 class="text-center kanban-table-header mt-3 talbe-name">@column.ColumnName</h6>
+                            <h6 class="text-center kanban-table-header mt-3 talbe-name">@column.KanbanBoardColumnOptionColumnName</h6>
                             @* Visualize current elements in column / max elements allowed *@
-                            @if (column.ColumnOrder > 1 && column.ColumnOrder < byte.MaxValue)
+                            @if (column.KanbanBoardColumnOptionPositionLTR > 1 && column.KanbanBoardColumnOptionPositionLTR < byte.MaxValue)
                             {
-                                <h6 class="ml-auto">0/@column.MaxItems</h6>
+                                <h6 class="ml-auto">0/@column.KanbanBoardColumnOptionMaxItems</h6>
                             }
                         </div>
                         <div class="kanban-container-draggables">

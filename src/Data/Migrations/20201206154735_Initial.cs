@@ -230,27 +230,34 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "KanbanBoards",
+                name: "KanbanBoardColumns",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
+                    KanbanBoardColumnOptionId = table.Column<int>(nullable: false),
                     ProjectId = table.Column<int>(nullable: false),
                     SprintId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_KanbanBoards", x => x.Id);
+                    table.PrimaryKey("PK_KanbanBoardColumns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_KanbanBoards_Projects_ProjectId",
+                        name: "FK_KanbanBoardColumns_KanbanBoardColumnOptions_KanbanBoardColumnOptionId",
+                        column: x => x.KanbanBoardColumnOptionId,
+                        principalTable: "KanbanBoardColumnOptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_KanbanBoardColumns_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_KanbanBoards_Sprints_SprintId",
+                        name: "FK_KanbanBoardColumns_Sprints_SprintId",
                         column: x => x.SprintId,
                         principalTable: "Sprints",
                         principalColumn: "Id",
@@ -400,34 +407,6 @@ namespace Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "KanbanBoardColumns",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    KanbanBoardColumnOptionId = table.Column<int>(nullable: false),
-                    KanbanBoardId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_KanbanBoardColumns", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_KanbanBoardColumns_KanbanBoardColumnOptions_KanbanBoardColumnOptionId",
-                        column: x => x.KanbanBoardColumnOptionId,
-                        principalTable: "KanbanBoardColumnOptions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_KanbanBoardColumns_KanbanBoards_KanbanBoardId",
-                        column: x => x.KanbanBoardId,
-                        principalTable: "KanbanBoards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -731,18 +710,13 @@ namespace Data.Migrations
                 column: "KanbanBoardColumnOptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KanbanBoardColumns_KanbanBoardId",
+                name: "IX_KanbanBoardColumns_ProjectId",
                 table: "KanbanBoardColumns",
-                column: "KanbanBoardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_KanbanBoards_ProjectId",
-                table: "KanbanBoards",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_KanbanBoards_SprintId",
-                table: "KanbanBoards",
+                name: "IX_KanbanBoardColumns_SprintId",
+                table: "KanbanBoardColumns",
                 column: "SprintId",
                 unique: true,
                 filter: "[SprintId] IS NOT NULL");
@@ -921,9 +895,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "KanbanBoardColumnOptions");
-
-            migrationBuilder.DropTable(
-                name: "KanbanBoards");
 
             migrationBuilder.DropTable(
                 name: "Sprints");

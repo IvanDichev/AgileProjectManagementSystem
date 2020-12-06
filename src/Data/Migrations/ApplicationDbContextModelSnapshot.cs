@@ -90,36 +90,6 @@ namespace Data.Migrations
                     b.ToTable("Bugs");
                 });
 
-            modelBuilder.Entity("Data.Models.KanbanBoard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SprintId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("SprintId")
-                        .IsUnique()
-                        .HasFilter("[SprintId] IS NOT NULL");
-
-                    b.ToTable("KanbanBoards");
-                });
-
             modelBuilder.Entity("Data.Models.KanbanBoardColumn", b =>
                 {
                     b.Property<int>("Id")
@@ -133,17 +103,24 @@ namespace Data.Migrations
                     b.Property<int>("KanbanBoardColumnOptionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("KanbanBoardId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SprintId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("KanbanBoardColumnOptionId");
 
-                    b.HasIndex("KanbanBoardId");
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("SprintId")
+                        .IsUnique()
+                        .HasFilter("[SprintId] IS NOT NULL");
 
                     b.ToTable("KanbanBoardColumns");
                 });
@@ -854,19 +831,6 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Data.Models.KanbanBoard", b =>
-                {
-                    b.HasOne("Data.Models.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.Sprint", "Sprint")
-                        .WithOne("KanbanBoard")
-                        .HasForeignKey("Data.Models.KanbanBoard", "SprintId");
-                });
-
             modelBuilder.Entity("Data.Models.KanbanBoardColumn", b =>
                 {
                     b.HasOne("Data.Models.KanbanBoardColumnOption", "KanbanBoardColumnOption")
@@ -875,9 +839,15 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.KanbanBoard", null)
+                    b.HasOne("Data.Models.Project", "Project")
                         .WithMany("KanbanBoardColumns")
-                        .HasForeignKey("KanbanBoardId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Sprint", "Sprint")
+                        .WithOne("KanbanBoard")
+                        .HasForeignKey("Data.Models.KanbanBoardColumn", "SprintId");
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
