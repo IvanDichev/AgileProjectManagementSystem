@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201201150334_ChangeTableNameCommentToUserStoryComments")]
-    partial class ChangeTableNameCommentToUserStoryComments
+    [Migration("20201206143435_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,9 @@ namespace Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IdForProject")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -87,6 +90,93 @@ namespace Data.Migrations
                     b.HasIndex("UserStoryId");
 
                     b.ToTable("Bugs");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SprintId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("SprintId")
+                        .IsUnique()
+                        .HasFilter("[SprintId] IS NOT NULL");
+
+                    b.ToTable("KanbanBoards");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoardColumn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KanbanBoardColumnOptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("KanbanBoardId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KanbanBoardColumnOptionId");
+
+                    b.HasIndex("KanbanBoardId");
+
+                    b.ToTable("KanbanBoardColumns");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoardColumnOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ColumnName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(75)")
+                        .HasMaxLength(75);
+
+                    b.Property<int>("MaxItems")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("PositionLTR")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("KanbanBoardColumnOptions");
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
@@ -169,6 +259,9 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<int>("WorkItemsId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
@@ -214,10 +307,17 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(75)")
+                        .HasMaxLength(75);
+
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -331,6 +431,9 @@ namespace Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("IdForProject")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -412,6 +515,9 @@ namespace Data.Migrations
                     b.Property<int>("IdForProject")
                         .HasColumnType("int");
 
+                    b.Property<int?>("KanbanBoardColumnId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -431,6 +537,8 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BacklogPriorityId");
+
+                    b.HasIndex("KanbanBoardColumnId");
 
                     b.HasIndex("ProjectId");
 
@@ -486,6 +594,9 @@ namespace Data.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdForProject")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
@@ -745,6 +856,32 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Data.Models.KanbanBoard", b =>
+                {
+                    b.HasOne("Data.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Sprint", "Sprint")
+                        .WithOne("KanbanBoard")
+                        .HasForeignKey("Data.Models.KanbanBoard", "SprintId");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoardColumn", b =>
+                {
+                    b.HasOne("Data.Models.KanbanBoardColumnOption", "KanbanBoardColumnOption")
+                        .WithMany()
+                        .HasForeignKey("KanbanBoardColumnOptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.KanbanBoard", null)
+                        .WithMany("KanbanBoardColumns")
+                        .HasForeignKey("KanbanBoardId");
+                });
+
             modelBuilder.Entity("Data.Models.Mockup", b =>
                 {
                     b.HasOne("Data.Models.Bug", null)
@@ -773,13 +910,17 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Sprint", b =>
                 {
-                    b.HasOne("Data.Models.Project", null)
+                    b.HasOne("Data.Models.Project", "Project")
                         .WithMany("Sprints")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Data.Models.SprintStatus", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Data.Models.Team", b =>
@@ -848,6 +989,10 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Data.Models.KanbanBoardColumn", null)
+                        .WithMany("UserStories")
+                        .HasForeignKey("KanbanBoardColumnId");
+
                     b.HasOne("Data.Models.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
@@ -855,7 +1000,7 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Data.Models.Sprint", null)
-                        .WithMany("WorkItems")
+                        .WithMany("UserStories")
                         .HasForeignKey("SprintId");
                 });
 

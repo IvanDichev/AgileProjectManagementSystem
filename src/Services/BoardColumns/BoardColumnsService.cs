@@ -14,10 +14,10 @@ namespace Services.BoardColumns
 {
     public class BoardColumnsService : IBoardColumnsService
     {
-        private readonly IRepository<BoardColumn> repo;
+        private readonly IRepository<KanbanBoardColumnOption> repo;
         private readonly IMapper mapper;
 
-        public BoardColumnsService(IRepository<BoardColumn> repo, IMapper mapper)
+        public BoardColumnsService(IRepository<KanbanBoardColumnOption> repo, IMapper mapper)
         {
             this.repo = repo;
             this.mapper = mapper;
@@ -26,8 +26,8 @@ namespace Services.BoardColumns
         public async Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId)
         {
             var columns = await this.repo.AllAsNoTracking()
-                .Where(x => x.ProjectId == projectId)
-                .OrderBy(x => x.ColumnOrder)
+                //.Where(x => x.ProjectId == projectId)
+                .OrderBy(x => x.PositionLTR)
                 .ProjectTo<BoardColumnAllDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -37,7 +37,7 @@ namespace Services.BoardColumns
         public async Task<ICollection<BoardColumnAllNamePositionDto>> GetColumnsNamesPositionAsync(int projectId)
         {
             var columns = await this.repo.AllAsNoTracking()
-                .Where(x => x.ProjectId == projectId)
+                //.Where(x => x.ProjectId == projectId)
                 .ProjectTo<BoardColumnAllNamePositionDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -46,13 +46,13 @@ namespace Services.BoardColumns
 
         public async Task AddcolumnToTheLeftAsync(BoardOptionsInputModel inputModel)
         {
-            var boardColumn = new BoardColumn()
+            var boardColumn = new KanbanBoardColumnOption()
             {
                 AddedOn = DateTime.UtcNow,
                 ColumnName = inputModel.ColumnName,
                 MaxItems = inputModel.MaxItems,
-                ProjectId = inputModel.ProjectId,
-                ColumnOrder = ++inputModel.ColumnOrder,
+                //ProjectId = inputModel.ProjectId,
+                PositionLTR = ++inputModel.ColumnOrder,
             };
 
             // Shift already existing columns to the left so there are no collisions in the order.
@@ -71,7 +71,7 @@ namespace Services.BoardColumns
                 if (column.ColumnOrder == n)
                 {
                     var oldColumn = await this.repo.All().Where(x => x.Id == column.Id).FirstOrDefaultAsync();
-                    oldColumn.ColumnOrder++;
+                    oldColumn.PositionLTR++;
                     this.repo.Update(oldColumn);
                     n++;
                 }

@@ -21,12 +21,14 @@ namespace Data.Models
 
         public int StatusId { get; set; }
 
-        public SprintStatus Status { get; set; }
+        public virtual SprintStatus Status { get; set; }
 
         public int ProjectId { get; set; }
 
         public Project Project { get; set; }
 
         public virtual ICollection<UserStory> UserStories { get; set; }
+
+        public virtual KanbanBoard KanbanBoard { get; set; }
     }
 }

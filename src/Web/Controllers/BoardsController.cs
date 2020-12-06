@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.BoardColumns;
 using Services.Projects;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Web.Controllers

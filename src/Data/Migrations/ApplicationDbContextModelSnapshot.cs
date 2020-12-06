@@ -43,40 +43,6 @@ namespace Data.Migrations
                     b.ToTable("BacklogPriorities");
                 });
 
-            modelBuilder.Entity("Data.Models.BoardColumn", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AddedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ColumnName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(75)")
-                        .HasMaxLength(75);
-
-                    b.Property<byte>("ColumnOrder")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("MaxItems")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("BoardColumn");
-                });
-
             modelBuilder.Entity("Data.Models.Bug", b =>
                 {
                     b.Property<int>("Id")
@@ -122,6 +88,93 @@ namespace Data.Migrations
                     b.HasIndex("UserStoryId");
 
                     b.ToTable("Bugs");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SprintId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("SprintId")
+                        .IsUnique()
+                        .HasFilter("[SprintId] IS NOT NULL");
+
+                    b.ToTable("KanbanBoards");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoardColumn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KanbanBoardColumnOptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("KanbanBoardId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KanbanBoardColumnOptionId");
+
+                    b.HasIndex("KanbanBoardId");
+
+                    b.ToTable("KanbanBoardColumns");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoardColumnOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ColumnName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(75)")
+                        .HasMaxLength(75);
+
+                    b.Property<int>("MaxItems")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("PositionLTR")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("KanbanBoardColumnOptions");
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
@@ -454,13 +507,13 @@ namespace Data.Migrations
                     b.Property<int>("BacklogPriorityId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BoardColumnId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdForProject")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("KanbanBoardColumnId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ModifiedOn")
@@ -483,7 +536,7 @@ namespace Data.Migrations
 
                     b.HasIndex("BacklogPriorityId");
 
-                    b.HasIndex("BoardColumnId");
+                    b.HasIndex("KanbanBoardColumnId");
 
                     b.HasIndex("ProjectId");
 
@@ -782,15 +835,6 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Data.Models.BoardColumn", b =>
-                {
-                    b.HasOne("Data.Models.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Data.Models.Bug", b =>
                 {
                     b.HasOne("Data.Models.Severity", "Severity")
@@ -808,6 +852,32 @@ namespace Data.Migrations
                         .HasForeignKey("UserStoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoard", b =>
+                {
+                    b.HasOne("Data.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Sprint", "Sprint")
+                        .WithOne("KanbanBoard")
+                        .HasForeignKey("Data.Models.KanbanBoard", "SprintId");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoardColumn", b =>
+                {
+                    b.HasOne("Data.Models.KanbanBoardColumnOption", "KanbanBoardColumnOption")
+                        .WithMany()
+                        .HasForeignKey("KanbanBoardColumnOptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.KanbanBoard", null)
+                        .WithMany("KanbanBoardColumns")
+                        .HasForeignKey("KanbanBoardId");
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
@@ -917,9 +987,9 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.BoardColumn", "BoardColumn")
+                    b.HasOne("Data.Models.KanbanBoardColumn", null)
                         .WithMany("UserStories")
-                        .HasForeignKey("BoardColumnId");
+                        .HasForeignKey("KanbanBoardColumnId");
 
                     b.HasOne("Data.Models.Project", "Project")
                         .WithMany()

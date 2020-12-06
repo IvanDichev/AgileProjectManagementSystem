@@ -39,6 +39,23 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "KanbanBoardColumnOptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    ColumnName = table.Column<string>(maxLength: 75, nullable: false),
+                    MaxItems = table.Column<int>(nullable: false),
+                    PositionLTR = table.Column<byte>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KanbanBoardColumnOptions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -47,7 +64,8 @@ namespace Data.Migrations
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 50, nullable: true),
-                    Description = table.Column<string>(maxLength: 400, nullable: true)
+                    Description = table.Column<string>(maxLength: 400, nullable: true),
+                    WorkItemsId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,9 +169,11 @@ namespace Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 75, nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: false),
                     DueDate = table.Column<DateTime>(nullable: false),
-                    StatusId = table.Column<int>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: true)
+                    StatusId = table.Column<int>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -163,13 +183,13 @@ namespace Data.Migrations
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sprints_SprintStatuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "SprintStatuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,38 +230,27 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserStories",
+                name: "KanbanBoards",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Title = table.Column<string>(maxLength: 200, nullable: true),
-                    StoryPoints = table.Column<int>(nullable: true),
-                    BacklogPriorityId = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
                     ProjectId = table.Column<int>(nullable: false),
                     SprintId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserStories", x => x.Id);
+                    table.PrimaryKey("PK_KanbanBoards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserStories_BacklogPriorities_BacklogPriorityId",
-                        column: x => x.BacklogPriorityId,
-                        principalTable: "BacklogPriorities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserStories_Projects_ProjectId",
+                        name: "FK_KanbanBoards_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserStories_Sprints_SprintId",
+                        name: "FK_KanbanBoards_Sprints_SprintId",
                         column: x => x.SprintId,
                         principalTable: "Sprints",
                         principalColumn: "Id",
@@ -394,7 +403,35 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bugs",
+                name: "KanbanBoardColumns",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    KanbanBoardColumnOptionId = table.Column<int>(nullable: false),
+                    KanbanBoardId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KanbanBoardColumns", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_KanbanBoardColumns_KanbanBoardColumnOptions_KanbanBoardColumnOptionId",
+                        column: x => x.KanbanBoardColumnOptionId,
+                        principalTable: "KanbanBoardColumnOptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_KanbanBoardColumns_KanbanBoards_KanbanBoardId",
+                        column: x => x.KanbanBoardId,
+                        principalTable: "KanbanBoards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -402,7 +439,54 @@ namespace Data.Migrations
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     Title = table.Column<string>(maxLength: 200, nullable: true),
+                    IdForProject = table.Column<int>(nullable: false),
                     StoryPoints = table.Column<int>(nullable: true),
+                    BacklogPriorityId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
+                    ProjectId = table.Column<int>(nullable: false),
+                    KanbanBoardColumnId = table.Column<int>(nullable: true),
+                    SprintId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStories_BacklogPriorities_BacklogPriorityId",
+                        column: x => x.BacklogPriorityId,
+                        principalTable: "BacklogPriorities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserStories_KanbanBoardColumns_KanbanBoardColumnId",
+                        column: x => x.KanbanBoardColumnId,
+                        principalTable: "KanbanBoardColumns",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserStories_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserStories_Sprints_SprintId",
+                        column: x => x.SprintId,
+                        principalTable: "Sprints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bugs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IdForProject = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(maxLength: 200, nullable: true),
                     Description = table.Column<string>(nullable: true),
                     AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
                     UserStoryId = table.Column<int>(nullable: false),
@@ -433,37 +517,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    Title = table.Column<string>(maxLength: 200, nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
-                    UserStoryId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tasks_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tasks_UserStories_UserStoryId",
-                        column: x => x.UserStoryId,
-                        principalTable: "UserStories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tests",
                 columns: table => new
                 {
@@ -471,6 +524,7 @@ namespace Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
+                    IdForProject = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 200, nullable: true),
                     Description = table.Column<string>(nullable: true),
                     AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
@@ -495,7 +549,7 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
+                name: "UserStoryComments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -504,41 +558,52 @@ namespace Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: false),
-                    WorkItemId = table.Column<int>(nullable: false),
-                    BugId = table.Column<int>(nullable: true),
-                    TestId = table.Column<int>(nullable: true),
-                    UserStoryTaskId = table.Column<int>(nullable: true)
+                    UserStoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.PrimaryKey("PK_UserStoryComments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_Bugs_BugId",
-                        column: x => x.BugId,
-                        principalTable: "Bugs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comments_Tests_TestId",
-                        column: x => x.TestId,
-                        principalTable: "Tests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_UserId",
+                        name: "FK_UserStoryComments_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Tasks_UserStoryTaskId",
-                        column: x => x.UserStoryTaskId,
-                        principalTable: "Tasks",
+                        name: "FK_UserStoryComments_UserStories_UserStoryId",
+                        column: x => x.UserStoryId,
+                        principalTable: "UserStories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStoryTasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    Title = table.Column<string>(maxLength: 200, nullable: true),
+                    IdForProject = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
+                    UserStoryId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStoryTasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStoryTasks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Comments_UserStories_WorkItemId",
-                        column: x => x.WorkItemId,
+                        name: "FK_UserStoryTasks_UserStories_UserStoryId",
+                        column: x => x.UserStoryId,
                         principalTable: "UserStories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -554,8 +619,7 @@ namespace Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     WorkItemId = table.Column<int>(nullable: false),
                     BugId = table.Column<int>(nullable: true),
-                    TestId = table.Column<int>(nullable: true),
-                    UserStoryTaskId = table.Column<int>(nullable: true)
+                    TestId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -570,12 +634,6 @@ namespace Data.Migrations
                         name: "FK_Mockup_Tests_TestId",
                         column: x => x.TestId,
                         principalTable: "Tests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Mockup_Tasks_UserStoryTaskId",
-                        column: x => x.UserStoryTaskId,
-                        principalTable: "Tasks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -668,29 +726,26 @@ namespace Data.Migrations
                 column: "UserStoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_BugId",
-                table: "Comments",
-                column: "BugId");
+                name: "IX_KanbanBoardColumns_KanbanBoardColumnOptionId",
+                table: "KanbanBoardColumns",
+                column: "KanbanBoardColumnOptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_TestId",
-                table: "Comments",
-                column: "TestId");
+                name: "IX_KanbanBoardColumns_KanbanBoardId",
+                table: "KanbanBoardColumns",
+                column: "KanbanBoardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserId",
-                table: "Comments",
-                column: "UserId");
+                name: "IX_KanbanBoards_ProjectId",
+                table: "KanbanBoards",
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserStoryTaskId",
-                table: "Comments",
-                column: "UserStoryTaskId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_WorkItemId",
-                table: "Comments",
-                column: "WorkItemId");
+                name: "IX_KanbanBoards_SprintId",
+                table: "KanbanBoards",
+                column: "SprintId",
+                unique: true,
+                filter: "[SprintId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mockup_BugId",
@@ -701,11 +756,6 @@ namespace Data.Migrations
                 name: "IX_Mockup_TestId",
                 table: "Mockup",
                 column: "TestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Mockup_UserStoryTaskId",
-                table: "Mockup",
-                column: "UserStoryTaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mockup_WorkItemId",
@@ -726,16 +776,6 @@ namespace Data.Migrations
                 name: "IX_Sprints_StatusId",
                 table: "Sprints",
                 column: "StatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_UserId",
-                table: "Tasks",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_UserStoryId",
-                table: "Tasks",
-                column: "UserStoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teams_ProjectId",
@@ -779,6 +819,11 @@ namespace Data.Migrations
                 column: "BacklogPriorityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserStories_KanbanBoardColumnId",
+                table: "UserStories",
+                column: "KanbanBoardColumnId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserStories_ProjectId",
                 table: "UserStories",
                 column: "ProjectId");
@@ -787,6 +832,26 @@ namespace Data.Migrations
                 name: "IX_UserStories_SprintId",
                 table: "UserStories",
                 column: "SprintId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStoryComments_UserId",
+                table: "UserStoryComments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStoryComments_UserStoryId",
+                table: "UserStoryComments",
+                column: "UserStoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStoryTasks_UserId",
+                table: "UserStoryTasks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStoryTasks_UserStoryId",
+                table: "UserStoryTasks",
+                column: "UserStoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -807,9 +872,6 @@ namespace Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comments");
-
-            migrationBuilder.DropTable(
                 name: "MockupAttachments");
 
             migrationBuilder.DropTable(
@@ -817,6 +879,12 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tickets");
+
+            migrationBuilder.DropTable(
+                name: "UserStoryComments");
+
+            migrationBuilder.DropTable(
+                name: "UserStoryTasks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -834,9 +902,6 @@ namespace Data.Migrations
                 name: "Tests");
 
             migrationBuilder.DropTable(
-                name: "Tasks");
-
-            migrationBuilder.DropTable(
                 name: "Severities");
 
             migrationBuilder.DropTable(
@@ -850,6 +915,15 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "BacklogPriorities");
+
+            migrationBuilder.DropTable(
+                name: "KanbanBoardColumns");
+
+            migrationBuilder.DropTable(
+                name: "KanbanBoardColumnOptions");
+
+            migrationBuilder.DropTable(
+                name: "KanbanBoards");
 
             migrationBuilder.DropTable(
                 name: "Sprints");

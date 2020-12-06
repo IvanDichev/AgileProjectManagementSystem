@@ -62,8 +62,8 @@ namespace Web.Automapper
             CreateMap<BacklogPrioritiesDto, BacklogPriorityDropDownModel>().ReverseMap();
 
             // Board columns
-            CreateMap<BoardColumn, BoardColumnAllDto>().ReverseMap();
-            CreateMap<BoardColumn, BoardColumnAllNamePositionDto>().ReverseMap();
+            CreateMap<KanbanBoardColumnOption, BoardColumnAllDto>().ReverseMap();
+            CreateMap<KanbanBoardColumnOption, BoardColumnAllNamePositionDto>().ReverseMap();
 
             // User story comments
             CreateMap<UserStoryComment, CommentDto>().ReverseMap();

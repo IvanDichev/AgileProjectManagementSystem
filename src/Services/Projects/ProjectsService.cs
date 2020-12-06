@@ -7,6 +7,7 @@ using DataModels.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repo;
+using Shared.Constants;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,8 +79,54 @@ namespace Services.Projects
                 TeamId = project.Team.Id,
             });
 
+            AddDefaultKanbanBoardToProject(project);
+
             await this.repo.AddAsync(project);
             await repo.SaveChangesAsync();
+
+            var projectId = this.repo.All().FirstOrDefault(x => x.Name == project.Name).Id;
+            
+        }
+
+        private static void AddDefaultKanbanBoardToProject(Project project)
+        {
+            var defaultBacklogColumnOptions = new KanbanBoardColumnOption()
+            {
+                AddedOn = DateTime.UtcNow,
+                ColumnName = DefaultKanbanOptionsConstants.Backlog,
+                MaxItems = DefaultKanbanOptionsConstants.BacklogMaxItems,
+                PositionLTR = DefaultKanbanOptionsConstants.BacklogPosition,
+            };
+
+            var defaultDoneColumnOptions = new KanbanBoardColumnOption()
+            {
+                AddedOn = DateTime.UtcNow,
+                ColumnName = DefaultKanbanOptionsConstants.Done,
+                MaxItems = DefaultKanbanOptionsConstants.DoneMaxItems,
+                PositionLTR = DefaultKanbanOptionsConstants.DonePosition,
+            };
+
+            var BacklogkanbanBoardColumn = new KanbanBoardColumn()
+            {
+                AddedOn = DateTime.UtcNow,
+                KanbanBoardColumnOption = defaultBacklogColumnOptions,
+            };
+
+            var DonekanbanBoardColumn = new KanbanBoardColumn()
+            {
+                AddedOn = DateTime.UtcNow,
+                KanbanBoardColumnOption = defaultDoneColumnOptions,
+            };
+
+            var kanbanBoard = new KanbanBoard
+            {
+                AddedOn = DateTime.UtcNow
+            };
+
+            kanbanBoard.KanbanBoardColumns.Add(BacklogkanbanBoardColumn);
+            kanbanBoard.KanbanBoardColumns.Add(DonekanbanBoardColumn);
+
+            project.KanbanBoards.Add(kanbanBoard);
         }
 
         public bool IsNameTaken(string name)
