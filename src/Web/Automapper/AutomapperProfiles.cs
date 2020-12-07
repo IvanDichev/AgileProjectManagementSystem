@@ -54,6 +54,7 @@ namespace Web.Automapper
 
             // Sprints
             CreateMap<Sprint, SprintDto>().ReverseMap();
+            CreateMap<Sprint, SprintDropDownModel>().ReverseMap();
             CreateMap<SprintAllViewModel, SprintDto>().ReverseMap();
             CreateMap<SprintInputModel, SprintInputDto>().ReverseMap();
 

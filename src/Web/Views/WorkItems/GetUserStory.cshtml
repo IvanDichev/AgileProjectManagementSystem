@@ -6,6 +6,10 @@
 
     var priorities = Model.PrioritiesDropDown?
         .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
+    
+    var spints = Model.SprintDropDownModel?
+        .Select(x => new SelectListItem() 
+        { Value = x.Id.ToString(), Text = Model.ViewModel.SprintId == x.Id ? x.Name + " (Current sprint)" : x.Name });
 
     var commentsCounter = 0;
 }
@@ -44,6 +48,16 @@
                             asp-items="priorities"></select>
                     <span asp-validation-for="@Model.ViewModel.BacklogPriorityPriority" class="text-danger"></span>
                 </div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Sprint</span>
+                </div>
+                <select asp-for="@Model.ViewModel.SprintId" id="priorityInputSelect" class="form-control"
+                        asp-items="spints">
+                    <option> </option>
+                </select>
+                <span asp-validation-for="@Model.ViewModel.SprintId" class="text-danger"></span>
             </div>
             <hr />
 

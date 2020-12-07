@@ -98,6 +98,14 @@ namespace Services.Projects
                 PositionLTR = DefaultKanbanOptionsConstants.BacklogPosition,
             };
 
+            var defaultDoingColumnOptions = new KanbanBoardColumnOption()
+            {
+                AddedOn = DateTime.UtcNow,
+                ColumnName = DefaultKanbanOptionsConstants.Doing,
+                MaxItems = DefaultKanbanOptionsConstants.DoingMaxItems,
+                PositionLTR = DefaultKanbanOptionsConstants.DoingPosition,
+            };
+
             var defaultDoneColumnOptions = new KanbanBoardColumnOption()
             {
                 AddedOn = DateTime.UtcNow,
@@ -112,6 +120,12 @@ namespace Services.Projects
                 KanbanBoardColumnOption = defaultBacklogColumnOptions,
             };
 
+            var DoingkanbanBoardColumn = new KanbanBoardColumn()
+            {
+                AddedOn = DateTime.UtcNow,
+                KanbanBoardColumnOption = defaultDoingColumnOptions,
+            };
+            
             var DonekanbanBoardColumn = new KanbanBoardColumn()
             {
                 AddedOn = DateTime.UtcNow,
@@ -120,6 +134,7 @@ namespace Services.Projects
 
             project.KanbanBoardColumns.Add(BacklogkanbanBoardColumn);
             project.KanbanBoardColumns.Add(DonekanbanBoardColumn);
+            project.KanbanBoardColumns.Add(DoingkanbanBoardColumn);
         }
 
         public bool IsNameTaken(string name)

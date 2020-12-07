@@ -6,8 +6,8 @@
         public const byte BacklogPosition = 1;
         public const ushort BacklogMaxItems = 3500;
 
-        public const string Doint = "Backlog";
-        public const byte DointPosition = 1;
+        public const string Doing = "Backlog";
+        public const byte DoingPosition = 1;
         public const ushort DoingMaxItems = 3500;
 
         public const string Done = "Done";

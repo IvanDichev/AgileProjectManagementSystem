@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201206230547_RemoveRefFromSprintsToKanbarnBoardColumns")]
-    partial class RemoveRefFromSprintsToKanbarnBoardColumns
+    [Migration("20201207130649_Initia")]
+    partial class Initia
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -111,11 +111,18 @@ namespace Data.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SprintId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KanbanBoardColumnOptionId");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("SprintId")
+                        .IsUnique()
+                        .HasFilter("[SprintId] IS NOT NULL");
 
                     b.ToTable("KanbanBoardColumns");
                 });
@@ -179,7 +186,7 @@ namespace Data.Migrations
 
                     b.HasIndex("WorkItemId");
 
-                    b.ToTable("Mockups");
+                    b.ToTable("Mockup");
                 });
 
             modelBuilder.Entity("Data.Models.MockupAttachment", b =>
@@ -839,6 +846,10 @@ namespace Data.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Data.Models.Sprint", "Sprint")
+                        .WithOne("KanbanBoard")
+                        .HasForeignKey("Data.Models.KanbanBoardColumn", "SprintId");
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
@@ -948,7 +959,7 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.KanbanBoardColumn", "KanbanBoardColumn")
+                    b.HasOne("Data.Models.KanbanBoardColumn", null)
                         .WithMany("UserStories")
                         .HasForeignKey("KanbanBoardColumnId");
 
@@ -958,7 +969,7 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.Sprint", "Sprint")
+                    b.HasOne("Data.Models.Sprint", null)
                         .WithMany("UserStories")
                         .HasForeignKey("SprintId");
                 });

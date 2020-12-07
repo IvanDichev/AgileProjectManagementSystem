@@ -38,5 +38,7 @@ namespace DataModels.Models.WorkItems.UserStory
         public string SanitizedAcceptanceCriteria => this.htmlSanitizer.Sanitize(this.AcceptanceCriteria);
 
         public ICollection<CommentViewModel> Comments { get; set; }
+
+        public int? SprintId { get; set; }
     }
 }

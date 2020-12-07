@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.BacklogPriorities;
 using Services.Projects;
+using Services.Sprints;
 using Services.WorkItems;
 using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
@@ -34,6 +35,7 @@ namespace Web.Controllers
         private readonly ITasksService tasksService;
         private readonly ITestsService testsService;
         private readonly IBugsService bugsService;
+        private readonly ISprintsService sprintsService;
 
         public WorkItemsController(IWorkItemService workItemService,
             IBacklogPrioritiesService backlogPrioritiesService,
@@ -42,7 +44,8 @@ namespace Web.Controllers
             IUserStoryService userStoryService,
             ITasksService tasksService,
             ITestsService testsService,
-            IBugsService bugsService) : base(projectsService)
+            IBugsService bugsService,
+            ISprintsService sprintsService) : base(projectsService)
         {
             this.workItemService = workItemService;
             this.backlogPrioritiesService = backlogPrioritiesService;
@@ -51,6 +54,7 @@ namespace Web.Controllers
             this.tasksService = tasksService;
             this.testsService = testsService;
             this.bugsService = bugsService;
+            this.sprintsService = sprintsService;
         }
 
         public async Task<IActionResult> GetAll(int projectId, SortingFilter sortingFilter)
@@ -141,6 +145,7 @@ namespace Web.Controllers
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync()),
+                SprintDropDownModel = await this.sprintsService.GetSprintDropDownAsync(projectId),
                 ViewModel = this.mapper.Map<UserStoryViewModel>(await userStoryService.GetAsync(UserStoryId)),
             };
 
@@ -165,6 +170,7 @@ namespace Web.Controllers
                 // If model is not valid prioritiesDropDown will be null so we need do populated it.
                 model.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync());
+                model.SprintDropDownModel = await this.sprintsService.GetSprintDropDownAsync(projectId);
 
                 return View(model);
             }

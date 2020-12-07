@@ -1,6 +1,6 @@
 ﻿namespace DataModels.Models.Sprints
 {
-    public class SprintsDropDownModel
+    public class SprintDropDownModel
     {
         public int Id { get; set; }
 

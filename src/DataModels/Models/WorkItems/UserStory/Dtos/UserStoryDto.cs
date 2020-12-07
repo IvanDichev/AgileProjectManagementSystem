@@ -7,6 +7,8 @@ namespace DataModels.Models.WorkItems.UserStory.Dtos
     {
         public int Id { get; set; }
 
+        public int? SprintId { get; set; }
+
         public int IdForProject { get; set; }
 
         public string Title { get; set; }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Data.Models;
+using DataModels.Models.Sprints;
 using DataModels.Models.Sprints.Dto;
 using Microsoft.EntityFrameworkCore;
 using Repo;
@@ -14,7 +15,7 @@ namespace Services.Sprints
 {
     public class SprintsService : ISprintsService
     {
-        private readonly IRepository<Sprint> repo;
+        private readonly IRepository<Sprint> sprintRepo;
         private readonly IMapper mapper;
         private readonly IRepository<SprintStatus> sprintStatusRepo;
 
@@ -22,7 +23,7 @@ namespace Services.Sprints
             IMapper mapper, 
             IRepository<SprintStatus> sprintStatusRepo)
         {
-            this.repo = sprintRepo;
+            this.sprintRepo = sprintRepo;
             this.mapper = mapper;
             this.sprintStatusRepo = sprintStatusRepo;
         }
@@ -39,13 +40,13 @@ namespace Services.Sprints
                 StatusId = GetSprintStatus(inputDto.StartDate, inputDto.DueDate)
             };
 
-            await this.repo.AddAsync(sprint);
-            await this.repo.SaveChangesAsync();
+            await this.sprintRepo.AddAsync(sprint);
+            await this.sprintRepo.SaveChangesAsync();
         }
 
         public async Task<ICollection<SprintDto>> GetAllForProjectAsync(int projectId)
         {
-            var allSprints = await this.repo.AllAsNoTracking()
+            var allSprints = await this.sprintRepo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId)
                 .ProjectTo<SprintDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
@@ -55,7 +56,7 @@ namespace Services.Sprints
 
         public async Task<SprintDto> GetByIdAsync(int sprintId)
         {
-            var sprint = await this.repo.AllAsNoTracking()
+            var sprint = await this.sprintRepo.AllAsNoTracking()
                 .Where(x => x.Id == sprintId)
                 .ProjectTo<SprintDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
@@ -65,20 +66,30 @@ namespace Services.Sprints
 
         public async Task DeleteAsync(int sprintId)
         {
-            var toRemove = await this.repo.All()
+            var toRemove = await this.sprintRepo.All()
                 .FirstOrDefaultAsync(x => x.Id == sprintId);
 
-            this.repo.Delete(toRemove);
-            await this.repo.SaveChangesAsync();
+            this.sprintRepo.Delete(toRemove);
+            await this.sprintRepo.SaveChangesAsync();
         }
 
         public async Task<bool> AreUserStoriesInSprintAsync(int sprintId)
         {
-            var areUserStoriesInSprint = await this.repo.AllAsNoTracking()
+            var areUserStoriesInSprint = await this.sprintRepo.AllAsNoTracking()
                 .Where(x => x.Id == sprintId)
                 .AnyAsync(x => x.UserStories != null);
 
             return areUserStoriesInSprint;
+        }
+
+        public async Task<ICollection<SprintDropDownModel>> GetSprintDropDownAsync(int projectId)
+        {
+            var sprintDropDown = await this.sprintRepo.AllAsNoTracking()
+                .Where(x => x.ProjectId == projectId)
+                .ProjectTo<SprintDropDownModel>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return sprintDropDown;
         }
 
         private int GetSprintStatus(DateTime startDate, DateTime dueDate)
