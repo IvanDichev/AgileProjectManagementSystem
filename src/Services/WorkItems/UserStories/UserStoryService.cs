@@ -21,16 +21,13 @@ namespace Services.WorkItems.UserStories
     {
         private readonly IRepository<UserStory> repo;
         private readonly IMapper mapper;
-        private readonly ILogger<UserStoryService> logger;
         private readonly IProjectsService projectsService;
 
-        public UserStoryService(IRepository<UserStory> repo, IMapper mapper, 
-            ILogger<UserStoryService> logger, 
+        public UserStoryService(IRepository<UserStory> repo, IMapper mapper,
             IProjectsService projectsService)
         {
             this.repo = repo;
             this.mapper = mapper;
-            this.logger = logger;
             this.projectsService = projectsService;
         }
         public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
@@ -82,38 +79,32 @@ namespace Services.WorkItems.UserStories
 
         public async Task UpdateAsync(UserStoryUpdateModel updateModel)
         {
-            try
+            var toUpdate = this.repo.AllAsNoTracking()
+                .Where(x => x.Id == updateModel.Id)
+                .FirstOrDefault();
+
+            toUpdate.ModifiedOn = DateTime.UtcNow;
+            toUpdate.Title = updateModel.Title;
+            toUpdate.StoryPoints = updateModel.StoryPoints;
+            toUpdate.AcceptanceCriteria = updateModel.AcceptanceCriteria;
+            toUpdate.BacklogPriorityId = updateModel.BacklogPriorityid;
+            toUpdate.Description = updateModel.Description;
+            toUpdate.SprintId = updateModel.SprintId;
+
+            if (updateModel.Comment != null)
             {
-                var toUpdate = this.repo.AllAsNoTracking()
-                    .Where(x => x.Id == updateModel.Id)
-                    .FirstOrDefault();
-
-                toUpdate.ModifiedOn = DateTime.UtcNow;
-                toUpdate.Title = updateModel.Title;
-                toUpdate.StoryPoints = updateModel.StoryPoints;
-                toUpdate.AcceptanceCriteria = updateModel.AcceptanceCriteria;
-                toUpdate.BacklogPriorityId = updateModel.BacklogPriorityid;
-                toUpdate.Description = updateModel.Description;
-
-                if (updateModel.Comment != null)
+                var comment = new UserStoryComment
                 {
-                    var comment = new UserStoryComment
-                    {
-                        UserId = updateModel.Comment.AddedById,
-                        Description = updateModel.Comment.SanitizedDescription,
-                        AddedOn = DateTime.UtcNow
-                    };
+                    UserId = updateModel.Comment.AddedById,
+                    Description = updateModel.Comment.SanitizedDescription,
+                    AddedOn = DateTime.UtcNow
+                };
 
-                    toUpdate.Comments.Add(comment);
-                }
+                toUpdate.Comments.Add(comment);
+            }
 
-                this.repo.Update(toUpdate);
-                await this.repo.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                this.logger.LogWarning(e, $"Error while updating workitem entity with id {updateModel.Id}.");
-            }
+            this.repo.Update(toUpdate);
+            await this.repo.SaveChangesAsync();
         }
 
         public async Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId)

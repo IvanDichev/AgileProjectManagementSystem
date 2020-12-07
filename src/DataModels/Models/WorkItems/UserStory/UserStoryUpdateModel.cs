@@ -7,6 +7,8 @@ namespace DataModels.Models.WorkItems.UserStory
     {
         public int Id { get; set; }
 
+        public int? SprintId { get; set; }
+
         public string Title { get; set; }
 
         public ushort? StoryPoints { get; set; }
