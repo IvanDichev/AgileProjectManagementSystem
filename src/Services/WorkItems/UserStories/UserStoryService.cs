@@ -30,6 +30,7 @@ namespace Services.WorkItems.UserStories
             this.mapper = mapper;
             this.projectsService = projectsService;
         }
+
         public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
         {
             var query = this.repo.AllAsNoTracking()

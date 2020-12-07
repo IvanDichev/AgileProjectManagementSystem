@@ -24,7 +24,6 @@ namespace Data
         public DbSet<TeamsUsers> TeamsUsers { get; set; }
         public DbSet<KanbanBoardColumnOption> KanbanBoardColumnOptions { get; set; }
         public DbSet<KanbanBoardColumn> KanbanBoardColumns { get; set; }
-        //public DbSet<KanbanBoard> KanbanBoards { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }

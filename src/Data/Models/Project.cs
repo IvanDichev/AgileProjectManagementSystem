@@ -10,7 +10,7 @@ namespace Data.Models
         {
             this.Tickets = new HashSet<Ticket>();
             this.Sprints = new HashSet<Sprint>();
-            this.KanbanBoardColumns = new HashSet<KanbanBoardColumn>();
+            this.KanbanBoardColumnOptions = new HashSet<KanbanBoardColumnOption>();
         }
 
         [MaxLength(50)]
@@ -25,7 +25,7 @@ namespace Data.Models
 
         public ICollection<Sprint> Sprints { get; set; }
 
-        public ICollection<KanbanBoardColumn> KanbanBoardColumns { get; set; }
+        public ICollection<KanbanBoardColumnOption> KanbanBoardColumnOptions { get; set; }
 
         public virtual Team Team { get; set; }
     }

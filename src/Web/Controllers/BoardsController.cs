@@ -30,7 +30,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var boardColumns = await this.boardColumnsService.GetAllColumnsAsync(projectId);
+            var boardColumns = await this.boardColumnsService.GetAllColumnsAsync(projectId, 1);
 
             return View(boardColumns);
         }

@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201207145749_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,7 +115,9 @@ namespace Data.Migrations
 
                     b.HasIndex("KanbanBoardColumnOptionId");
 
-                    b.HasIndex("SprintId");
+                    b.HasIndex("SprintId")
+                        .IsUnique()
+                        .HasFilter("[SprintId] IS NOT NULL");
 
                     b.ToTable("KanbanBoardColumns");
                 });
@@ -838,8 +842,8 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Data.Models.Sprint", "Sprint")
-                        .WithMany("KanbanBoard")
-                        .HasForeignKey("SprintId");
+                        .WithOne("KanbanBoard")
+                        .HasForeignKey("Data.Models.KanbanBoardColumn", "SprintId");
                 });
 
             modelBuilder.Entity("Data.Models.KanbanBoardColumnOption", b =>

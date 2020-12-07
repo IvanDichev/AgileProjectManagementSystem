@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class Initia : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -36,23 +36,6 @@ namespace Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BacklogPriorities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "KanbanBoardColumnOptions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AddedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    ColumnName = table.Column<string>(maxLength: 75, nullable: false),
-                    MaxItems = table.Column<int>(nullable: false),
-                    PositionLTR = table.Column<byte>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_KanbanBoardColumnOptions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,6 +118,30 @@ namespace Data.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "KanbanBoardColumnOptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: true),
+                    ColumnName = table.Column<string>(maxLength: 75, nullable: false),
+                    MaxItems = table.Column<int>(nullable: false),
+                    PositionLTR = table.Column<byte>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KanbanBoardColumnOptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_KanbanBoardColumnOptions_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -238,7 +245,6 @@ namespace Data.Migrations
                     AddedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     KanbanBoardColumnOptionId = table.Column<int>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: false),
                     SprintId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -248,12 +254,6 @@ namespace Data.Migrations
                         name: "FK_KanbanBoardColumns_KanbanBoardColumnOptions_KanbanBoardColumnOptionId",
                         column: x => x.KanbanBoardColumnOptionId,
                         principalTable: "KanbanBoardColumnOptions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_KanbanBoardColumns_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -424,8 +424,8 @@ namespace Data.Migrations
                     Description = table.Column<string>(nullable: true),
                     AcceptanceCriteria = table.Column<string>(maxLength: 3000, nullable: true),
                     ProjectId = table.Column<int>(nullable: false),
-                    KanbanBoardColumnId = table.Column<int>(nullable: true),
-                    SprintId = table.Column<int>(nullable: true)
+                    SprintId = table.Column<int>(nullable: true),
+                    KanbanBoardColumnId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -705,14 +705,14 @@ namespace Data.Migrations
                 column: "UserStoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_KanbanBoardColumnOptions_ProjectId",
+                table: "KanbanBoardColumnOptions",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_KanbanBoardColumns_KanbanBoardColumnOptionId",
                 table: "KanbanBoardColumns",
                 column: "KanbanBoardColumnOptionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_KanbanBoardColumns_ProjectId",
-                table: "KanbanBoardColumns",
-                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_KanbanBoardColumns_SprintId",

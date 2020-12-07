@@ -16,9 +16,9 @@ namespace Data.Models
 
         public ICollection<UserStory> UserStories { get; set; }
 
-        public int ProjectId { get; set; }
+        //public int ProjectId { get; set; }
 
-        public virtual Project Project { get; set; }
+        //public virtual Project Project { get; set; }
 
         public int? SprintId { get; set; }
 

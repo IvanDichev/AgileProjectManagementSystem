@@ -15,5 +15,9 @@ namespace Data.Models
 
         [Range(1, byte.MaxValue)]
         public byte PositionLTR { get; set; }
+
+        public int ProjectId { get; set; }
+
+        public virtual Project Project { get; set; }
     }
 }

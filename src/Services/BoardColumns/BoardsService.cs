@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Data.Models;
 using DataModels.Models.Board;
 using DataModels.Models.Board.Dtos;
+using DataModels.Models.WorkItems.UserStory.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Repo;
 using System;
@@ -27,10 +28,10 @@ namespace Services.BoardColumns
             this.columnRepo = columnRepo;
         }
 
-        public async Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId)
-        {            
+        public async Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId, int sprintId)
+        {       
             var columns = await this.columnRepo.AllAsNoTracking()
-                .Where(x => x.ProjectId == projectId)
+                .Where(x => x.KanbanBoardColumnOption.ProjectId == projectId && x.SprintId == sprintId)
                 .OrderBy(x => x.KanbanBoardColumnOption.PositionLTR)
                 .ProjectTo<BoardColumnAllDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
@@ -41,7 +42,7 @@ namespace Services.BoardColumns
         public async Task<ICollection<BoardColumnAllNamePositionDto>> GetColumnsNamesPositionAsync(int projectId)
         {
             var columns = await this.columnRepo.AllAsNoTracking()
-                .Where(x => x.ProjectId == projectId)
+                //.Where(x => x.ProjectId == projectId)
                 .ProjectTo<BoardColumnAllNamePositionDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
@@ -62,7 +63,7 @@ namespace Services.BoardColumns
             {
                 AddedOn = DateTime.UtcNow,
                 KanbanBoardColumnOption = boardColumnOption,
-                ProjectId = inputModel.ProjectId,
+                //ProjectId = inputModel.ProjectId,
             };
 
             // Shift already existing columns to the left so there are no collisions in the order.

@@ -16,20 +16,23 @@ namespace Services.Projects
 {
     public class ProjectsService : IProjectsService
     {
-        private readonly IRepository<Project> repo;
+        private readonly IRepository<Project> projectRepo;
         private readonly IMapper mapper;
         private readonly ILogger<ProjectsService> logger;
+        private readonly IRepository<KanbanBoardColumn> boardRepo;
 
-        public ProjectsService(IRepository<Project> repo, IMapper mapper, ILogger<ProjectsService> logger)
+        public ProjectsService(IRepository<Project> projectRepo, IMapper mapper, ILogger<ProjectsService> logger,
+            IRepository<KanbanBoardColumn> boardRepo)
         {
-            this.repo = repo;
+            this.projectRepo = projectRepo;
             this.mapper = mapper;
             this.logger = logger;
+            this.boardRepo = boardRepo;
         }
 
         public async Task<ProjectDto> GetAsync(int id)
         {
-            var project = await this.repo.AllAsNoTracking()
+            var project = await this.projectRepo.AllAsNoTracking()
                 .Where(x => x.Id == id)
                 .ProjectTo<ProjectDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
@@ -39,7 +42,7 @@ namespace Services.Projects
 
         public async Task<PaginatedProjectDto> GetAllAsync(int userId, PaginationFilter paginationFilter)
         {
-            var query = this.repo.All();
+            var query = this.projectRepo.All();
             var allForUser = query.Where(x => x.Team.ProjectId == x.Id)
                 .Where(p => p.Team.TeamsUsers.Any(x => x.TeamId == p.Team.Id && x.UserId == userId));
 
@@ -79,16 +82,13 @@ namespace Services.Projects
                 TeamId = project.Team.Id,
             });
 
-            AddDefaultKanbanBoardToProject(project);
+            await AddDefaultKanbanBoardToProjectAsync(project);
 
-            await this.repo.AddAsync(project);
-            await repo.SaveChangesAsync();
-
-            var projectId = this.repo.All().FirstOrDefault(x => x.Name == project.Name).Id;
-            
+            await this.projectRepo.AddAsync(project);
+            await projectRepo.SaveChangesAsync();            
         }
 
-        private static void AddDefaultKanbanBoardToProject(Project project)
+        private async Task AddDefaultKanbanBoardToProjectAsync(Project project)
         {
             var defaultBacklogColumnOptions = new KanbanBoardColumnOption()
             {
@@ -114,62 +114,71 @@ namespace Services.Projects
                 PositionLTR = DefaultKanbanOptionsConstants.DonePosition,
             };
 
-            var BacklogkanbanBoardColumn = new KanbanBoardColumn()
+            var backlogkanbanBoardColumn = new KanbanBoardColumn()
             {
                 AddedOn = DateTime.UtcNow,
                 KanbanBoardColumnOption = defaultBacklogColumnOptions,
             };
 
-            var DoingkanbanBoardColumn = new KanbanBoardColumn()
+            var doingkanbanBoardColumn = new KanbanBoardColumn()
             {
                 AddedOn = DateTime.UtcNow,
                 KanbanBoardColumnOption = defaultDoingColumnOptions,
             };
             
-            var DonekanbanBoardColumn = new KanbanBoardColumn()
+            var donekanbanBoardColumn = new KanbanBoardColumn()
             {
                 AddedOn = DateTime.UtcNow,
                 KanbanBoardColumnOption = defaultDoneColumnOptions,
             };
 
-            project.KanbanBoardColumns.Add(BacklogkanbanBoardColumn);
-            project.KanbanBoardColumns.Add(DonekanbanBoardColumn);
-            project.KanbanBoardColumns.Add(DoingkanbanBoardColumn);
+            project.KanbanBoardColumnOptions.Add(defaultDoneColumnOptions);
+            project.KanbanBoardColumnOptions.Add(defaultDoingColumnOptions);
+            project.KanbanBoardColumnOptions.Add(defaultBacklogColumnOptions);
+
+            await this.boardRepo.AddAsync(backlogkanbanBoardColumn);
+            await this.boardRepo.AddAsync(doingkanbanBoardColumn);
+            await this.boardRepo.AddAsync(donekanbanBoardColumn);
+
+            var board = this.boardRepo.AllAsNoTracking()
+                .Where(x => x.KanbanBoardColumnOption.ProjectId == 1);
+            var boarde = this.boardRepo.AllAsNoTracking()
+                .Where(x => x.KanbanBoardColumnOption.ProjectId == 3);
         }
 
         public bool IsNameTaken(string name)
         {
-            return this.repo.AllAsNoTracking()
+            return this.projectRepo.AllAsNoTracking()
                 .Any(x => x.Name == name);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var toRemove = await this.repo.All()
+            var toRemove = await this.projectRepo.All()
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
 
-            this.repo.Delete(toRemove);
-            await this.repo.SaveChangesAsync();
+            this.projectRepo.Delete(toRemove);
+            await this.projectRepo.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(EditProjectInputModel editModel)
         {
-            var project = await this.repo.All()
+            var project = await this.projectRepo.All()
                 .Where(x => x.Id == editModel.ProjectId)
                 .FirstOrDefaultAsync();
 
             project.Description = editModel.Description;
             project.ModifiedOn = DateTime.UtcNow;
 
-            this.repo.Update(project);
+            this.projectRepo.Update(project);
 
-            await this.repo.SaveChangesAsync();
+            await this.projectRepo.SaveChangesAsync();
         }
 
         public bool IsUserInProject(int projectId, int userId)
         {
-            return this.repo.AllAsNoTracking()
+            return this.projectRepo.AllAsNoTracking()
                 .Where(x => x.Id == projectId)
                 .Any(x => x.Team.TeamsUsers
                     .Any(x => x.UserId == userId));
@@ -177,13 +186,13 @@ namespace Services.Projects
 
         public async Task<int> GetNextIdForWorkItemAsync(int projectId)
         {
-            var project = this.repo.All()
+            var project = this.projectRepo.All()
                 .Where(x => x.Id == projectId)
                 .FirstOrDefault();
 
             project.WorkItemsId += 1;
-            this.repo.Update(project);
-            await this.repo.SaveChangesAsync();
+            this.projectRepo.Update(project);
+            await this.projectRepo.SaveChangesAsync();
             return project.WorkItemsId;
         }
     }

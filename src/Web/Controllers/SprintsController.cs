@@ -97,7 +97,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            if (await this.sprintsService.AreUserStoriesInSprintAsync(sprintId))
+            if (!await this.sprintsService.AreUserStoriesInSprintAsync(sprintId))
             {
                 try
                 {
@@ -106,7 +106,10 @@ namespace Web.Controllers
 
                     return RedirectToAction(nameof(All), new { projectId = projectId });
                 }
-                catch { }
+                catch 
+                {
+                    return RedirectToAction("Error", "Error");
+                }
             }
 
             TempData["SprintDeleteError"] = "Sprint with assigned user stories cannot be deleted.";

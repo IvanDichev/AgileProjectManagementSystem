@@ -108,7 +108,7 @@ namespace Web
                 app.UseCookiePolicy();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseSeedAdminAndRolesMiddleware();
+                //app.UseSeedAdminAndRolesMiddleware();
                 app.UseBrowserLink();
             }
             else

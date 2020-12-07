@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201207130649_Initia")]
-    partial class Initia
+    [Migration("20201207161612_AddRefFromSprintToKanbanColumns")]
+    partial class AddRefFromSprintToKanbanColumns
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -108,9 +108,6 @@ namespace Data.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("SprintId")
                         .HasColumnType("int");
 
@@ -118,11 +115,7 @@ namespace Data.Migrations
 
                     b.HasIndex("KanbanBoardColumnOptionId");
 
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("SprintId")
-                        .IsUnique()
-                        .HasFilter("[SprintId] IS NOT NULL");
+                    b.HasIndex("SprintId");
 
                     b.ToTable("KanbanBoardColumns");
                 });
@@ -151,7 +144,12 @@ namespace Data.Migrations
                     b.Property<byte>("PositionLTR")
                         .HasColumnType("tinyint");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("KanbanBoardColumnOptions");
                 });
@@ -841,15 +839,18 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Data.Models.Sprint", "Sprint")
+                        .WithMany("KanbanBoard")
+                        .HasForeignKey("SprintId");
+                });
+
+            modelBuilder.Entity("Data.Models.KanbanBoardColumnOption", b =>
+                {
                     b.HasOne("Data.Models.Project", "Project")
-                        .WithMany("KanbanBoardColumns")
+                        .WithMany("KanbanBoardColumnOptions")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Data.Models.Sprint", "Sprint")
-                        .WithOne("KanbanBoard")
-                        .HasForeignKey("Data.Models.KanbanBoardColumn", "SprintId");
                 });
 
             modelBuilder.Entity("Data.Models.Mockup", b =>
@@ -969,7 +970,7 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Models.Sprint", null)
+                    b.HasOne("Data.Models.Sprint", "Sprint")
                         .WithMany("UserStories")
                         .HasForeignKey("SprintId");
                 });

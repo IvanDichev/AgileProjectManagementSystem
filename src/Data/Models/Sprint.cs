@@ -10,6 +10,7 @@ namespace Data.Models
         public Sprint()
         {
             this.UserStories = new HashSet<UserStory>();
+            this.KanbanBoard = new HashSet<KanbanBoardColumn>();
         }
 
         [MaxLength(75)]
@@ -29,6 +30,6 @@ namespace Data.Models
 
         public virtual ICollection<UserStory> UserStories { get; set; }
 
-        public virtual KanbanBoardColumn KanbanBoard { get; set; }
+        public virtual ICollection<KanbanBoardColumn> KanbanBoard { get; set; }
     }
 }

@@ -18,14 +18,17 @@ namespace Services.Sprints
         private readonly IRepository<Sprint> sprintRepo;
         private readonly IMapper mapper;
         private readonly IRepository<SprintStatus> sprintStatusRepo;
+        private readonly IRepository<KanbanBoardColumnOption> boardOptionsRepo;
 
         public SprintsService(IRepository<Sprint> sprintRepo, 
             IMapper mapper, 
-            IRepository<SprintStatus> sprintStatusRepo)
+            IRepository<SprintStatus> sprintStatusRepo,
+            IRepository<KanbanBoardColumnOption> boardOptionsRepo)
         {
             this.sprintRepo = sprintRepo;
             this.mapper = mapper;
             this.sprintStatusRepo = sprintStatusRepo;
+            this.boardOptionsRepo = boardOptionsRepo;
         }
 
         public async Task CreateSprintAsync(SprintInputDto inputDto)
@@ -40,8 +43,28 @@ namespace Services.Sprints
                 StatusId = GetSprintStatus(inputDto.StartDate, inputDto.DueDate)
             };
 
+            await AddKanbanColumnsForSprint(inputDto, sprint);
+
             await this.sprintRepo.AddAsync(sprint);
             await this.sprintRepo.SaveChangesAsync();
+            
+        }
+
+        private async Task AddKanbanColumnsForSprint(SprintInputDto inputDto, Sprint sprint)
+        {
+            var boardOptionIdsForProject = await this.boardOptionsRepo.AllAsNoTracking()
+                            .Where(x => x.ProjectId == inputDto.ProjectId)
+                            .Select(x => x.Id)
+                            .ToListAsync();
+
+            foreach (var optionsId in boardOptionIdsForProject)
+            {
+                sprint.KanbanBoard.Add(new KanbanBoardColumn()
+                {
+                    KanbanBoardColumnOptionId = optionsId,
+                    AddedOn = DateTime.UtcNow,
+                });
+            }
         }
 
         public async Task<ICollection<SprintDto>> GetAllForProjectAsync(int projectId)
