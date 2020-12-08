@@ -6,9 +6,9 @@
         public const byte BacklogPosition = 1;
         public const ushort BacklogMaxItems = 3500;
 
-        public const string Doing = "Backlog";
-        public const byte DoingPosition = 1;
-        public const ushort DoingMaxItems = 3500;
+        public const string InProgress = "In Progress";
+        public const byte InProgressPosition = 1;
+        public const ushort InProgressMaxItems = 3500;
 
         public const string Done = "Done";
         public const byte DonePosition = byte.MaxValue;
