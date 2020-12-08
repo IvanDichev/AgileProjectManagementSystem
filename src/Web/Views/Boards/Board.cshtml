@@ -1,4 +1,4 @@
-﻿@model ICollection<BoardColumnAllDto>
+﻿@model BoardColumnAllViewModel
 
 @{
     ViewData["Title"] = "Board";
@@ -16,17 +16,18 @@
     <div class="dropdown" style="display:inline-block">
         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            DropDownForSprints
+            Sprints
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <button class="dropdown-item" type="button">Action</button>
-            <button class="dropdown-item" type="button">Another action</button>
-            <button class="dropdown-item" type="button">Something else here</button>
+            @foreach (var sprint in Model.SprintDropDown)
+            {
+                <a class="dropdown-item" asp-action="Board" asp-route-sprintId="@sprint.Id">@sprint.Name</a>
+            }
         </div>
     </div>
     <div class="row">
         <div class="kanban">
-            @foreach (var column in Model)
+            @foreach (var column in Model.BoardColumnAllDto)
             {
                 <div class="col-md-3">
                     <div class="kanban-container">

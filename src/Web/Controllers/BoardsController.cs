@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.BoardColumns;
 using Services.Projects;
+using Services.Sprints;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -13,26 +14,33 @@ namespace Web.Controllers
     {
         private readonly IMapper mapper;
         private readonly IBoardColumnsService boardColumnsService;
+        private readonly ISprintsService sprintsService;
 
         public BoardsController(IMapper mapper, 
             IProjectsService projectsService, 
-            IBoardColumnsService boardColumnsService)
+            IBoardColumnsService boardColumnsService,
+            ISprintsService sprintsService)
             : base(projectsService)
         {
             this.mapper = mapper;
             this.boardColumnsService = boardColumnsService;
+            this.sprintsService = sprintsService;
         }
 
-        public async Task<IActionResult> Board(int projectId)
+        public async Task<IActionResult> Board(int projectId, int sprintId)
         {
             if(!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            var boardColumns = await this.boardColumnsService.GetAllColumnsAsync(projectId, 1);
+            var boardViewModel = new BoardColumnAllViewModel()
+            {
+                BoardColumnAllDto = await this.boardColumnsService.GetAllColumnsAsync(projectId, sprintId),
+                SprintDropDown = await this.sprintsService.GetSprintDropDownAsync(projectId),
+            };
 
-            return View(boardColumns);
+            return View(boardViewModel);
         }
 
         public async Task<IActionResult> Options(int projectId)
