@@ -64,7 +64,9 @@ namespace Web.Automapper
 
             // Board columns
             CreateMap<KanbanBoardColumn, BoardColumnAllDto>().ReverseMap();
-            CreateMap<KanbanBoardColumn, BoardColumnAllNamePositionDto>().ReverseMap();
+
+            // Board options
+            CreateMap<KanbanBoardColumnOption, ColumnOptionsDto>().ReverseMap();
 
             // User story comments
             CreateMap<UserStoryComment, CommentDto>().ReverseMap();

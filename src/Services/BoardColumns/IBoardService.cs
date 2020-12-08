@@ -9,7 +9,7 @@ namespace Services.BoardColumns
     {
         Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId);
         Task<ICollection<BoardColumnAllDto>> GetAllColumnsForSprintAndProjectAsync(int projectId, int sprintId);
-        Task<ICollection<BoardColumnAllNamePositionDto>> GetColumnsNamesPositionAsync(int projectId);
+        Task<ICollection<ColumnOptionsDto>> GetColumnsNamesPositionAsync(int projectId);
         Task AddcolumnToTheLeftAsync(BoardOptionsInputModel inputModel);
     }
 }

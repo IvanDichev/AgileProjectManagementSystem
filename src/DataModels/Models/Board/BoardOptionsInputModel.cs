@@ -20,6 +20,6 @@ namespace DataModels.Models.Board
 
         public int ProjectId { get; set; }
 
-        public ICollection<BoardColumnAllNamePositionDto> AlreadyColumns { get; set; }
+        public ICollection<ColumnOptionsDto> AlreadyColumns { get; set; }
     }
 }

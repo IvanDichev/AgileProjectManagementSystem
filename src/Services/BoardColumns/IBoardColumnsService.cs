@@ -8,7 +8,7 @@ namespace Services.BoardColumns
     public interface IBoardColumnsService
     {
         Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId, int sprintId);
-        Task<ICollection<BoardColumnAllNamePositionDto>> GetColumnsNamesPositionAsync(int projectId);
+        Task<ICollection<ColumnOptionsDto>> GetColumnOptionsAsync(int projectId);
         Task AddcolumnToTheLeftAsync(BoardOptionsInputModel inputModel);
     }
 }

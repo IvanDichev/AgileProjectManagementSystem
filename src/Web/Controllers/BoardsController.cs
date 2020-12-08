@@ -50,7 +50,7 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var alreadyBoard = await this.boardColumnsService.GetColumnsNamesPositionAsync(projectId);
+            var alreadyBoard = await this.boardColumnsService.GetColumnOptionsAsync(projectId);
 
             var board = new BoardOptionsInputModel()
             {

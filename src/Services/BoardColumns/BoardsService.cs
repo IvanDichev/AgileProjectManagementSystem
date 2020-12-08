@@ -39,11 +39,11 @@ namespace Services.BoardColumns
             return columns;
         }
 
-        public async Task<ICollection<BoardColumnAllNamePositionDto>> GetColumnsNamesPositionAsync(int projectId)
+        public async Task<ICollection<ColumnOptionsDto>> GetColumnOptionsAsync(int projectId)
         {
-            var columns = await this.columnRepo.AllAsNoTracking()
-                //.Where(x => x.ProjectId == projectId)
-                .ProjectTo<BoardColumnAllNamePositionDto>(this.mapper.ConfigurationProvider)
+            var columns = await this.columnOptionsRepo.AllAsNoTracking()
+                .Where(x => x.ProjectId == projectId)
+                .ProjectTo<ColumnOptionsDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return columns;
@@ -59,30 +59,30 @@ namespace Services.BoardColumns
                 PositionLTR = ++inputModel.ColumnOrder,
             };
 
-            var column = new KanbanBoardColumn()
-            {
-                AddedOn = DateTime.UtcNow,
-                KanbanBoardColumnOption = boardColumnOption,
-                //ProjectId = inputModel.ProjectId,
-            };
+            //var column = new KanbanBoardColumn()
+            //{
+            //    AddedOn = DateTime.UtcNow,
+            //    KanbanBoardColumnOption = boardColumnOption,
+            //    //ProjectId = inputModel.ProjectId,
+            //};
 
-            // Shift already existing columns to the left so there are no collisions in the order.
-            await ShiftColumnPositionMatchesLeft(inputModel.ColumnOrder, inputModel.ProjectId);
+            // Shift already existing columns to right so there are no collisions in the order.
+            await ShiftColumnPosition(inputModel.ColumnOrder, inputModel.ProjectId);
 
             await this.columnOptionsRepo.AddAsync(boardColumnOption);
-            await this.columnRepo.AddAsync(column);
+            //await this.columnRepo.AddAsync(column);
 
             await this.columnOptionsRepo.SaveChangesAsync();
-            await this.columnRepo.SaveChangesAsync();
+            //await this.columnRepo.SaveChangesAsync();
         }
 
-        private async Task ShiftColumnPositionMatchesLeft(int columnOrder, int projectId)
+        private async Task ShiftColumnPosition(int columnOrder, int projectId)
         {
-            var alreadyColumns = await GetColumnsNamesPositionAsync(projectId);
+            var alreadyColumns = await GetColumnOptionsAsync(projectId);
             var n = columnOrder;
             foreach (var column in alreadyColumns)
             {
-                if (column.KanbanBoardColumnOptionPositionLTR == n)
+                if (column.PositionLTR == n)
                 {
                     var oldColumn = await this.columnOptionsRepo.All().Where(x => x.Id == column.Id).FirstOrDefaultAsync();
                     oldColumn.PositionLTR++;

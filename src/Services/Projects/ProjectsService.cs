@@ -101,9 +101,9 @@ namespace Services.Projects
             var defaultDoingColumnOptions = new KanbanBoardColumnOption()
             {
                 AddedOn = DateTime.UtcNow,
-                ColumnName = DefaultKanbanOptionsConstants.Doing,
-                MaxItems = DefaultKanbanOptionsConstants.DoingMaxItems,
-                PositionLTR = DefaultKanbanOptionsConstants.DoingPosition,
+                ColumnName = DefaultKanbanOptionsConstants.InProgress,
+                MaxItems = DefaultKanbanOptionsConstants.InProgressMaxItems,
+                PositionLTR = DefaultKanbanOptionsConstants.InProgressPosition,
             };
 
             var defaultDoneColumnOptions = new KanbanBoardColumnOption()
