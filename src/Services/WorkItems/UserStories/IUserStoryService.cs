@@ -15,5 +15,6 @@ namespace Services.WorkItems.UserStories
         Task DeleteAsync(int userStoryId);
         Task UpdateAsync(UserStoryUpdateModel updateModel);
         Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId);
+        Task ChangeColumnAsync(int userStoryId, int columnId);
     }
 }

@@ -38,6 +38,7 @@ else {
     const draggables = document.querySelectorAll(".draggable")
     const kanbanContainers = document.querySelectorAll(".kanban-container-draggables")
 
+
     draggables.forEach(draggable => {
         draggable.addEventListener('dragstart', () => {
             draggable.classList.add('dragging')
@@ -54,11 +55,42 @@ else {
             e.preventDefault()
             const afterElement = getDragAfterElement(container, e.clientY)
             const dragging = document.querySelector('.dragging')
+
+            //const userStoryId = dragging.id.split('-')[1]
+            //console.log(userStoryId)
+            //const columnId = console.log(container.id)
+
             if (afterElement == null) {
                 container.appendChild(dragging)
             } else {
                 container.insertBefore(dragging, afterElement)
             }
+        })
+    })
+
+    kanbanContainers.forEach(container => {
+        container.addEventListener('drop', e => {
+            e.preventDefault()
+
+            const dragging = document.querySelector('.dragging')
+
+            const userStoryId = dragging.id.split('-')[1]
+            const columnId = container.id.split('-')[1]
+            const form = document.querySelector('#changeColumn')
+            const formdata = new FormData(form);
+            formdata.append('userStoryId', userStoryId)
+            formdata.append('columnId', columnId)
+
+            $.ajax({
+                type: 'POST',
+                url: form.action,
+                data: formdata,
+                contentType: false,
+                processData: false,
+            })
+            //to prevent default form submit event
+            return false;
+
         })
     })
 

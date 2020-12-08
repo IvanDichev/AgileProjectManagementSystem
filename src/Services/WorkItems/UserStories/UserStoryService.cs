@@ -20,16 +20,16 @@ namespace Services.WorkItems.UserStories
 {
     public class UserStoryService : IUserStoryService
     {
-        private readonly IRepository<UserStory> repo;
+        private readonly IRepository<UserStory> userStoryRepo;
         private readonly IMapper mapper;
         private readonly IProjectsService projectsService;
         private readonly IBoardsService boardService;
 
-        public UserStoryService(IRepository<UserStory> repo, IMapper mapper,
+        public UserStoryService(IRepository<UserStory> userStoryRepo, IMapper mapper,
             IProjectsService projectsService,
             IBoardsService boardService)
         {
-            this.repo = repo;
+            this.userStoryRepo = userStoryRepo;
             this.mapper = mapper;
             this.projectsService = projectsService;
             this.boardService = boardService;
@@ -37,7 +37,7 @@ namespace Services.WorkItems.UserStories
 
         public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
         {
-            var query = this.repo.AllAsNoTracking()
+            var query = this.userStoryRepo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId);
             var srotedQuery = Sort(sortingFilter, query);
 
@@ -53,14 +53,14 @@ namespace Services.WorkItems.UserStories
             userStory.AddedOn = DateTime.UtcNow;
             userStory.IdForProject = await projectsService.GetNextIdForWorkItemAsync(model.ProjectId);
 
-            await this.repo.AddAsync(userStory);
+            await this.userStoryRepo.AddAsync(userStory);
 
-            await this.repo.SaveChangesAsync();
+            await this.userStoryRepo.SaveChangesAsync();
         }
 
         public async Task<UserStoryDto> GetAsync(int WorkItemId)
         {
-            var workItem = await this.repo.AllAsNoTracking()
+            var workItem = await this.userStoryRepo.AllAsNoTracking()
                 .Where(x => x.Id == WorkItemId)
                 .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
@@ -70,21 +70,21 @@ namespace Services.WorkItems.UserStories
 
         public async Task DeleteAsync(int userStoryId)
         {
-            var toRemove = await this.repo.All()
+            var toRemove = await this.userStoryRepo.All()
                 .Where(x => x.Id == userStoryId)
                 .FirstOrDefaultAsync();
 
             if (toRemove != null)
             {
-                this.repo.Delete(toRemove);
+                this.userStoryRepo.Delete(toRemove);
 
-                await this.repo.SaveChangesAsync();
+                await this.userStoryRepo.SaveChangesAsync();
             }
         }
 
         public async Task UpdateAsync(UserStoryUpdateModel updateModel)
         {
-            var toUpdate = this.repo.AllAsNoTracking()
+            var toUpdate = this.userStoryRepo.AllAsNoTracking()
                 .Where(x => x.Id == updateModel.Id)
                 .FirstOrDefault();
 
@@ -115,18 +115,28 @@ namespace Services.WorkItems.UserStories
                 toUpdate.Comments.Add(comment);
             }
 
-            this.repo.Update(toUpdate);
-            await this.repo.SaveChangesAsync();
+            this.userStoryRepo.Update(toUpdate);
+            await this.userStoryRepo.SaveChangesAsync();
         }
 
         public async Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId)
         {
-            var dropdowns = await this.repo.AllAsNoTracking()
+            var dropdowns = await this.userStoryRepo.AllAsNoTracking()
                 .Where(x => x.ProjectId == projectId)
                 .ProjectTo<UserStoryDropDownModel>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return dropdowns;
+        }
+
+        public async Task ChangeColumnAsync(int userStoryId, int columnId)
+        {
+            var userStoryToMove = await this.userStoryRepo.All()
+                .Where(x => x.Id == userStoryId)
+                .FirstOrDefaultAsync();
+
+            userStoryToMove.KanbanBoardColumnId = columnId;
+            await this.userStoryRepo.SaveChangesAsync();
         }
 
         private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)

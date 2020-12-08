@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.BoardColumns;
 using Services.Projects;
 using Services.Sprints;
+using Services.WorkItems.UserStories;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -15,16 +16,19 @@ namespace Web.Controllers
         private readonly IMapper mapper;
         private readonly IBoardsService boardColumnsService;
         private readonly ISprintsService sprintsService;
+        private readonly IUserStoryService userStoryService;
 
         public BoardsController(IMapper mapper, 
             IProjectsService projectsService, 
             IBoardsService boardColumnsService,
-            ISprintsService sprintsService)
+            ISprintsService sprintsService,
+            IUserStoryService userStoryService)
             : base(projectsService)
         {
             this.mapper = mapper;
             this.boardColumnsService = boardColumnsService;
             this.sprintsService = sprintsService;
+            this.userStoryService = userStoryService;
         }
 
         public async Task<IActionResult> Board(int projectId, int sprintId)
@@ -41,6 +45,14 @@ namespace Web.Controllers
             };
 
             return View(boardViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeColumn(int columnId, int userStoryId)
+        {
+            await this.userStoryService.ChangeColumnAsync(userStoryId, columnId);
+
+            return Json(new { changed = "changed" });
         }
 
         public async Task<IActionResult> Options(int projectId)
