@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Services.BoardColumns
 {
-    public interface IBoardColumnsService
+    public interface IBoardsService
     {
         Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId, int sprintId);
         Task<ICollection<ColumnOptionsDto>> GetColumnOptionsAsync(int projectId);

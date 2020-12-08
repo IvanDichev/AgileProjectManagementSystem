@@ -145,7 +145,7 @@ namespace Web.Controllers
             {
                 PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync()),
-                SprintDropDownModel = await this.sprintsService.GetSprintDropDownAsync(projectId),
+                SprintDropDownModel = (await this.sprintsService.GetSprintDropDownAsync(projectId)),
                 ViewModel = this.mapper.Map<UserStoryViewModel>(await userStoryService.GetAsync(UserStoryId)),
             };
 

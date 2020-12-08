@@ -8,6 +8,7 @@ using DataModels.Models.WorkItems.UserStory.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repo;
+using Services.BoardColumns;
 using Services.Projects;
 using Shared.Constants;
 using System;
@@ -22,13 +23,16 @@ namespace Services.WorkItems.UserStories
         private readonly IRepository<UserStory> repo;
         private readonly IMapper mapper;
         private readonly IProjectsService projectsService;
+        private readonly IBoardsService boardService;
 
         public UserStoryService(IRepository<UserStory> repo, IMapper mapper,
-            IProjectsService projectsService)
+            IProjectsService projectsService,
+            IBoardsService boardService)
         {
             this.repo = repo;
             this.mapper = mapper;
             this.projectsService = projectsService;
+            this.boardService = boardService;
         }
 
         public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
@@ -90,7 +94,14 @@ namespace Services.WorkItems.UserStories
             toUpdate.AcceptanceCriteria = updateModel.AcceptanceCriteria;
             toUpdate.BacklogPriorityId = updateModel.BacklogPriorityid;
             toUpdate.Description = updateModel.Description;
-            toUpdate.SprintId = updateModel.SprintId;
+            if(toUpdate.SprintId != updateModel.SprintId || toUpdate.SprintId == null)
+            {
+                int sprintId = updateModel.SprintId ?? default;
+                var columnId = (await this.boardService.GetAllColumnsAsync(toUpdate.ProjectId, sprintId)).FirstOrDefault().Id;
+
+                toUpdate.SprintId = sprintId;
+                toUpdate.KanbanBoardColumnId = columnId;
+            }
 
             if (updateModel.Comment != null)
             {

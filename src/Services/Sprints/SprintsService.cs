@@ -108,7 +108,8 @@ namespace Services.Sprints
         public async Task<ICollection<SprintDropDownModel>> GetSprintDropDownAsync(int projectId)
         {
             var sprintDropDown = await this.sprintRepo.AllAsNoTracking()
-                .Where(x => x.ProjectId == projectId)
+                .Where(x => x.ProjectId == projectId && 
+                    (x.Status.Status != SprintStatusConstants.Closed && x.Status.Status != SprintStatusConstants.Accepted))
                 .ProjectTo<SprintDropDownModel>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 

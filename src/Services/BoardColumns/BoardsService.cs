@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace Services.BoardColumns
 {
-    public class BoardsService : IBoardColumnsService
+    public class BoardsService : IBoardsService
     {
         private readonly IRepository<KanbanBoardColumnOption> columnOptionsRepo;
         private readonly IMapper mapper;
         private readonly IRepository<KanbanBoardColumn> columnRepo;
 
-        public BoardsService(IRepository<KanbanBoardColumnOption> columnOptionsRepo, 
+        public BoardsService(IRepository<KanbanBoardColumnOption> columnOptionsRepo,
             IMapper mapper,
             IRepository<KanbanBoardColumn> columnRepo)
         {
@@ -29,7 +29,7 @@ namespace Services.BoardColumns
         }
 
         public async Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId, int sprintId)
-        {       
+        {
             var columns = await this.columnRepo.AllAsNoTracking()
                 .Where(x => x.KanbanBoardColumnOption.ProjectId == projectId && x.SprintId == sprintId)
                 .OrderBy(x => x.KanbanBoardColumnOption.PositionLTR)

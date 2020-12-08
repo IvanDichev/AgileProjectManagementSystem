@@ -38,6 +38,10 @@ namespace Data.Models
 
         public int? SprintId { get; set; }
 
+        public int? KanbanBoardColumnId { get; set; }
+
+        public virtual KanbanBoardColumn KanbanBoardColumn { get; set; }
+
         public virtual Sprint Sprint { get; set; }
 
         public ICollection<Mockup> Mockups { get; set; }

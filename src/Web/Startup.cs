@@ -90,7 +90,7 @@ namespace Web
             services.AddScoped<ITestsService, TestsService>();
             services.AddScoped<IBugsService, BugsService>();
             services.AddScoped<ISprintsService, SprintsService>();
-            services.AddScoped<IBoardColumnsService, BoardsService>();
+            services.AddScoped<IBoardsService, BoardsService>();
 
         }
 

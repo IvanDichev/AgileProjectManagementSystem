@@ -13,12 +13,12 @@ namespace Web.Controllers
     public class BoardsController : BaseController
     {
         private readonly IMapper mapper;
-        private readonly IBoardColumnsService boardColumnsService;
+        private readonly IBoardsService boardColumnsService;
         private readonly ISprintsService sprintsService;
 
         public BoardsController(IMapper mapper, 
             IProjectsService projectsService, 
-            IBoardColumnsService boardColumnsService,
+            IBoardsService boardColumnsService,
             ISprintsService sprintsService)
             : base(projectsService)
         {
