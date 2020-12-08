@@ -19,16 +19,19 @@ namespace Services.Sprints
         private readonly IMapper mapper;
         private readonly IRepository<SprintStatus> sprintStatusRepo;
         private readonly IRepository<KanbanBoardColumnOption> boardOptionsRepo;
+        private readonly IRepository<KanbanBoardColumn> boardRepo;
 
         public SprintsService(IRepository<Sprint> sprintRepo, 
             IMapper mapper, 
             IRepository<SprintStatus> sprintStatusRepo,
-            IRepository<KanbanBoardColumnOption> boardOptionsRepo)
+            IRepository<KanbanBoardColumnOption> boardOptionsRepo,
+            IRepository<KanbanBoardColumn> boardRepo)
         {
             this.sprintRepo = sprintRepo;
             this.mapper = mapper;
             this.sprintStatusRepo = sprintStatusRepo;
             this.boardOptionsRepo = boardOptionsRepo;
+            this.boardRepo = boardRepo;
         }
 
         public async Task CreateSprintAsync(SprintInputDto inputDto)
@@ -90,7 +93,15 @@ namespace Services.Sprints
         public async Task DeleteAsync(int sprintId)
         {
             var toRemove = await this.sprintRepo.All()
+                .Where(x => x.Id == sprintId)
                 .FirstOrDefaultAsync(x => x.Id == sprintId);
+
+            var columnsToRemove = boardRepo.All()
+                .Where(x => x.SprintId == sprintId);
+
+            // Remove board columns for sprint.
+            await columnsToRemove.ForEachAsync(x => this.boardRepo.Delete(x));
+            await this.boardRepo.SaveChangesAsync();
 
             this.sprintRepo.Delete(toRemove);
             await this.sprintRepo.SaveChangesAsync();
@@ -100,7 +111,7 @@ namespace Services.Sprints
         {
             var areUserStoriesInSprint = await this.sprintRepo.AllAsNoTracking()
                 .Where(x => x.Id == sprintId)
-                .AnyAsync(x => x.UserStories != null);
+                .AnyAsync(x => x.UserStories.Count != 0);
 
             return areUserStoriesInSprint;
         }
