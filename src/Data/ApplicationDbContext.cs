@@ -20,7 +20,7 @@ namespace Data
         public DbSet<BacklogPriority> BacklogPriorities { get; set; }
         public DbSet<Severity> Severities { get; set; }
         public DbSet<SprintStatus> SprintStatuses { get; set; }
-        public DbSet<MockupAttachment> MockupAttachments { get; set; }
+        public DbSet<Mockup> Mockups { get; set; }
         public DbSet<TeamsUsers> TeamsUsers { get; set; }
         public DbSet<KanbanBoardColumnOption> KanbanBoardColumnOptions { get; set; }
         public DbSet<KanbanBoardColumn> KanbanBoardColumns { get; set; }
