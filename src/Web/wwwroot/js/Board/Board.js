@@ -56,10 +56,6 @@ else {
             const afterElement = getDragAfterElement(container, e.clientY)
             const dragging = document.querySelector('.dragging')
 
-            //const userStoryId = dragging.id.split('-')[1]
-            //console.log(userStoryId)
-            //const columnId = console.log(container.id)
-
             if (afterElement == null) {
                 container.appendChild(dragging)
             } else {
@@ -73,7 +69,6 @@ else {
             e.preventDefault()
 
             const dragging = document.querySelector('.dragging')
-
             const userStoryId = dragging.id.split('-')[1]
             const columnId = container.id.split('-')[1]
             const form = document.querySelector('#changeColumn')
