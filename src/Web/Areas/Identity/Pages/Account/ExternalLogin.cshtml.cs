@@ -13,7 +13,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Shared.Constants;
+using Utilities.Mailing;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -22,19 +25,22 @@ namespace Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly Utilities.Mailing.IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly IConfiguration _config;
 
         public ExternalLoginModel(
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            Utilities.Mailing.IEmailSender emailSender, 
+            IConfiguration config)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
+            _config = config;
         }
 
         [BindProperty]
@@ -141,8 +147,12 @@ namespace Web.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        var emailToSend = new Email(_config["EmailSenderInformation:Email"], Input.Email,
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
+                        Constants.ConfirmationEmailSubject);
+
+                        await _emailSender.SendAsync(emailToSend, _config["EmailSenderInformation:Password"],
+                            _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
 
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)

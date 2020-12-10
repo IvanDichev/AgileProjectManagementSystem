@@ -22,6 +22,8 @@ using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
 using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Utilities.Mailing;
 using Web.Middlewares;
 
@@ -76,6 +78,12 @@ namespace Web
             {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = Configuration["GoogleAuth:ClientId"];
+                options.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
             });
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
