@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using DataModels.Models.Sorting;
 using DataModels.Models.WorkItems;
 using DataModels.Models.WorkItems.Bugs;
@@ -8,8 +10,10 @@ using DataModels.Models.WorkItems.Tasks.Dtos;
 using DataModels.Models.WorkItems.Tests;
 using DataModels.Models.WorkItems.Tests.Dtos;
 using DataModels.Models.WorkItems.UserStory;
+using DataModels.Models.WorkItems.UserStory.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Services.BacklogPriorities;
 using Services.Projects;
 using Services.Sprints;
@@ -20,6 +24,7 @@ using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -36,6 +41,7 @@ namespace Web.Controllers
         private readonly ITestsService testsService;
         private readonly IBugsService bugsService;
         private readonly ISprintsService sprintsService;
+        private readonly IConfiguration config;
 
         public WorkItemsController(IWorkItemService workItemService,
             IBacklogPrioritiesService backlogPrioritiesService,
@@ -45,7 +51,8 @@ namespace Web.Controllers
             ITasksService tasksService,
             ITestsService testsService,
             IBugsService bugsService,
-            ISprintsService sprintsService) : base(projectsService)
+            ISprintsService sprintsService,
+            IConfiguration config) : base(projectsService)
         {
             this.workItemService = workItemService;
             this.backlogPrioritiesService = backlogPrioritiesService;
@@ -55,6 +62,7 @@ namespace Web.Controllers
             this.testsService = testsService;
             this.bugsService = bugsService;
             this.sprintsService = sprintsService;
+            this.config = config;
         }
 
         public async Task<IActionResult> GetAll(int projectId, SortingFilter sortingFilter)
@@ -98,13 +106,38 @@ namespace Web.Controllers
             {
                 inputModel.PrioritiesDropDown = this.mapper.Map<ICollection<BacklogPriorityDropDownModel>>
                     (await this.backlogPrioritiesService.GetAllAsync());
+
                 return View(inputModel);
             }
 
             try
             {
+                var savedFilepath = string.Empty;
+                if (inputModel.Mockup.Length > 0)
+                {
+                    string filePath = Guid.NewGuid().ToString();
+                    Account account = new Account(
+                        config["Cloudinary:CloudName"],
+                        config["Cloudinary:ApiKey"],
+                        config["Cloudinary:ApiSecret"]
+                        );
+
+                    Cloudinary cloudinary = new Cloudinary(account);
+
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(filePath + ".png", inputModel.Mockup.OpenReadStream()),
+                        Overwrite = true,
+                    };
+                    var uploadResult = cloudinary.Upload(uploadParams);
+
+                    savedFilepath = uploadResult.SecureUrl.AbsoluteUri;
+                }
+
                 inputModel.ProjectId = projectId;
-                await this.userStoryService.CreateAsync(inputModel);
+                var inputDto = this.mapper.Map<UserStoryInputDto>(inputModel);
+                inputDto.MockupPath = savedFilepath;
+                await this.userStoryService.CreateAsync(inputDto);
 
                 return RedirectToAction(nameof(GetAll), new { projectId = projectId });
             }
@@ -273,12 +306,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTest(int projectId, TestInputModel testInputModel)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 testInputModel.UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId);
 
@@ -301,7 +334,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteTest(int projectId, int testId)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -333,12 +366,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBug(int projectId, BugInputModel inputModel)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 inputModel.UserStoryDropDown = await this.userStoryService.GetUserStoryDropDownsAsync(projectId);
                 inputModel.SeverityDropDown = await this.bugsService.GetSeverityDropDown();
@@ -357,13 +390,13 @@ namespace Web.Controllers
             {
                 return RedirectToAction("Error", "Error");
             }
-            
+
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteBug(int projectId, int bugId)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }

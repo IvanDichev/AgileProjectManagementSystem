@@ -1,7 +1,9 @@
 ﻿using Ganss.XSS;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace DataModels.Models.WorkItems.UserStory
 {
@@ -34,6 +36,8 @@ namespace DataModels.Models.WorkItems.UserStory
         public string AcceptanceCriteria { get; set; }
 
         public string SanitizedAcceptanceCriteria => htmlSanitizer.Sanitize(AcceptanceCriteria);
+
+        public IFormFile Mockup { get; set; }
 
         public int ProjectId { get; set; }
 

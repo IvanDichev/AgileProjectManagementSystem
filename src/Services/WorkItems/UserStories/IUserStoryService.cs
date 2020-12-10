@@ -11,7 +11,7 @@ namespace Services.WorkItems.UserStories
     {
         Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter);
         Task<UserStoryDto> GetAsync(int WorkItemId);
-        Task CreateAsync(UserStoryInputModel model);
+        Task CreateAsync(UserStoryInputDto model);
         Task DeleteAsync(int userStoryId);
         Task UpdateAsync(UserStoryUpdateModel updateModel);
         Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId);

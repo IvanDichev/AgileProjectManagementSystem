@@ -47,13 +47,31 @@ namespace Services.WorkItems.UserStories
             return sortedWorkItems;
         }
 
-        public async Task CreateAsync(UserStoryInputModel model)
+        public async Task CreateAsync(UserStoryInputDto inputDto)
         {
-            var userStory = this.mapper.Map<UserStory>(model);
-            userStory.AddedOn = DateTime.UtcNow;
-            userStory.IdForProject = await projectsService.GetNextIdForWorkItemAsync(model.ProjectId);
+            var userStory = new UserStory()
+            {
+                AddedOn = DateTime.UtcNow,
+                IdForProject = await projectsService.GetNextIdForWorkItemAsync(inputDto.ProjectId),
+                AcceptanceCriteria = inputDto.SanitizedAcceptanceCriteria,
+                BacklogPriorityId = inputDto.BacklogPriorityid,
+                Description = inputDto.SanitizedDescription,
+                ProjectId = inputDto.ProjectId,
+                StoryPoints = inputDto.StoryPoints,
+                Title = inputDto.Title,
+            };
 
             await this.userStoryRepo.AddAsync(userStory);
+            await this.userStoryRepo.SaveChangesAsync();
+
+            var userStoryId = this.userStoryRepo.AllAsNoTracking().Where(x => x == userStory).Select(x => x.Id).FirstOrDefault();
+
+            userStory.Mockups.Add(new Mockup()
+            {
+                AddedOn = DateTime.UtcNow,
+                MockUpPath = inputDto.MockupPath,
+                UserStoryId = userStoryId,
+            });
 
             await this.userStoryRepo.SaveChangesAsync();
         }

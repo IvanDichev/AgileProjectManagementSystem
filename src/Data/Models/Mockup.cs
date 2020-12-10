@@ -1,5 +1,4 @@
 ﻿using Data.Models.Base;
-using System.Collections.Generic;
 
 namespace Data.Models
 {
@@ -7,7 +6,7 @@ namespace Data.Models
     {
         public string MockUpPath { get; set; }
 
-        public int WorkItemId { get; set; }
+        public int UserStoryId { get; set; }
 
         public virtual UserStory UserStory { get; set; }
     }

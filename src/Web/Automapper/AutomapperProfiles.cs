@@ -36,6 +36,7 @@ namespace Web.Automapper
             CreateMap<UserStory, UserStoryAllDto>().ReverseMap(); 
             CreateMap<UserStory, UserStoryInputModel>().ReverseMap();
             CreateMap<UserStory, UserStoryDropDownModel>().ReverseMap();
+            CreateMap<UserStoryInputDto, UserStoryInputModel>().ReverseMap();
             CreateMap<UserStoryViewModel, UserStoryUpdateModel>().ReverseMap(); 
             CreateMap<UserStoryViewModel, UserStoryDto>().ReverseMap(); 
             CreateMap<UserStoryAllViewmodel, UserStoryAllDto>().ReverseMap();

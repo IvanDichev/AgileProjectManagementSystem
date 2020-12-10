@@ -13,7 +13,7 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="AddUserStory">
+        <form asp-action="AddUserStory" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -32,6 +32,11 @@
                             asp-items="priorities"></select>
                     <span asp-validation-for="BacklogPriorityid" class="text-danger"></span>
                 </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mockup" class="control-label"></label>
+                <input asp-for="Mockup" class="form-control" />
+                <span asp-validation-for="Mockup" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
