@@ -61,6 +61,11 @@
             </div>
             <hr />
 
+            @foreach (var mockup in Model.ViewModel.Mockups)
+            {
+                <img src="@mockup.MockUpPath" class="img-fluid" alt="Mockup" />
+            }
+
             <p class="text-info">Description</p>
             <textarea asp-for="@Model.ViewModel.Description" id="textarea-tinemce-description"> </textarea>
             <hr />

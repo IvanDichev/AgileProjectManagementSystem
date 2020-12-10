@@ -1,4 +1,5 @@
 ﻿using DataModels.Models.Comments;
+using DataModels.Models.Mockups.Dtos;
 using System.Collections.Generic;
 
 namespace DataModels.Models.WorkItems.UserStory.Dtos
@@ -22,6 +23,8 @@ namespace DataModels.Models.WorkItems.UserStory.Dtos
         public string Description { get; set; }
 
         public string AcceptanceCriteria { get; set; }
+
+        public ICollection<MockupDto> Mockups { get; set; }
 
         public ICollection<CommentViewModel> Comments { get; set; }
     }

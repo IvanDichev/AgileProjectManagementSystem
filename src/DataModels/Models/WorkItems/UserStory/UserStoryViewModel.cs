@@ -1,4 +1,5 @@
 ﻿using DataModels.Models.Comments;
+using DataModels.Models.Mockups.Dtos;
 using Ganss.XSS;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace DataModels.Models.WorkItems.UserStory
 
         public int Id { get; set; }
 
+        public int? SprintId { get; set; }
+
         [MaxLength(200)]
         [Required]
         public string Title { get; set; }
@@ -30,6 +33,8 @@ namespace DataModels.Models.WorkItems.UserStory
 
         public string Description { get; set; }
 
+        public string MockupsMockUpPath { get; set; }
+
         public string SanitizedDescription => this.htmlSanitizer.Sanitize(this.Description);
 
         [MaxLength(3000)]
@@ -39,6 +44,6 @@ namespace DataModels.Models.WorkItems.UserStory
 
         public ICollection<CommentViewModel> Comments { get; set; }
 
-        public int? SprintId { get; set; }
+        public ICollection<MockupDto> Mockups { get; set; }
     }
 }

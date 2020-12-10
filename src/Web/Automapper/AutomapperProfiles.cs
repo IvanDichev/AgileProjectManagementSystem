@@ -4,6 +4,7 @@ using DataModels.Models.BacklogPriorities;
 using DataModels.Models.Board.Dtos;
 using DataModels.Models.Comments;
 using DataModels.Models.Comments.Dtos;
+using DataModels.Models.Mockups.Dtos;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
 using DataModels.Models.Severity;
@@ -80,6 +81,9 @@ namespace Web.Automapper
 
             // Severity
             CreateMap<Severity, SeverityDropDownModel>().ReverseMap();
+
+            // Mockup
+            CreateMap<Mockup, MockupDto>().ReverseMap();
         }
     }
 }
