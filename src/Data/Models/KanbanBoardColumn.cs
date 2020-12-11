@@ -23,5 +23,7 @@ namespace Data.Models
         public ICollection<UserStoryTask> Tasks { get; set; }
 
         public ICollection<Test> Tests { get; set; }
+
+        public ICollection<Bug> Bugs { get; set; }
     }
 }

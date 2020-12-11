@@ -1,4 +1,5 @@
-﻿using DataModels.Models.WorkItems.Tasks.Dtos;
+﻿using DataModels.Models.WorkItems.Bugs.Dtos;
+using DataModels.Models.WorkItems.Tasks.Dtos;
 using DataModels.Models.WorkItems.Tests.Dtos;
 using DataModels.Models.WorkItems.UserStory.Dtos;
 using System.Collections.Generic;
@@ -24,5 +25,7 @@ namespace DataModels.Models.Board.Dtos
         public ICollection<TaskAllDto> Tasks { get; set; }
 
         public ICollection<TestAllDto> Tests { get; set; }
+
+        public ICollection<BugAllDto> Bugs { get; set; }
     }
 }

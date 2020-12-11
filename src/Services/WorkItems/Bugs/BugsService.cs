@@ -5,6 +5,7 @@ using DataModels.Models.Severity;
 using DataModels.Models.WorkItems.Bugs.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Repo;
+using Services.BoardColumns;
 using Services.Projects;
 using System;
 using System.Collections.Generic;
@@ -19,21 +20,33 @@ namespace Services.WorkItems.Bugs
         private readonly IRepository<Severity> severityRepo;
         private readonly IMapper mapper;
         private readonly IProjectsService projectsService;
+        private readonly IRepository<UserStory> userStoryRepo;
+        private readonly IBoardsService boardService;
 
         public BugsService(IRepository<Bug> bugsRepo, 
             IRepository<Severity> severityRepo, 
             IMapper mapper, 
-            IProjectsService projectsService)
+            IProjectsService projectsService,
+            IRepository<UserStory> userStoryRepo,
+            IBoardsService boardService)
         {
             this.bugsRepo = bugsRepo;
             this.severityRepo = severityRepo;
             this.mapper = mapper;
             this.projectsService = projectsService;
+            this.userStoryRepo = userStoryRepo;
+            this.boardService = boardService;
         }
 
         public async Task CreateBugAsync(int projectId, BugInputModelDto inputModel)
         {
             var nextId = await this.projectsService.GetNextIdForWorkItemAsync(projectId);
+            var sprintId = await userStoryRepo.AllAsNoTracking()
+                .Where(x => x.Id == inputModel.UserStoryId)
+                .Select(x => x.SprintId)
+                .FirstOrDefaultAsync() ?? default;
+
+            var columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault().Id;
 
             var toCreate = new Bug()
             {
@@ -44,6 +57,7 @@ namespace Services.WorkItems.Bugs
                 Title = inputModel.Title,
                 UserStoryId = inputModel.UserStoryId,
                 IdForProject = nextId,
+                KanbanBoardColumnId = columnId,
             };
 
             await this.bugsRepo.AddAsync(toCreate);
