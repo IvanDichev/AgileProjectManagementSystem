@@ -1,5 +1,6 @@
 ﻿using DataModels.Models.Comments;
 using System;
+using System.Collections.Generic;
 
 namespace DataModels.Models.WorkItems.UserStory
 {
@@ -18,6 +19,8 @@ namespace DataModels.Models.WorkItems.UserStory
         public string Description { get; set; }
 
         public string AcceptanceCriteria { get; set; }
+
+        public ICollection<string> MockupPaths { get; set; }
 
         public DateTime ModifedOn { get; set; }
 

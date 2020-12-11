@@ -112,7 +112,8 @@ namespace Services.WorkItems.UserStories
             toUpdate.AcceptanceCriteria = updateModel.AcceptanceCriteria;
             toUpdate.BacklogPriorityId = updateModel.BacklogPriorityid;
             toUpdate.Description = updateModel.Description;
-            if(toUpdate.SprintId != updateModel.SprintId || toUpdate.SprintId == null)
+
+            if(toUpdate.SprintId != updateModel.SprintId || toUpdate.SprintId != null)
             {
                 int sprintId = updateModel.SprintId ?? default;
                 var columnId = (await this.boardService.GetAllColumnsAsync(toUpdate.ProjectId, sprintId)).FirstOrDefault().Id;
@@ -131,6 +132,16 @@ namespace Services.WorkItems.UserStories
                 };
 
                 toUpdate.Comments.Add(comment);
+            }
+
+            foreach (var mockup in updateModel.MockupPaths)
+            {
+                toUpdate.Mockups.Add(new Mockup()
+                {
+                    AddedOn = DateTime.UtcNow,
+                    MockUpPath = mockup,
+                    UserStoryId = toUpdate.Id,
+                });
             }
 
             this.userStoryRepo.Update(toUpdate);

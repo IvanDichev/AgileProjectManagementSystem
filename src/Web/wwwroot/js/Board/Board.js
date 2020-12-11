@@ -76,6 +76,7 @@ else {
             formdata.append('userStoryId', userStoryId)
             formdata.append('columnId', columnId)
 
+            // Post rquest to change column of userStory
             $.ajax({
                 type: 'POST',
                 url: form.action,

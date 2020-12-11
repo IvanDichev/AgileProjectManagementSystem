@@ -114,7 +114,7 @@ namespace Web.Controllers
             try
             {
                 var savedFilepath = string.Empty;
-                if (inputModel.Mockup.Length > 0)
+                if (inputModel.Mockup?.Length > 0)
                 {
                     string filePath = Guid.NewGuid().ToString();
                     Account account = new Account(
@@ -160,7 +160,6 @@ namespace Web.Controllers
             {
                 var userstory = await this.userStoryService.GetAsync(userStoryId);
 
-                string filePath = Guid.NewGuid().ToString();
                 Account account = new Account(
                     config["Cloudinary:CloudName"],
                     config["Cloudinary:ApiKey"],
@@ -241,7 +240,34 @@ namespace Web.Controllers
 
             try
             {
+                var savedFilepaths = new List<string>();
+                if (model.ViewModel.MockupFiles?.Count > 0)
+                {                   
+                    Account account = new Account(
+                        config["Cloudinary:CloudName"],
+                        config["Cloudinary:ApiKey"],
+                        config["Cloudinary:ApiSecret"]
+                        );
+
+                    Cloudinary cloudinary = new Cloudinary(account);
+                    foreach (var file in model.ViewModel.MockupFiles)
+                    {
+                        string filePath = Guid.NewGuid().ToString();
+
+                        var uploadParams = new ImageUploadParams()
+                        {
+                            File = new FileDescription(filePath + ".png", file.OpenReadStream()),
+                            Overwrite = true,
+                        };
+                        var uploadResult = cloudinary.Upload(uploadParams);
+
+                        savedFilepaths.Add(uploadResult.SecureUrl.AbsoluteUri);
+                    }
+                }
+
+                userStory.MockupPaths = savedFilepaths;
                 await this.userStoryService.UpdateAsync(userStory);
+
                 return RedirectToAction(nameof(GetAll), new { projectId = projectId });
             }
             catch (Exception)

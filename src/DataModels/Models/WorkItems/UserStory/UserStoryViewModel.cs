@@ -1,6 +1,7 @@
 ﻿using DataModels.Models.Comments;
 using DataModels.Models.Mockups.Dtos;
 using Ganss.XSS;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -41,6 +42,8 @@ namespace DataModels.Models.WorkItems.UserStory
         public string AcceptanceCriteria { get; set; }
 
         public string SanitizedAcceptanceCriteria => this.htmlSanitizer.Sanitize(this.AcceptanceCriteria);
+
+        public ICollection<IFormFile> MockupFiles { get; set; }
 
         public ICollection<CommentViewModel> Comments { get; set; }
 

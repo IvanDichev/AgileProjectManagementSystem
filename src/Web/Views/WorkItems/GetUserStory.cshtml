@@ -1,4 +1,4 @@
-﻿@model UserStoryUpdateViewModel;
+﻿@model UserStoryUpdateViewModel
 @using Utilities.CalculateTimeAgo;
 
 @{
@@ -6,9 +6,9 @@
 
     var priorities = Model.PrioritiesDropDown?
         .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Priority });
-    
+
     var spints = Model.SprintDropDownModel?
-        .Select(x => new SelectListItem() 
+        .Select(x => new SelectListItem()
         { Value = x.Id.ToString(), Text = Model.ViewModel.SprintId == x.Id ? x.Name + " (Current sprint)" : x.Name });
 
     var commentsCounter = 0;
@@ -17,10 +17,10 @@
 <link rel="stylesheet" href="~/css/WorkItems/GetUserStory.css" asp-append-version="true" />
 
 <div>
-    <form method="post">
+    <form method="post" id="form" enctype="multipart/form-data">
         <div asp-validation-summary="All" class="text-danger"></div>
         <span asp-validation-for="@Model.ViewModel.StoryPoints" class="text-danger"></span>
-        <input asp-for="@Model.ViewModel.Id" hidden />
+        <input asp-for="@Model.ViewModel.Id" hidden id="userStoryId"/>
         <div class="left">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -59,13 +59,22 @@
                 </select>
                 <span asp-validation-for="@Model.ViewModel.SprintId" class="text-danger"></span>
             </div>
-            <hr />
 
-            @foreach (var mockup in Model.ViewModel.Mockups)
+            <hr />
+            @if (Model.ViewModel.Mockups.Count != 0)
             {
-                <img src="@mockup.MockUpPath" class="img-fluid" alt="Mockup" />
+                <p class="text-info">Mockup</p>
+                @foreach (var mockup in Model.ViewModel.Mockups)
+                {
+                    @if (!string.IsNullOrEmpty(mockup.MockUpPath))
+                    {
+                        <img src="@mockup.MockUpPath" class="img-fluid" alt="Mockup" id="mockupElement" />
+                    }
+                }
+                <input asp-for="ViewModel.MockupFiles" />
             }
 
+            <hr />
             <p class="text-info">Description</p>
             <textarea asp-for="@Model.ViewModel.Description" id="textarea-tinemce-description"> </textarea>
             <hr />
