@@ -7,5 +7,6 @@ namespace Services.WorkItems.Tests
     {
         Task CreateAsync(int projectId, TestInputModelDto inputModel);
         Task DeleteAsync(int testId);
+        Task ChangeColumnAsync(int itemId, int columnId);
     }
 }

@@ -21,6 +21,16 @@ namespace Services.WorkItems.Tests
             this.projectsService = projectsService;
         }
 
+        public async Task ChangeColumnAsync(int itemId, int columnId)
+        {
+            var testToMove = await this.repo.All()
+               .Where(x => x.Id == itemId)
+               .FirstOrDefaultAsync();
+
+            testToMove.KanbanBoardColumnId = columnId;
+            await this.repo.SaveChangesAsync();
+        }
+
         public async Task CreateAsync(int projectId, TestInputModelDto inputModel)
         {
             var nextId = await this.projectsService.GetNextIdForWorkItemAsync(projectId);

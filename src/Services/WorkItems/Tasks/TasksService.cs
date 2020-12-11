@@ -20,6 +20,16 @@ namespace Services.WorkItems.Tasks
             this.projectsService = projectsService;
         }
 
+        public async Task ChangeColumnAsync(int itemId, int columnId)
+        {
+            var taskToMove = await this.repo.All()
+               .Where(x => x.Id == itemId)
+               .FirstOrDefaultAsync();
+
+            taskToMove.KanbanBoardColumnId = columnId;
+            await this.repo.SaveChangesAsync();
+        }
+
         public async Task CreateAsync(TaskInputModelDto inputModelDto, int projectId)
         {
             var nextId = await this.projectsService.GetNextIdForWorkItemAsync(projectId);
@@ -46,5 +56,7 @@ namespace Services.WorkItems.Tasks
             this.repo.Delete(toRemove);
             await this.repo.SaveChangesAsync();
         }
+
+
     }
 }

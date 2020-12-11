@@ -29,6 +29,10 @@ namespace Data.Models
 
         public User AssignedTo { get; set; }
 
+        public int? KanbanBoardColumnId { get; set; }
+
+        public virtual KanbanBoardColumn KanbanBoardColumn { get; set; }
+
         //public ICollection<UserStoryComment> Comments { get; set; }
     }
 }

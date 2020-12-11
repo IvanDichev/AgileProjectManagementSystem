@@ -16,12 +16,12 @@ namespace Data.Models
 
         public ICollection<UserStory> UserStories { get; set; }
 
-        //public int ProjectId { get; set; }
-
-        //public virtual Project Project { get; set; }
-
         public int? SprintId { get; set; }
 
         public virtual Sprint Sprint { get; set; }
+
+        public ICollection<UserStoryTask> Tasks { get; set; }
+
+        public ICollection<Test> Tests { get; set; }
     }
 }

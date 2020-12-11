@@ -24,15 +24,21 @@ namespace Services.WorkItems.UserStories
         private readonly IMapper mapper;
         private readonly IProjectsService projectsService;
         private readonly IBoardsService boardService;
+        private readonly IRepository<UserStoryTask> taskRepo;
+        private readonly IRepository<Test> testRepo;
 
         public UserStoryService(IRepository<UserStory> userStoryRepo, IMapper mapper,
             IProjectsService projectsService,
-            IBoardsService boardService)
+            IBoardsService boardService,
+            IRepository<UserStoryTask> taskRepo,
+            IRepository<Test> testRepo)
         {
             this.userStoryRepo = userStoryRepo;
             this.mapper = mapper;
             this.projectsService = projectsService;
             this.boardService = boardService;
+            this.taskRepo = taskRepo;
+            this.testRepo = testRepo;
         }
 
         public async Task<IEnumerable<UserStoryAllDto>> GetAllAsync(int projectId, SortingFilter sortingFilter)
@@ -102,8 +108,10 @@ namespace Services.WorkItems.UserStories
 
         public async Task UpdateAsync(UserStoryUpdateModel updateModel)
         {
-            var toUpdate = this.userStoryRepo.AllAsNoTracking()
+            var toUpdate = this.userStoryRepo.All()
                 .Where(x => x.Id == updateModel.Id)
+                .Include(x => x.Tests)
+                .Include(x => x.Tasks)
                 .FirstOrDefault();
 
             toUpdate.ModifiedOn = DateTime.UtcNow;
@@ -113,13 +121,39 @@ namespace Services.WorkItems.UserStories
             toUpdate.BacklogPriorityId = updateModel.BacklogPriorityid;
             toUpdate.Description = updateModel.Description;
 
-            if(toUpdate.SprintId != updateModel.SprintId || toUpdate.SprintId != null)
+            if(toUpdate.SprintId != updateModel.SprintId && updateModel.SprintId != null)
             {
                 int sprintId = updateModel.SprintId ?? default;
                 var columnId = (await this.boardService.GetAllColumnsAsync(toUpdate.ProjectId, sprintId)).FirstOrDefault().Id;
 
                 toUpdate.SprintId = sprintId;
                 toUpdate.KanbanBoardColumnId = columnId;
+
+                foreach (var test in toUpdate.Tests)
+                {
+                    test.KanbanBoardColumnId = columnId;
+                }
+
+                foreach (var task in toUpdate.Tasks)
+                {
+                    task.KanbanBoardColumnId = columnId;
+                }
+            }
+            else if (updateModel.SprintId == null)
+            {
+                // Remove from sprint and board.
+                toUpdate.SprintId = updateModel.SprintId;
+                toUpdate.KanbanBoardColumnId = null;
+
+                foreach (var test in toUpdate.Tests)
+                {
+                    test.KanbanBoardColumnId = null;
+                }
+
+                foreach (var task in toUpdate.Tasks)
+                {
+                    task.KanbanBoardColumnId = null;
+                }
             }
 
             if (updateModel.Comment != null)
@@ -146,6 +180,8 @@ namespace Services.WorkItems.UserStories
 
             this.userStoryRepo.Update(toUpdate);
             await this.userStoryRepo.SaveChangesAsync();
+            await this.taskRepo.SaveChangesAsync();
+            await this.testRepo.SaveChangesAsync();
         }
 
         public async Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId)

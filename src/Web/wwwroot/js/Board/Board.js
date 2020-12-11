@@ -69,12 +69,28 @@ else {
             e.preventDefault()
 
             const dragging = document.querySelector('.dragging')
-            const userStoryId = dragging.id.split('-')[1]
+            const itemId = dragging.id.split('-')[1]
             const columnId = container.id.split('-')[1]
             const form = document.querySelector('#changeColumn')
-            const formdata = new FormData(form);
-            formdata.append('userStoryId', userStoryId)
+            const formdata = new FormData(form)
+            var isUserStory = false
+            var isTest = false
+            var isTask = false
+            if (dragging.id.split('-')[0] == 'userStory') {
+                isUserStory = true
+            }
+            if (dragging.id.split('-')[0] == 'test') {
+                isTest = true
+            }
+            if (dragging.id.split('-')[0] == 'task') {
+                isTask = true
+            }
+
+            formdata.append('itemId', itemId)
             formdata.append('columnId', columnId)
+            formdata.append('isUserStory', isUserStory)
+            formdata.append('isTest', isTest)
+            formdata.append('isTask', isTask)
 
             // Post rquest to change column of userStory
             $.ajax({

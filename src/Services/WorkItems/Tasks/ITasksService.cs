@@ -7,5 +7,6 @@ namespace Services.WorkItems.Tasks
     {
         Task CreateAsync(TaskInputModelDto inputModelDto, int projectId);
         Task DeleteAsync(int taskId);
+        Task ChangeColumnAsync(int itemId, int columnId);
     }
 }

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Services.BoardColumns;
 using Services.Projects;
 using Services.Sprints;
+using Services.WorkItems.Tasks;
+using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
 using System.Threading.Tasks;
 
@@ -17,23 +19,29 @@ namespace Web.Controllers
         private readonly IBoardsService boardColumnsService;
         private readonly ISprintsService sprintsService;
         private readonly IUserStoryService userStoryService;
+        private readonly ITestsService testsService;
+        private readonly ITasksService tasksService;
 
-        public BoardsController(IMapper mapper, 
-            IProjectsService projectsService, 
+        public BoardsController(IMapper mapper,
+            IProjectsService projectsService,
             IBoardsService boardColumnsService,
             ISprintsService sprintsService,
-            IUserStoryService userStoryService)
+            IUserStoryService userStoryService,
+            ITestsService testsService,
+            ITasksService tasksService)
             : base(projectsService)
         {
             this.mapper = mapper;
             this.boardColumnsService = boardColumnsService;
             this.sprintsService = sprintsService;
             this.userStoryService = userStoryService;
+            this.testsService = testsService;
+            this.tasksService = tasksService;
         }
 
         public async Task<IActionResult> Board(int projectId, int sprintId)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
@@ -48,16 +56,27 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeColumn(int columnId, int userStoryId)
+        public async Task<IActionResult> ChangeColumn(int columnId, int itemId, bool isUserStory, bool isTask, bool isTest)
         {
-            await this.userStoryService.ChangeColumnAsync(userStoryId, columnId);
+            if (isUserStory)
+            {
+                await this.userStoryService.ChangeColumnAsync(itemId, columnId);
+            }
+            else if (isTask)
+            {
+                await this.tasksService.ChangeColumnAsync(itemId, columnId);
+            }
+            else if (isTest)
+            {
+                await this.testsService.ChangeColumnAsync(itemId, columnId);
+            }
 
             return Json(new { changed = "changed" });
         }
 
         public async Task<IActionResult> Options(int projectId)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }

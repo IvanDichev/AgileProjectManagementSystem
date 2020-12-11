@@ -33,6 +33,10 @@ namespace Data.Models
 
         public ICollection<Mockup> Mockups { get; set; }
 
+        public int? KanbanBoardColumnId { get; set; }
+
+        public virtual KanbanBoardColumn KanbanBoardColumn { get; set; }
+
         //public ICollection<UserStoryComment> Comments { get; set; }
     }
 }

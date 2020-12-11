@@ -43,7 +43,7 @@
                             <div class="kanban-container-draggables" id="col-@column.Id">
                                 @foreach (var userStory in column.UserStories)
                                 {
-                                    <div class="draggable" draggable="true" id="us-@userStory.Id">
+                                    <div class="draggable" draggable="true" id="userStory-@userStory.Id">
                                         <div class="card">
                                             <div class="card-body">
                                                 <h6 class="card-title">@userStory.Title</h6>
@@ -69,6 +69,60 @@
                                         </div>
                                     </div>
                                 }
+                                @foreach (var task in column.Tasks)
+                                {
+                                    <div class="draggable" draggable="true" id="task-@task.Id">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-title">@task.Title</h6>
+                                                <hr style="margin-top: 0px; margin-bottom: 0px;" />
+                                                <div>
+                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-check-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9.854-2.854a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                    </svg>
+                                                    <h6 class="assigned-to">
+                                                        I.Dichev0@gmail.com //TODO
+                                                    </h6>
+                                                </div>
+                                                <div style="display:inline-flex">
+                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-code" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M5.854 4.146a.5.5 0 0 1 0 .708L2.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm4.292 0a.5.5 0 0 0 0 .708L13.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <a href="#" class="btn btn-info btn-sm">Edit</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @foreach (var test in column.Tests)
+                                {
+                                    <div class="draggable" draggable="true" id="test-@test.Id">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-title">@test.Title</h6>
+                                                <hr style="margin-top: 0px; margin-bottom: 0px;" />
+                                                <div>
+                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-check-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm9.854-2.854a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                    </svg>
+                                                    <h6 class="assigned-to">
+                                                        I.Dichev0@gmail.com //TODO
+                                                    </h6>
+                                                </div>
+                                                <div style="display:inline-flex">
+                                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-code" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M5.854 4.146a.5.5 0 0 1 0 .708L2.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm4.292 0a.5.5 0 0 0 0 .708L13.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <a href="#" class="btn btn-info btn-sm">Edit</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -76,9 +130,6 @@
             </div>
         </div>
     </div>
-
-
-
 </form>
 
 @section Scripts{
