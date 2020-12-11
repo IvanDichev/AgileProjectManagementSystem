@@ -25,6 +25,7 @@ using Services.WorkItems.UserStories;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -157,6 +158,24 @@ namespace Web.Controllers
 
             try
             {
+                var userstory = await this.userStoryService.GetAsync(userStoryId);
+
+                string filePath = Guid.NewGuid().ToString();
+                Account account = new Account(
+                    config["Cloudinary:CloudName"],
+                    config["Cloudinary:ApiKey"],
+                    config["Cloudinary:ApiSecret"]
+                    );
+
+                Cloudinary cloudinary = new Cloudinary(account);
+
+                foreach (var mockup in userstory.Mockups)
+                {
+                    // Get public name of the file.
+                    var deleteParams = new DeletionParams(mockup.MockUpPath.Split('/').Last().Split('.')[0]);
+                    var deleteresult = cloudinary.Destroy(deleteParams);
+                }
+
                 await this.userStoryService.DeleteAsync(userStoryId);
 
                 return RedirectToAction(nameof(GetAll), new { projectId = projectId });
