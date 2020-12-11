@@ -76,10 +76,10 @@ namespace Services.WorkItems.UserStories
             await this.userStoryRepo.SaveChangesAsync();
         }
 
-        public async Task<UserStoryDto> GetAsync(int WorkItemId)
+        public async Task<UserStoryDto> GetAsync(int UserStoryId)
         {
             var workItem = await this.userStoryRepo.AllAsNoTracking()
-                .Where(x => x.Id == WorkItemId)
+                .Where(x => x.Id == UserStoryId)
                 .ProjectTo<UserStoryDto>(this.mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
