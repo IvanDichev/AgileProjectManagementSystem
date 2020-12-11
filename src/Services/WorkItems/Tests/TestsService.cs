@@ -3,6 +3,7 @@ using Data.Models;
 using DataModels.Models.WorkItems.Tests.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Repo;
+using Services.BoardColumns;
 using Services.Projects;
 using System;
 using System.Linq;
@@ -14,11 +15,18 @@ namespace Services.WorkItems.Tests
     {
         private readonly IRepository<Test> repo;
         private readonly IProjectsService projectsService;
+        private readonly IRepository<UserStory> userStoryRepo;
+        private readonly IBoardsService boardService;
 
-        public TestsService(IRepository<Test> repo, IMapper mapper,IProjectsService projectsService)
+        public TestsService(IRepository<Test> repo,
+            IProjectsService projectsService,
+            IRepository<UserStory> userStoryRepo,
+            IBoardsService boardService)
         {
             this.repo = repo;
             this.projectsService = projectsService;
+            this.userStoryRepo = userStoryRepo;
+            this.boardService = boardService;
         }
 
         public async Task ChangeColumnAsync(int itemId, int columnId)
@@ -34,6 +42,12 @@ namespace Services.WorkItems.Tests
         public async Task CreateAsync(int projectId, TestInputModelDto inputModel)
         {
             var nextId = await this.projectsService.GetNextIdForWorkItemAsync(projectId);
+            var sprintId = await userStoryRepo.AllAsNoTracking()
+                .Where(x => x.Id == inputModel.UserStoryId)
+                .Select(x => x.SprintId)
+                .FirstOrDefaultAsync() ?? default;
+
+            var columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault().Id;
 
             var testToCreate = new Test()
             {
@@ -42,7 +56,8 @@ namespace Services.WorkItems.Tests
                 Description = inputModel.Description,
                 UserStoryId = inputModel.UserStoryId,
                 Title = inputModel.Title,
-                IdForProject = nextId
+                IdForProject = nextId,
+                KanbanBoardColumnId = columnId,
             };
 
             await this.repo.AddAsync(testToCreate);
