@@ -9,10 +9,14 @@
 <h3 class="text-center">Board</h3>
 <form asp-action="ChangeColumn" id="changeColumn">
     <div>
-        <a class="btn btn-info"
-           asp-action="Options"
+        @*<a class="btn btn-info"
+               asp-action="Options"
+               asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+                Settings
+            </a>*@
+        <a class="btn btn-info" asp-action="Burndown"
            asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
-            Settings
+            Burndown
         </a>
         <div class="dropdown" style="display:inline-block">
             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2"

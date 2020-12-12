@@ -84,7 +84,6 @@ namespace Web
             });
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
-            // Register for all type of repositories.
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IWorkItemService, WorkItemService>();
@@ -96,7 +95,6 @@ namespace Web
             services.AddScoped<IBugsService, BugsService>();
             services.AddScoped<ISprintsService, SprintsService>();
             services.AddScoped<IBoardsService, BoardsService>();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -122,6 +120,7 @@ namespace Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
             app.UseHttpsRedirection();
@@ -143,8 +142,6 @@ namespace Web
                             "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-
-
         }
     }
 }

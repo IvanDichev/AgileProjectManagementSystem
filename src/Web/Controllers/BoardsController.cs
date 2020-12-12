@@ -103,5 +103,10 @@ namespace Web.Controllers
 
             return RedirectToAction(nameof(Options), new { projectId = projectId });
         }
+
+        public IActionResult Burndown()
+        {
+            return View();
+        }
     }
 }

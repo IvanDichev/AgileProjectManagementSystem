@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/leftNav.css" asp-append-version="true" />
+    <script src="~/lib/Chart.js/Chart.min.js" asp-append-version="true"></script>
 </head>
 <body>
     <header>
@@ -20,7 +21,7 @@
         <main role="main" id="main-container" class="pb-3">
             @RenderBody()
         </main>
-    </div>
+    </div>   
 
     @* Modal element *@
     <div class="modal" tabindex="-1" role="dialog" id="form-modal"
