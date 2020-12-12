@@ -14,10 +14,6 @@
                asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
                 Settings
             </a>*@
-        <a class="btn btn-info" asp-action="Burndown"
-           asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
-            Burndown
-        </a>
         <div class="dropdown" style="display:inline-block">
             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,6 +23,12 @@
                 @foreach (var sprint in Model.SprintDropDown)
                 {
                     <a class="dropdown-item" asp-action="Board" asp-route-sprintId="@sprint.Id">@sprint.Name</a>
+                    <a class="dropdown-item" asp-action="Burndown"
+                       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
+                       asp-route-sprintId="@sprint.Id">
+                        @sprint.Name Burndown
+                    </a>
+                    <hr />
                 }
             </div>
         </div>

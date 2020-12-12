@@ -8,6 +8,7 @@ using Services.Sprints;
 using Services.WorkItems.Tasks;
 using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Web.Controllers
@@ -107,6 +108,13 @@ namespace Web.Controllers
         public IActionResult Burndown()
         {
             return View();
+        }
+
+        public async Task<IActionResult> GetBurndownData(int projectId, int sprintId)
+        {
+            var viewModel = await this.boardColumnsService.GetBurndownData(projectId, sprintId);
+            
+            return Json( new { DaysInSprint = viewModel.DaysInSprint, ScopeChanges = viewModel.ScopeChanges, TasksRemaining = viewModel.TasksRemaining });
         }
     }
 }

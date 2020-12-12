@@ -76,6 +76,41 @@ namespace Services.BoardColumns
             //await this.columnRepo.SaveChangesAsync();
         }
 
+        public async Task<BurndownViewModel> GetBurndownData(int projectId, int sprintId)
+        {
+            var columns = await this.GetAllColumnsAsync(projectId, sprintId);
+
+            var sprintDays = await this.columnRepo.AllAsNoTracking()
+                .Where(x => x.SprintId == sprintId)
+                .Include(x => x.Sprint)
+                .Select(x => (x.Sprint.DueDate - x.Sprint.StartDate).TotalDays)
+                .FirstOrDefaultAsync();
+
+            var totalTasks = columns.Select(x => x.Tasks.Count);
+            var totalSprints = columns.Select(x => x.UserStories.Count);
+            var totaltests = columns.Select(x => x.Tests.Count);
+            var totalbugs = columns.Select(x => x.Bugs.Count);
+            var tasksRemaining = totalSprints.Sum() + totalTasks.Sum() + totaltests.Sum() + totalbugs.Sum();
+
+            var burndownData = new BurndownViewModel()
+            {
+                DaysInSprint = new List<int>() { },
+                TasksRemaining = new List<int>()
+                {
+                    tasksRemaining,
+                },
+                ScopeChanges = new List<int>(),
+            };
+
+            for (int i = int.Parse(Math.Floor(sprintDays).ToString()); i > 0 ; i--)
+            {
+                burndownData.DaysInSprint.Add(i);
+                burndownData.ScopeChanges.Add(0);
+            };
+
+            return burndownData;
+        }
+
         private async Task ShiftColumnPosition(int columnOrder, int projectId)
         {
             var alreadyColumns = await GetColumnOptionsAsync(projectId);

@@ -10,5 +10,6 @@ namespace Services.BoardColumns
         Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId, int sprintId);
         Task<ICollection<ColumnOptionsDto>> GetColumnOptionsAsync(int projectId);
         Task AddcolumnToTheLeftAsync(BoardOptionsInputModel inputModel);
+        Task<BurndownViewModel> GetBurndownData(int projectId, int sprintId);
     }
 }
