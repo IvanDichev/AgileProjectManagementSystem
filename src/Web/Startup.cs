@@ -26,7 +26,8 @@ using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
 using System;
 using Utilities.Mailing;
-using Web.Helpers.HangfireFilters;
+using Web.Hangfire.Filters;
+using Web.Hangfire.RecurringJobs;
 
 namespace Web
 {
@@ -115,9 +116,13 @@ namespace Web
             services.AddScoped<IBugsService, BugsService>();
             services.AddScoped<ISprintsService, SprintsService>();
             services.AddScoped<IBoardsService, BoardsService>();
+
+            // Hangfire
+            services.AddSingleton<IPrintDemo, PrintDemo>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+            IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -169,6 +174,17 @@ namespace Web
                 endpoints.MapHangfireDashboard();
                 endpoints.MapRazorPages();
             });
+
+            CallHangfireJobs(recurringJobManager, serviceProvider);
+        }
+
+        private void CallHangfireJobs(IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
+        {
+            recurringJobManager.AddOrUpdate(
+                "Run every minute",
+                () => serviceProvider.GetService<IPrintDemo>().Print("Called from hangfire recurring job!"),
+                "* * * * *"
+                );
         }
     }
 }

@@ -2,7 +2,7 @@
 using Hangfire.Dashboard;
 using System.Linq;
 
-namespace Web.Helpers.HangfireFilters
+namespace Web.Hangfire.Filters
 {
     public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
