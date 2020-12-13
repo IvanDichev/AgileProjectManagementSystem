@@ -87,20 +87,29 @@ namespace Services.BoardColumns
                 .FirstOrDefaultAsync();
 
             var totalTasks = columns.Select(x => x.Tasks.Count);
-            var totalSprints = columns.Select(x => x.UserStories.Count);
-            var totaltests = columns.Select(x => x.Tests.Count);
-            var totalbugs = columns.Select(x => x.Bugs.Count);
-            var tasksRemaining = totalSprints.Sum() + totalTasks.Sum() + totaltests.Sum() + totalbugs.Sum();
+            var totalUserStories = columns.Select(x => x.UserStories.Count);
+            var totalTests = columns.Select(x => x.Tests.Count);
+            var totalBugs = columns.Select(x => x.Bugs.Count);
+            var totalItemsInSprint = totalUserStories.Sum() + totalTasks.Sum() + totalTests.Sum() + totalBugs.Sum();
+
+            var finishedTasks = columns.Reverse().Take(1).Select(x => x.Tasks.Count);
+            var finishedUserStories = columns.Reverse().Take(1).Select(x => x.UserStories.Count);
+            var finishedTests = columns.Reverse().Take(1).Select(x => x.Tests.Count);
+            var finishedBugs = columns.Reverse().Take(1).Select(X => X.Bugs.Count);
+            var finishedItemsInSprint = finishedTasks.Sum() + finishedUserStories.Sum() + finishedBugs.Sum() + finishedTests.Sum();
+
+            var remainingItems = totalItemsInSprint - finishedItemsInSprint;
 
             var burndownData = new BurndownViewModel()
             {
                 DaysInSprint = new List<int>() { },
                 TasksRemaining = new List<int>()
                 {
-                    tasksRemaining,
+                    totalItemsInSprint,
                 },
                 ScopeChanges = new List<int>(),
             };
+            burndownData.TasksRemaining.Add(remainingItems);
 
             for (int i = int.Parse(Math.Floor(sprintDays).ToString()); i > 0 ; i--)
             {
