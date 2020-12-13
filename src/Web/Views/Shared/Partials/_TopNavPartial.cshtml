@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Data.Models.Users
+@using Shared.Constants;
 @inject SignInManager<User> SignInManager
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
+    @* If user has signed in and projecd has beed selected *@
     @if (SignInManager.IsSignedIn(User) && Url.ActionContext.RouteData.Values["projectId"] != null)
     {
         <div class="container" id="left-nav-buttton">
@@ -37,6 +39,14 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="GetAll">Projects</a>
                     </li>
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole(ApplicationRolesConstatnts.Admin))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="https://localhost:5001/hangfire">
+                                hangfire
+                            </a>
+                        </li>
+}
                 </ul>
             }
         </div>

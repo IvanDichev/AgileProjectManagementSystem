@@ -13,5 +13,6 @@ namespace Services.Sprints
         Task CreateSprintAsync(SprintInputDto inputDto);
         Task DeleteAsync(int sprintId);
         Task<bool> AreUserStoriesInSprintAsync(int sprintId);
+        Task UpdateSprintStatus();
     }
 }

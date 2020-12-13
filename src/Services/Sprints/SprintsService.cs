@@ -21,8 +21,8 @@ namespace Services.Sprints
         private readonly IRepository<KanbanBoardColumnOption> boardOptionsRepo;
         private readonly IRepository<KanbanBoardColumn> boardRepo;
 
-        public SprintsService(IRepository<Sprint> sprintRepo, 
-            IMapper mapper, 
+        public SprintsService(IRepository<Sprint> sprintRepo,
+            IMapper mapper,
             IRepository<SprintStatus> sprintStatusRepo,
             IRepository<KanbanBoardColumnOption> boardOptionsRepo,
             IRepository<KanbanBoardColumn> boardRepo)
@@ -50,7 +50,7 @@ namespace Services.Sprints
 
             await this.sprintRepo.AddAsync(sprint);
             await this.sprintRepo.SaveChangesAsync();
-            
+
         }
 
         private async Task AddKanbanColumnsForSprint(SprintInputDto inputDto, Sprint sprint)
@@ -119,12 +119,27 @@ namespace Services.Sprints
         public async Task<ICollection<SprintDropDownModel>> GetSprintDropDownAsync(int projectId)
         {
             var sprintDropDown = await this.sprintRepo.AllAsNoTracking()
-                .Where(x => x.ProjectId == projectId && 
+                .Where(x => x.ProjectId == projectId &&
                     (x.Status.Status != SprintStatusConstants.Closed && x.Status.Status != SprintStatusConstants.Accepted))
                 .ProjectTo<SprintDropDownModel>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return sprintDropDown;
+        }
+
+        public async Task UpdateSprintStatus()
+        {
+            var sprints = await this.sprintRepo.All()
+                .Where(x => x.Status.Status != SprintStatusConstants.Closed
+                    && x.Status.Status != SprintStatusConstants.Accepted)
+                .ToListAsync();
+
+            foreach (var sprint in sprints)
+            {
+                sprint.StatusId = GetSprintStatus(sprint.StartDate, sprint.DueDate);
+            }
+
+            await this.sprintRepo.SaveChangesAsync();
         }
 
         private int GetSprintStatus(DateTime startDate, DateTime dueDate)

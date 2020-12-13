@@ -1,5 +1,6 @@
 ﻿using Hangfire.Annotations;
 using Hangfire.Dashboard;
+using Shared.Constants;
 using System.Linq;
 
 namespace Web.Hangfire.Filters
@@ -9,7 +10,7 @@ namespace Web.Hangfire.Filters
         public bool Authorize([NotNull] DashboardContext context)
         {
             var httpContext = context.GetHttpContext();
-            var isAdmin = httpContext.User.Claims.Where(x => x.Value == "Admin").FirstOrDefault() != null;
+            var isAdmin = httpContext.User.Claims.Where(x => x.Value == ApplicationRolesConstatnts.Admin).FirstOrDefault() != null;
 
             return isAdmin;
         }

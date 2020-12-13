@@ -180,10 +180,16 @@ namespace Web
 
         private void CallHangfireJobs(IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
         {
-            recurringJobManager.AddOrUpdate(
-                "Run every minute",
-                () => serviceProvider.GetService<IPrintDemo>().Print("Called from hangfire recurring job!"),
-                "* * * * *"
+            //recurringJobManager.AddOrUpdate<IPrintDemo>(
+            //    "Run every minute Demo",
+            //    x => x.Print("Called from hangfire recurring job!"),
+            //    "* * * * *"
+            //    );
+
+            recurringJobManager.AddOrUpdate<ISprintsService>(
+                "Update sprint status",
+                x => x.UpdateSprintStatus(),
+                "0 0 * * *"
                 );
         }
     }
