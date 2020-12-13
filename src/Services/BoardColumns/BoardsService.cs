@@ -86,20 +86,25 @@ namespace Services.BoardColumns
                 .Select(x => (x.Sprint.DueDate - x.Sprint.StartDate).TotalDays)
                 .FirstOrDefaultAsync();
 
+            // Get total items in sprint
             var totalTasks = columns.Select(x => x.Tasks.Count);
             var totalUserStories = columns.Select(x => x.UserStories.Count);
             var totalTests = columns.Select(x => x.Tests.Count);
             var totalBugs = columns.Select(x => x.Bugs.Count);
             var totalItemsInSprint = totalUserStories.Sum() + totalTasks.Sum() + totalTests.Sum() + totalBugs.Sum();
 
+            // Get finished items in sprint
+            // TODO fix this to get finished items for everyday from burndownData table in Db
             var finishedTasks = columns.Reverse().Take(1).Select(x => x.Tasks.Count);
             var finishedUserStories = columns.Reverse().Take(1).Select(x => x.UserStories.Count);
             var finishedTests = columns.Reverse().Take(1).Select(x => x.Tests.Count);
             var finishedBugs = columns.Reverse().Take(1).Select(X => X.Bugs.Count);
             var finishedItemsInSprint = finishedTasks.Sum() + finishedUserStories.Sum() + finishedBugs.Sum() + finishedTests.Sum();
 
+            // Remaining items
             var remainingItems = totalItemsInSprint - finishedItemsInSprint;
 
+            // Initialize burndown data collection
             var burndownData = new BurndownViewModel()
             {
                 DaysInSprint = new List<int>() { },
@@ -109,8 +114,13 @@ namespace Services.BoardColumns
                 },
                 ScopeChanges = new List<int>(),
             };
+
+            // Add remaining items to colleciton tracking remainings 
+            // TODO fix this to get remaining tasks everyday from burndownData table in Db
             burndownData.TasksRemaining.Add(remainingItems);
 
+            // Add days in burndown data and scope changes 
+            // TODO fix this to get scope changes from burndowData table in Db
             for (int i = int.Parse(Math.Floor(sprintDays).ToString()); i > 0 ; i--)
             {
                 burndownData.DaysInSprint.Add(i);

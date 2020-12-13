@@ -2,6 +2,8 @@ using AutoMapper;
 using Data;
 using Data.Models.Users;
 using Data.Seeding;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +24,9 @@ using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
 using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
+using System;
 using Utilities.Mailing;
+using Web.Helpers.HangfireFilters;
 
 namespace Web
 {
@@ -83,6 +87,22 @@ namespace Web
                 options.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
             });
 
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+
+            services.AddHangfireServer();
+            services.AddMvc();
+
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProjectsService, ProjectsService>();
@@ -131,6 +151,11 @@ namespace Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorizationFilter() }
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -140,6 +165,8 @@ namespace Web
                 endpoints.MapControllerRoute(
                             "areaRoute",
                             "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHangfireDashboard();
                 endpoints.MapRazorPages();
             });
         }
