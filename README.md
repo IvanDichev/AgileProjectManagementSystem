@@ -16,3 +16,5 @@ This website is designed and runs using the **main** technologies below:
    10) **[Cloudinary API](https://cloudinary.com/documentation/image_upload_api_reference)**
    11) **[MailKit API](https://github.com/jstedfast/MailKit)**
    10) **[Chart.js](https://www.chartjs.org/samples/latest/)**
+   10) **[Ajax](https://en.wikipedia.org/wiki/Ajax_(programming))**
+   10) **[Jquery](https://jquery.com/)**
