@@ -2,7 +2,7 @@
 
 namespace Services.BurndownDatas
 {
-    public interface IBurndownData
+    public interface IBurndownDataService
     {
         Task UpdateData();
     }

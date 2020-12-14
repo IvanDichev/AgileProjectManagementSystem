@@ -97,8 +97,9 @@ namespace Services.BoardColumns
                 TasksRemaining = new List<int>(),
             };
 
-            //  tasksRemaining = totalTasks - finishedTasks
-            //  scopeChange = totaltasksFromdayOne - totalTasksNow
+            // tasksRemaining = totalTasks - finishedTasks
+            // scopeChange = totaltasksFromdayOne - totalTasksNow
+            // tasksRemaining should be calculated past current date! 
             for (int i = 0; i < burndown.Count; i++)
             {
                 burndownData.DaysInSprint.Add(burndown[i].DayOfSprint.ToString("dd-MMM-yyyy"));

@@ -3,6 +3,7 @@ using DataModels.Models.Board;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.BoardColumns;
+using Services.BurndownDatas;
 using Services.Projects;
 using Services.Sprints;
 using Services.WorkItems.Bugs;
@@ -24,6 +25,7 @@ namespace Web.Controllers
         private readonly ITestsService testsService;
         private readonly ITasksService tasksService;
         private readonly IBugsService bugsService;
+        private readonly IBurndownDataService burndownDataService;
 
         public BoardsController(IMapper mapper,
             IProjectsService projectsService,
@@ -32,7 +34,8 @@ namespace Web.Controllers
             IUserStoryService userStoryService,
             ITestsService testsService,
             ITasksService tasksService,
-            IBugsService bugsService)
+            IBugsService bugsService,
+            IBurndownDataService burndownDataService)
             : base(projectsService)
         {
             this.mapper = mapper;
@@ -42,6 +45,7 @@ namespace Web.Controllers
             this.testsService = testsService;
             this.tasksService = tasksService;
             this.bugsService = bugsService;
+            this.burndownDataService = burndownDataService;
         }
 
         public async Task<IActionResult> Board(int projectId, int sprintId)

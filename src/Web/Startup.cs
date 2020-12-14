@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Repo;
 using Services.BacklogPriorities;
 using Services.BoardColumns;
+using Services.BurndownDatas;
 using Services.Comments;
 using Services.Projects;
 using Services.Sprints;
@@ -117,6 +118,7 @@ namespace Web
             services.AddScoped<IBugsService, BugsService>();
             services.AddScoped<ISprintsService, SprintsService>();
             services.AddScoped<IBoardsService, BoardsService>();
+            services.AddScoped<IBurndownDataService, BurndownDataService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
@@ -173,7 +175,7 @@ namespace Web
                 endpoints.MapRazorPages();
             });
 
-            // CallHangfireJobs(recurringJobManager, serviceProvider);
+            CallHangfireJobs(recurringJobManager, serviceProvider);
         }
 
         private void CallHangfireJobs(IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
@@ -187,6 +189,12 @@ namespace Web
             recurringJobManager.AddOrUpdate<ISprintsService>(
                 "Update sprint status",
                 x => x.UpdateSprintStatus(),
+                "0 0 * * *"
+                );
+
+            recurringJobManager.AddOrUpdate<IBurndownDataService>(
+                "Update burndown data",
+                x => x.UpdateData(),
                 "0 0 * * *"
                 );
         }
