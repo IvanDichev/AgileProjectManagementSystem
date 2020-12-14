@@ -11,6 +11,7 @@ namespace Data.Models
         {
             this.UserStories = new HashSet<UserStory>();
             this.KanbanBoard = new HashSet<KanbanBoardColumn>();
+            this.BurndownData = new HashSet<BurndownData>();
         }
 
         [MaxLength(75)]
@@ -27,6 +28,8 @@ namespace Data.Models
         public int ProjectId { get; set; }
 
         public Project Project { get; set; }
+
+        public ICollection<BurndownData> BurndownData { get; set; }
 
         public virtual ICollection<UserStory> UserStories { get; set; }
 

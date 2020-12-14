@@ -21,6 +21,7 @@ namespace Data
         public DbSet<Severity> Severities { get; set; }
         public DbSet<SprintStatus> SprintStatuses { get; set; }
         public DbSet<Mockup> Mockups { get; set; }
+        public DbSet<BurndownData> BurndownDatas { get; set; }
         public DbSet<TeamsUsers> TeamsUsers { get; set; }
         public DbSet<KanbanBoardColumnOption> KanbanBoardColumnOptions { get; set; }
         public DbSet<KanbanBoardColumn> KanbanBoardColumns { get; set; }
