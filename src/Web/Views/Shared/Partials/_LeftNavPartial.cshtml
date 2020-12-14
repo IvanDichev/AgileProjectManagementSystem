@@ -5,7 +5,10 @@
 @if (SignInManager.IsSignedIn(User) && Url.ActionContext.RouteData.Values["projectId"] != null)
 {
     <div id="mySidenav" class="sidenav">
-        <a href="#">Wiki</a>
+        <a asp-area="Wiki" asp-action="Index" asp-controller="Home" 
+           asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
+            Wiki
+        </a>
         <a class="nav-link" asp-area="" asp-controller="WorkItems"
            asp-action="GetAll" asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]">
             Work Items
