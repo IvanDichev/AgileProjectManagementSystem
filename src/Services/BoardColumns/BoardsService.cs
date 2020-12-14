@@ -6,6 +6,7 @@ using DataModels.Models.Board.Dtos;
 using DataModels.Models.WorkItems.UserStory.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Repo;
+using Shared.Constants.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,20 @@ namespace Services.BoardColumns
         private readonly IRepository<KanbanBoardColumnOption> columnOptionsRepo;
         private readonly IMapper mapper;
         private readonly IRepository<KanbanBoardColumn> columnRepo;
+        private readonly IRepository<BurndownData> burndownRepo;
+        private readonly IRepository<Sprint> sprintRepo;
 
         public BoardsService(IRepository<KanbanBoardColumnOption> columnOptionsRepo,
             IMapper mapper,
-            IRepository<KanbanBoardColumn> columnRepo)
+            IRepository<KanbanBoardColumn> columnRepo,
+            IRepository<BurndownData> burndownRepo,
+            IRepository<Sprint> sprintRepo)
         {
             this.columnOptionsRepo = columnOptionsRepo;
             this.mapper = mapper;
             this.columnRepo = columnRepo;
+            this.burndownRepo = burndownRepo;
+            this.sprintRepo = sprintRepo;
         }
 
         public async Task<ICollection<BoardColumnAllDto>> GetAllColumnsAsync(int projectId, int sprintId)
@@ -78,6 +85,21 @@ namespace Services.BoardColumns
 
         public async Task<BurndownViewModel> GetBurndownData(int projectId, int sprintId)
         {
+            //  tasksRemaining = totalTasks - finishedTasks
+            //  scopeChange = totaltasksFromdayOne - totalTasksNow
+
+            //  id  DayNo   sprintId    totalTasks  finishedTasks
+            //  1   1       1           10          0
+            //  2   2       1           10          1
+            //  3   3       1           10          3
+            //  4   4       1           11          4
+            //  5   5       1           11          6
+            //  6   6       1           11          9
+            //  7   7       1           11          11
+            //  8   1       2           7           1 sch 0 - tr 6
+            //  9   2       2           8           1
+            var burndownDatatable = new BurndownData();
+
             var columns = await this.GetAllColumnsAsync(projectId, sprintId);
 
             var sprintDays = await this.columnRepo.AllAsNoTracking()
@@ -85,6 +107,27 @@ namespace Services.BoardColumns
                 .Include(x => x.Sprint)
                 .Select(x => (x.Sprint.DueDate - x.Sprint.StartDate).TotalDays)
                 .FirstOrDefaultAsync();
+            ;
+            var sprints = await this.sprintRepo.AllAsNoTracking()
+                .Where(x => x.Status.Status == SprintStatusConstants.Active ||
+                            x.Status.Status == SprintStatusConstants.Planning)
+                .Include(x => x.KanbanBoard)
+                .ThenInclude(x => x.Tasks)
+                .Include(x => x.KanbanBoard)
+                .ThenInclude(x => x.UserStories)
+                .Include(x => x.KanbanBoard)
+                .ThenInclude(x => x.Tests)
+                .Include(x => x.KanbanBoard)
+                .ThenInclude(x => x.Bugs)
+                .ToListAsync();
+            ;
+            foreach (var sprint in sprints)
+            {
+                var tasks = sprint.KanbanBoard.Select(x => x.Tasks.Count).Sum();
+                var userStories = sprint.KanbanBoard.Select(x => x.UserStories.Count).Sum();
+                var tests = sprint.KanbanBoard.Select(x => x.Tests.Count).Sum();
+                var bugs = sprint.KanbanBoard.Select(x => x.Bugs.Count).Sum();
+            }
 
             // Get total items in sprint
             var totalTasks = columns.Select(x => x.Tasks.Count);
@@ -101,13 +144,20 @@ namespace Services.BoardColumns
             var finishedBugs = columns.Reverse().Take(1).Select(X => X.Bugs.Count);
             var finishedItemsInSprint = finishedTasks.Sum() + finishedUserStories.Sum() + finishedBugs.Sum() + finishedTests.Sum();
 
+            // For all sprints which status is active or planning
+            burndownDatatable.AddedOn = DateTime.UtcNow;
+            burndownDatatable.TotalTasks = totalItemsInSprint;
+            burndownDatatable.FinishedTasks = finishedItemsInSprint;
+            burndownDatatable.SprintId = sprintId;
+            //burndownDatatable.DayNo = DateTime.UtcNow.Date;
+
             // Remaining items
             var remainingItems = totalItemsInSprint - finishedItemsInSprint;
 
             // Initialize burndown data collection
             var burndownData = new BurndownViewModel()
             {
-                DaysInSprint = new List<int>() { },
+                DaysInSprint = new List<string>() { },
                 TasksRemaining = new List<int>()
                 {
                     totalItemsInSprint,
@@ -121,9 +171,15 @@ namespace Services.BoardColumns
 
             // Add days in burndown data and scope changes 
             // TODO fix this to get scope changes from burndowData table in Db
-            for (int i = int.Parse(Math.Floor(sprintDays).ToString()); i > 0 ; i--)
+            //for (int i = int.Parse(Math.Floor(sprintDays).ToString()); i > 0 ; i--)
+            //{
+            //    burndownData.DaysInSprint.Add(DateTime.UtcNow.Date.AddDays(i));
+            //    burndownData.ScopeChanges.Add(0);
+            //};
+            // if sprint is one day add the final date!!
+            for (int i = 0; i < int.Parse(Math.Ceiling(sprintDays).ToString()) + 1 ; i++)
             {
-                burndownData.DaysInSprint.Add(i);
+                burndownData.DaysInSprint.Add(DateTime.UtcNow.Date.AddDays(i).ToString("dd/MMM/yyyy"));
                 burndownData.ScopeChanges.Add(0);
             };
 

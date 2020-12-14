@@ -113,7 +113,7 @@ namespace Web.Controllers
         public async Task<IActionResult> GetBurndownData(int projectId, int sprintId)
         {
             var viewModel = await this.boardColumnsService.GetBurndownData(projectId, sprintId);
-            
+
             return Json( new { DaysInSprint = viewModel.DaysInSprint, ScopeChanges = viewModel.ScopeChanges, TasksRemaining = viewModel.TasksRemaining });
         }
     }

@@ -101,7 +101,7 @@ namespace Web
                     DisableGlobalLocks = true
                 }));
 
-            services.AddHangfireServer();
+            // services.AddHangfireServer();
             services.AddMvc();
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
@@ -116,9 +116,6 @@ namespace Web
             services.AddScoped<IBugsService, BugsService>();
             services.AddScoped<ISprintsService, SprintsService>();
             services.AddScoped<IBoardsService, BoardsService>();
-
-            // Hangfire
-            services.AddSingleton<IPrintDemo, PrintDemo>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
@@ -164,18 +161,18 @@ namespace Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                   name: "default",
-                   pattern: "{controller=Home}/{action=Index}/{projectId?}/{id?}");
+                            "areaRoute",
+                            "{area:exists}/{controller=Home}/{action=Index}/{projectId?}/{id?}");
 
                 endpoints.MapControllerRoute(
-                            "areaRoute",
-                            "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                   name: "default",
+                   pattern: "{controller=Home}/{action=Index}/{projectId?}/{id?}");
 
                 endpoints.MapHangfireDashboard();
                 endpoints.MapRazorPages();
             });
 
-            CallHangfireJobs(recurringJobManager, serviceProvider);
+            // CallHangfireJobs(recurringJobManager, serviceProvider);
         }
 
         private void CallHangfireJobs(IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)

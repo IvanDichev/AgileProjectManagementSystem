@@ -14,8 +14,8 @@ namespace Data.Seeding
 
             var roles = new List<string>()
             {
-                TeamRolesConstants.BackEndDeveloper,
-                TeamRolesConstants.FrontEndDeveloper,
+                TeamRolesConstants.BackendDeveloper,
+                TeamRolesConstants.FrontendDeveloper,
                 TeamRolesConstants.FullStackDeveloper,
                 TeamRolesConstants.ProductOwner,
                 TeamRolesConstants.ProjectManager,
