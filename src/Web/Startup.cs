@@ -28,6 +28,7 @@ using System;
 using Utilities.Mailing;
 using Web.Hangfire.Filters;
 using Web.Hangfire.RecurringJobs;
+using Web.Middlewares;
 
 namespace Web
 {
@@ -101,7 +102,7 @@ namespace Web
                     DisableGlobalLocks = true
                 }));
 
-            // services.AddHangfireServer();
+            services.AddHangfireServer();
             services.AddMvc();
 
             services.AddScoped<Utilities.Mailing.IEmailSender, EmailSender>();
@@ -133,7 +134,7 @@ namespace Web
                 app.UseCookiePolicy();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                //app.UseSeedAdminAndRolesMiddleware();
+                app.UseSeedAdminAndRolesMiddleware();
                 app.UseBrowserLink();
             }
             else

@@ -39,13 +39,13 @@ namespace Services.WorkItems.Tests
         {
             var testToMove = await this.repo.All()
                .Where(x => x.Id == itemId)
-               .Include(x => x.UserStory.SprintId)
+               .Include(x => x.UserStory)
                .FirstOrDefaultAsync();
+
+            await this.UpdateBurndownTsks(testToMove.UserStory.SprintId, columnId, oldColId: testToMove.KanbanBoardColumnId);
 
             testToMove.KanbanBoardColumnId = columnId;
             await this.repo.SaveChangesAsync();
-
-            await this.UpdateBurndownTsks(testToMove.UserStory.SprintId, columnId);
         }
 
         public async Task CreateAsync(int projectId, TestInputModelDto inputModel)
@@ -75,7 +75,7 @@ namespace Services.WorkItems.Tests
             await this.repo.SaveChangesAsync();
         }
 
-        private async Task UpdateBurndownTsks(int? sprintId, int? columnId, bool isNewlyAdded = false)
+        private async Task UpdateBurndownTsks(int? sprintId, int? columnId, bool isNewlyAdded = false, int? oldColId = null)
         {
             if (sprintId != null && columnId != null)
             {
@@ -103,7 +103,7 @@ namespace Services.WorkItems.Tests
                     {
                         burndownToUpdate.FinishedTasks += 1;
                     }
-                    else
+                    else if (oldColId == doneColumnId)
                     {
                         burndownToUpdate.FinishedTasks -= 1;
                     }

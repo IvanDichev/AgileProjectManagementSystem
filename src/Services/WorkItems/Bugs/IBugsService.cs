@@ -8,7 +8,6 @@ namespace Services.WorkItems.Bugs
     public interface IBugsService
     {
         public Task<ICollection<SeverityDropDownModel>> GetSeverityDropDown();
-
         public Task CreateBugAsync(int projectId, BugInputModelDto inputModel);
         Task DeleteAsync(int bugId);
     }

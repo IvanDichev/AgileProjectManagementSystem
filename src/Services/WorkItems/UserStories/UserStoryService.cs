@@ -223,13 +223,13 @@ namespace Services.WorkItems.UserStories
                 .Where(x => x.Id == userStoryId)
                 .FirstOrDefaultAsync();
 
-            await UpdateBurndownTsks(userStoryToMove.SprintId, columnId);
+            await UpdateBurndownTsks(userStoryToMove.SprintId, columnId, oldColId: userStoryToMove.KanbanBoardColumnId);
 
             userStoryToMove.KanbanBoardColumnId = columnId;
             await this.userStoryRepo.SaveChangesAsync();
         }
 
-        private async Task UpdateBurndownTsks(int? sprintId, int? columnId, bool isNewlyAdded = false)
+        private async Task UpdateBurndownTsks(int? sprintId, int? columnId, bool isNewlyAdded = false, int? oldColId = null)
         {
             if (sprintId != null && columnId != null)
             {
@@ -257,7 +257,8 @@ namespace Services.WorkItems.UserStories
                     {
                         burndownToUpdate.FinishedTasks += 1;
                     }
-                    else
+                    // If item is removed from done column
+                    else if (oldColId == doneColumnId)
                     {
                         burndownToUpdate.FinishedTasks -= 1;
                     }
