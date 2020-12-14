@@ -106,6 +106,8 @@ namespace Services.WorkItems.UserStories
 
             if (toRemove != null)
             {
+                await this.RemoveFromBurndownData(toRemove.SprintId, toRemove.KanbanBoardColumnId);
+
                 this.userStoryRepo.Delete(toRemove);
 
                 await this.userStoryRepo.SaveChangesAsync();
@@ -135,10 +137,10 @@ namespace Services.WorkItems.UserStories
 
                 if (toUpdate.SprintId != null)
                 {
-                    await RemoveFromBurndownData(toUpdate.SprintId.GetValueOrDefault(), toUpdate.KanbanBoardColumnId.GetValueOrDefault());
+                    await RemoveFromBurndownData(toUpdate.SprintId, toUpdate.KanbanBoardColumnId);
                 }
 
-                await UpdateBurndownFinishedTsks(updateModel.SprintId.GetValueOrDefault(), columnId, true);
+                await UpdateBurndownTsks(updateModel.SprintId, columnId, true);
 
                 toUpdate.SprintId = sprintId;
                 toUpdate.KanbanBoardColumnId = columnId;
@@ -158,7 +160,7 @@ namespace Services.WorkItems.UserStories
             {
                 if (toUpdate.SprintId != null)
                 {
-                    await RemoveFromBurndownData(toUpdate.SprintId.GetValueOrDefault(), toUpdate.KanbanBoardColumnId.GetValueOrDefault());
+                    await RemoveFromBurndownData(toUpdate.SprintId, toUpdate.KanbanBoardColumnId);
                 }
                 // Remove from sprint and board.
                 toUpdate.SprintId = updateModel.SprintId;
@@ -221,71 +223,77 @@ namespace Services.WorkItems.UserStories
                 .Where(x => x.Id == userStoryId)
                 .FirstOrDefaultAsync();
 
-            await UpdateBurndownFinishedTsks(userStoryToMove.SprintId.GetValueOrDefault(), columnId);
+            await UpdateBurndownTsks(userStoryToMove.SprintId, columnId);
 
             userStoryToMove.KanbanBoardColumnId = columnId;
             await this.userStoryRepo.SaveChangesAsync();
         }
 
-        private async Task UpdateBurndownFinishedTsks(int sprintId, int columnId, bool isNewlyAdded = false)
+        private async Task UpdateBurndownTsks(int? sprintId, int? columnId, bool isNewlyAdded = false)
         {
-            // Get burndown record for the day 
-            var burndownToUpdate = await this.burndownRepo.All()
-                .Where(x => x.SprintId == sprintId && x.DayOfSprint.Date == DateTime.UtcNow.Date)
-                .FirstOrDefaultAsync();
-
-            // Take id of the last column in the baord which is the Done/Finished column
-            var doneColumnId = await this.boardRepo.AllAsNoTracking()
-                .Where(x => x.SprintId == sprintId)
-                .OrderByDescending(x => x.KanbanBoardColumnOption.PositionLTR)
-                .Take(1)
-                .Select(x => x.Id)
-                .FirstOrDefaultAsync();
-
-            if (isNewlyAdded)
+            if (sprintId != null && columnId != null)
             {
-                burndownToUpdate.TotalTasks += 1;
-            }
-            else
-            {
-                // Change finished tasks if item is placed in done column
-                if (columnId == doneColumnId)
+                // Get burndown record for the day 
+                var burndownToUpdate = await this.burndownRepo.All()
+                    .Where(x => x.SprintId == sprintId && x.DayOfSprint.Date == DateTime.UtcNow.Date)
+                    .FirstOrDefaultAsync();
+
+                // Take id of the last column in the baord which is the Done/Finished column
+                var doneColumnId = await this.boardRepo.AllAsNoTracking()
+                    .Where(x => x.SprintId == sprintId)
+                    .OrderByDescending(x => x.KanbanBoardColumnOption.PositionLTR)
+                    .Take(1)
+                    .Select(x => x.Id)
+                    .FirstOrDefaultAsync();
+
+                if (isNewlyAdded)
                 {
-                    burndownToUpdate.FinishedTasks += 1;
+                    burndownToUpdate.TotalTasks += 1;
                 }
                 else
                 {
-                    burndownToUpdate.FinishedTasks -= 1;
+                    // Change finished tasks if item is placed in done column
+                    if (columnId == doneColumnId)
+                    {
+                        burndownToUpdate.FinishedTasks += 1;
+                    }
+                    else
+                    {
+                        burndownToUpdate.FinishedTasks -= 1;
+                    }
                 }
-            }
 
-            await this.burndownRepo.SaveChangesAsync();
+                await this.burndownRepo.SaveChangesAsync();
+            }
         }
 
-        private async Task RemoveFromBurndownData(int sprintId, int columnId)
+        private async Task RemoveFromBurndownData(int? sprintId, int? columnId)
         {
-            // Get burndown record for the day 
-            var burndownToUpdate = await this.burndownRepo.All()
-                .Where(x => x.SprintId == sprintId && x.DayOfSprint.Date == DateTime.UtcNow.Date)
-                .FirstOrDefaultAsync();
-
-            // Take id of the last column in the baord which is the Done/Finished column
-            var doneColumnId = await this.boardRepo.AllAsNoTracking()
-                .Where(x => x.SprintId == sprintId)
-                .OrderByDescending(x => x.KanbanBoardColumnOption.PositionLTR)
-                .Take(1)
-                .Select(x => x.Id)
-                .FirstOrDefaultAsync();
-
-            // Change finished tasks if item is in done column
-            if (columnId == doneColumnId)
+            if (sprintId != null && columnId != null)
             {
-                burndownToUpdate.FinishedTasks -= 1;
+                // Get burndown record for the day 
+                var burndownToUpdate = await this.burndownRepo.All()
+                    .Where(x => x.SprintId == sprintId && x.DayOfSprint.Date == DateTime.UtcNow.Date)
+                    .FirstOrDefaultAsync();
+
+                // Take id of the last column in the baord which is the Done/Finished column
+                var doneColumnId = await this.boardRepo.AllAsNoTracking()
+                    .Where(x => x.SprintId == sprintId)
+                    .OrderByDescending(x => x.KanbanBoardColumnOption.PositionLTR)
+                    .Take(1)
+                    .Select(x => x.Id)
+                    .FirstOrDefaultAsync();
+
+                // Change finished tasks if item is in done column
+                if (columnId == doneColumnId)
+                {
+                    burndownToUpdate.FinishedTasks -= 1;
+                }
+
+                burndownToUpdate.TotalTasks -= 1;
+
+                await this.burndownRepo.SaveChangesAsync();
             }
-
-            burndownToUpdate.TotalTasks -= 1;
-
-            await this.burndownRepo.SaveChangesAsync();
         }
 
         private static IQueryable<UserStory> Sort(SortingFilter sortingFilter, IQueryable<UserStory> query)
