@@ -76,6 +76,7 @@ else {
             var isUserStory = false
             var isTest = false
             var isTask = false
+            var isBug = false
             if (dragging.id.split('-')[0] == 'userStory') {
                 isUserStory = true
             }
@@ -85,12 +86,16 @@ else {
             if (dragging.id.split('-')[0] == 'task') {
                 isTask = true
             }
+            if (dragging.id.split('-')[0] == 'bug') {
+                isBug = true
+            }
 
             formdata.append('itemId', itemId)
             formdata.append('columnId', columnId)
             formdata.append('isUserStory', isUserStory)
             formdata.append('isTest', isTest)
             formdata.append('isTask', isTask)
+            formdata.append('isBug', isBug)
 
             // Post rquest to change column of userStory
             $.ajax({

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.BoardColumns;
 using Services.Projects;
 using Services.Sprints;
+using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
 using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
@@ -22,6 +23,7 @@ namespace Web.Controllers
         private readonly IUserStoryService userStoryService;
         private readonly ITestsService testsService;
         private readonly ITasksService tasksService;
+        private readonly IBugsService bugsService;
 
         public BoardsController(IMapper mapper,
             IProjectsService projectsService,
@@ -29,7 +31,8 @@ namespace Web.Controllers
             ISprintsService sprintsService,
             IUserStoryService userStoryService,
             ITestsService testsService,
-            ITasksService tasksService)
+            ITasksService tasksService,
+            IBugsService bugsService)
             : base(projectsService)
         {
             this.mapper = mapper;
@@ -38,6 +41,7 @@ namespace Web.Controllers
             this.userStoryService = userStoryService;
             this.testsService = testsService;
             this.tasksService = tasksService;
+            this.bugsService = bugsService;
         }
 
         public async Task<IActionResult> Board(int projectId, int sprintId)
@@ -57,7 +61,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangeColumn(int columnId, int itemId, bool isUserStory, bool isTask, bool isTest)
+        public async Task<IActionResult> ChangeColumn(int columnId, int itemId, bool isUserStory, bool isTask, bool isTest, bool isBug)
         {
             if (isUserStory)
             {
@@ -70,6 +74,10 @@ namespace Web.Controllers
             else if (isTest)
             {
                 await this.testsService.ChangeColumnAsync(itemId, columnId);
+            }
+            else if (isBug)
+            {
+                await this.bugsService.ChangeColumnAsync(itemId, columnId);
             }
 
             return Json(new { changed = "changed" });
