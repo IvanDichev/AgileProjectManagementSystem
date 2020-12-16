@@ -4,6 +4,7 @@ using Data.Models;
 using Data.Models.Users;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Models.Users;
 using DataModels.Models.Users.Dtos;
 using DataModels.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -211,6 +212,28 @@ namespace Services.Projects
             this.projectRepo.Update(project);
             await this.projectRepo.SaveChangesAsync();
             return project.WorkItemsId;
+        }
+
+        public async Task<ICollection<UserDto>> GetUsersDropDown(int projectId)
+        {
+            var users = await this.usersRepo.AllAsNoTracking()
+                .Where(x => x.IsPublic == true && (x.TeamsUsers.Any(x => x.Team.ProjectId != projectId) || x.TeamsUsers.Count == 0))
+                .ProjectTo<UserDto>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return users;
+        }
+
+        public async Task AddUserToProject(int userId, int projectId)
+        {
+            var project = await this.projectRepo.All()
+                .Where(x => x.Id == projectId)
+                .Include(x => x.Team)
+                .FirstOrDefaultAsync();
+
+            project.Team.TeamsUsers.Add(new TeamsUsers { UserId = userId, TeamId = project.Team.Id });
+
+            await this.projectRepo.SaveChangesAsync();
         }
     }
 }

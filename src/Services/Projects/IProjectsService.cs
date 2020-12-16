@@ -1,6 +1,8 @@
 ﻿using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Models.Users.Dtos;
 using DataModels.Pagination;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Projects
@@ -21,5 +23,9 @@ namespace Services.Projects
         /// <returns></returns>
         bool IsUserInProject(int projectId, int userId);
         public Task<int> GetNextIdForWorkItemAsync(int projectId);
+
+        public Task<ICollection<UserDto>> GetUsersDropDown(int projectId);
+
+        public Task AddUserToProject(int userId, int projectId);
     }
 }

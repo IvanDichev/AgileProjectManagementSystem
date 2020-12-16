@@ -54,7 +54,7 @@ namespace Web.Controllers
 
             var AddUserToProjectInputModel = new AddUserToProjectInputModel
             {
-                UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.usersService.GetPublicUsersAsync()),
+                UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.projectsService.GetUsersDropDown(projectId)),
             };
 
             return View(AddUserToProjectInputModel);
@@ -68,12 +68,17 @@ namespace Web.Controllers
                 return Unauthorized();
             }
 
-            var AddUserToProjectInputModel = new AddUserToProjectInputModel
+            if (!ModelState.IsValid)
             {
-                UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.usersService.GetPublicUsersAsync()),
-            };
+                var AddUserToProjectInputModel = new AddUserToProjectInputModel
+                {
+                    UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.projectsService.GetUsersDropDown(projectId)),
+                };
+            }
 
-            return View(AddUserToProjectInputModel);
+            await this.projectsService.AddUserToProject(inputModel.UserId, projectId);
+
+            return RedirectToAction(nameof(Get), new { projectId = projectId });
         }
 
         public async Task<IActionResult> GetAll(PaginationFilter paginationFilter)
