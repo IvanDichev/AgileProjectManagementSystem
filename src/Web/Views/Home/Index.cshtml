@@ -8,7 +8,7 @@
 
 <div>
     <div class="card">
-        <div class="card-body">
+        <div class="card-body cb1">
             What is scrum
         </div>
     </div>
@@ -18,3 +18,13 @@
         </div>
     </div>
 </div>
+
+<div class="notifyjs-corner" style="top: 0px; right: 0px;"></div>
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        $(".notifyjs-corner").notify("Access granted", "success");
+    });
+</script>
+}

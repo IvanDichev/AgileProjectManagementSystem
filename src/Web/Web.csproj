@@ -42,6 +42,7 @@
     <Folder Include="Areas\Administration\Controllers\" />
     <Folder Include="Areas\Administration\Views\" />
     <Folder Include="Areas\Wiki\Views\Shared\" />
+    <Folder Include="wwwroot\lib\notify.js\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
