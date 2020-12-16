@@ -33,6 +33,20 @@
         </div>
     </div>
 </div>
+<div>
+    <h5>Users assigned to the project: </h5>
+    <form asp-action="AddUserToProject">
+        <button type="submit" class="btn btn-primary btn-sm">Add to project</button>
+    </form>
+    <ul>
+        @foreach (var user in Model.Users)
+        {
+            <li>
+                @user.Email
+            </li>
+        }
+    </ul>
+</div>
 
 @section Scripts{
     <script src="~/js/Projects/Get.js" asp-append-version="true"></script>

@@ -29,7 +29,6 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Get(int projectId)
         {
-            // If projectId does not exist or user has no ref to the project.
             if (!IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();

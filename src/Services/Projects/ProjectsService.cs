@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Data.Models;
+using Data.Models.Users;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
+using DataModels.Models.Users.Dtos;
 using DataModels.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Repo;
 using Shared.Constants;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,24 +23,38 @@ namespace Services.Projects
         private readonly IMapper mapper;
         private readonly ILogger<ProjectsService> logger;
         private readonly IRepository<KanbanBoardColumn> boardRepo;
+        private readonly IRepository<User> usersRepo;
 
         public ProjectsService(IRepository<Project> projectRepo, IMapper mapper, ILogger<ProjectsService> logger,
-            IRepository<KanbanBoardColumn> boardRepo)
+            IRepository<KanbanBoardColumn> boardRepo, IRepository<User> usersRepo)
         {
             this.projectRepo = projectRepo;
             this.mapper = mapper;
             this.logger = logger;
             this.boardRepo = boardRepo;
+            this.usersRepo = usersRepo;
         }
 
-        public async Task<ProjectDto> GetAsync(int id)
+        public async Task<ProjectDto> GetAsync(int projectId)
         {
             var project = await this.projectRepo.AllAsNoTracking()
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == projectId)
                 .ProjectTo<ProjectDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
 
+            project.Users = await GetUsersInProject(projectId);
+
             return project;
+        }
+
+        private async Task<ICollection<UserDto>> GetUsersInProject(int projectId)
+        {
+            var users = await this.usersRepo.AllAsNoTracking()
+                .Where(x => x.TeamsUsers.Any(x => x.Team.ProjectId == projectId))
+                .ProjectTo<UserDto>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return users;
         }
 
         public async Task<PaginatedProjectDto> GetAllAsync(int userId, PaginationFilter paginationFilter)
@@ -85,7 +102,7 @@ namespace Services.Projects
             await AddDefaultKanbanBoardToProjectAsync(project);
 
             await this.projectRepo.AddAsync(project);
-            await projectRepo.SaveChangesAsync();            
+            await projectRepo.SaveChangesAsync();
         }
 
         private async Task AddDefaultKanbanBoardToProjectAsync(Project project)
@@ -125,7 +142,7 @@ namespace Services.Projects
                 AddedOn = DateTime.UtcNow,
                 KanbanBoardColumnOption = defaultDoingColumnOptions,
             };
-            
+
             var donekanbanBoardColumn = new KanbanBoardColumn()
             {
                 AddedOn = DateTime.UtcNow,

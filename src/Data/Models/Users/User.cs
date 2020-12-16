@@ -25,8 +25,9 @@ namespace Data.Models.Users
         public ICollection<TeamsUsers> TeamsUsers { get; set; }
 
         public int? TeamRoleId { get; set; }
+
         public virtual TeamRole TeamRole { get; set; }
 
-
+        public bool IsPublic { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Data.Models;
+using Data.Models.Users;
 using DataModels.Models.BacklogPriorities;
 using DataModels.Models.Board.Dtos;
 using DataModels.Models.Comments;
@@ -10,6 +11,8 @@ using DataModels.Models.Projects.Dtos;
 using DataModels.Models.Severity;
 using DataModels.Models.Sprints;
 using DataModels.Models.Sprints.Dto;
+using DataModels.Models.Users;
+using DataModels.Models.Users.Dtos;
 using DataModels.Models.WorkItems;
 using DataModels.Models.WorkItems.Bugs;
 using DataModels.Models.WorkItems.Bugs.Dtos;
@@ -84,6 +87,10 @@ namespace Web.Automapper
 
             // Mockup
             CreateMap<Mockup, MockupDto>().ReverseMap();
+
+            // User
+            CreateMap<User, UsersDropdown>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
         }
     }
 }

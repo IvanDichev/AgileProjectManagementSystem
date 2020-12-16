@@ -27,6 +27,8 @@ namespace Web.Areas.Identity.Pages.Account.Manage
 
         public string Username { get; set; }
 
+        public bool IsPublic { get; set; }
+
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -38,18 +40,24 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            
+            [Required]
+            [Display(Name = "Is account public")]
+            public bool IsPublic { get; set; }
         }
 
         private async Task LoadAsync(User user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var isPublic = (await _userManager.FindByEmailAsync(user.Email)).IsPublic;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                IsPublic = isPublic
             };
         }
 
@@ -83,6 +91,7 @@ namespace Web.Areas.Identity.Pages.Account.Manage
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+
                 if (!setPhoneResult.Succeeded)
                 {
                     StatusMessage = "Unexpected error when trying to set phone number.";
@@ -90,6 +99,8 @@ namespace Web.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            user.IsPublic = Input.IsPublic;
+            await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
