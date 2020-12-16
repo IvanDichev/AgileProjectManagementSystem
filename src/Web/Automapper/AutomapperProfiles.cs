@@ -91,6 +91,7 @@ namespace Web.Automapper
             // User
             CreateMap<User, UsersDropdown>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<UsersDropdown, UserDto>().ReverseMap();
         }
     }
 }

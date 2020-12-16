@@ -20,6 +20,7 @@ using Services.BurndownDatas;
 using Services.Comments;
 using Services.Projects;
 using Services.Sprints;
+using Services.Users;
 using Services.WorkItems;
 using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
@@ -119,6 +120,7 @@ namespace Web
             services.AddScoped<ISprintsService, SprintsService>();
             services.AddScoped<IBoardsService, BoardsService>();
             services.AddScoped<IBurndownDataService, BurndownDataService>();
+            services.AddScoped<IUsersService, UsersService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 

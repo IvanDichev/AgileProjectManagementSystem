@@ -1,0 +1,20 @@
+﻿@model AddUserToProjectInputModel
+ 
+@{ 
+    var usersDropdown = Model.UsersDropdown
+        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Email });
+}
+
+<h5>Users assigned to the project: </h5>
+<form asp-action="AddUserToProject">
+    <div class="form-group">
+        <label asp-for="UserId" class="control-label"></label>
+        <select asp-for="UserId" class="form-control"
+                asp-items="usersDropdown"></select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
+    <input asp-for="ProjectId" hidden />
+
+    <button type="submit" class="btn btn-primary btn-sm">Add to project</button>
+</form>

@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using DataModels.Models.Error;
 using DataModels.Models.Projects;
+using DataModels.Models.Users;
 using DataModels.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
+using Services.Users;
 using Shared.Constants;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Extentions;
@@ -19,12 +22,15 @@ namespace Web.Controllers
     {
         private readonly IProjectsService projectsService;
         private readonly IMapper mapper;
+        private readonly IUsersService usersService;
 
         public ProjectsController(IProjectsService projectsService,
-            IMapper mapper) : base(projectsService)
+            IMapper mapper,
+            IUsersService usersService) : base(projectsService)
         {
             this.projectsService = projectsService;
             this.mapper = mapper;
+            this.usersService = usersService;
         }
 
         public async Task<IActionResult> Get(int projectId)
@@ -37,6 +43,37 @@ namespace Web.Controllers
             var project = mapper.Map<ProjectViewModel>(await this.projectsService.GetAsync(projectId));
 
             return View(project);
+        }
+
+        public async Task<IActionResult> AddUserToProject(int projectId)
+        {
+            if (!IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            var AddUserToProjectInputModel = new AddUserToProjectInputModel
+            {
+                UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.usersService.GetPublicUsersAsync()),
+            };
+
+            return View(AddUserToProjectInputModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUserToProject(AddUserToProjectInputModel inputModel, int projectId)
+        {
+            if (!IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            var AddUserToProjectInputModel = new AddUserToProjectInputModel
+            {
+                UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.usersService.GetPublicUsersAsync()),
+            };
+
+            return View(AddUserToProjectInputModel);
         }
 
         public async Task<IActionResult> GetAll(PaginationFilter paginationFilter)
