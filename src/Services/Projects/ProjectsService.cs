@@ -7,7 +7,9 @@ using DataModels.Models.Projects.Dtos;
 using DataModels.Models.Users;
 using DataModels.Models.Users.Dtos;
 using DataModels.Pagination;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Repo;
 using Shared.Constants;
@@ -15,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utilities.Mailing;
 
 namespace Services.Projects
 {
@@ -25,15 +28,30 @@ namespace Services.Projects
         private readonly ILogger<ProjectsService> logger;
         private readonly IRepository<KanbanBoardColumn> boardRepo;
         private readonly IRepository<User> usersRepo;
+        private readonly IEmailSender emailSender;
+        private readonly IConfiguration config;
+        private readonly UserManager<User> userManager;
+        private readonly IRepository<TeamsUsers> teamUsersRepo;
 
-        public ProjectsService(IRepository<Project> projectRepo, IMapper mapper, ILogger<ProjectsService> logger,
-            IRepository<KanbanBoardColumn> boardRepo, IRepository<User> usersRepo)
+        public ProjectsService(IRepository<Project> projectRepo, 
+            IMapper mapper, 
+            ILogger<ProjectsService> logger,
+            IRepository<KanbanBoardColumn> boardRepo, 
+            IRepository<User> usersRepo,
+            IEmailSender emailSender,
+            IConfiguration config,
+            UserManager<User> userManager,
+            IRepository<TeamsUsers> teamUsersRepo)
         {
             this.projectRepo = projectRepo;
             this.mapper = mapper;
             this.logger = logger;
             this.boardRepo = boardRepo;
             this.usersRepo = usersRepo;
+            this.emailSender = emailSender;
+            this.config = config;
+            this.userManager = userManager;
+            this.teamUsersRepo = teamUsersRepo;
         }
 
         public async Task<ProjectDto> GetAsync(int projectId)
@@ -234,6 +252,39 @@ namespace Services.Projects
             project.Team.TeamsUsers.Add(new TeamsUsers { UserId = userId, TeamId = project.Team.Id });
 
             await this.projectRepo.SaveChangesAsync();
+
+            // Send email to user to inform them about being added to a project.
+            var user = await userManager.FindByIdAsync(userId.ToString());
+            var email = new Email(this.config["EmailSenderInformation:Email"], 
+                user.Email,
+                EmailConstants.AddedToProject + project.Name, 
+                EmailConstants.AddedToProjectSubject);
+
+            await this.emailSender.SendAsync(email, this.config["EmailSenderInformation:Password"],
+                        this.config["EmailSenderOptions:SmtpServer"], int.Parse(this.config["EmailSenderOptions:Port"]));
+        }
+
+        public async Task RemoveUserFromProject(int userId, int projectId)
+        {
+            var project = await this.projectRepo.All()
+                .Where(x => x.Id == projectId)
+                .Include(x => x.Team)
+                .FirstOrDefaultAsync();
+
+            var teamUsersToRemove = project.Team.TeamsUsers.FirstOrDefault(x => x.UserId == userId && x.TeamId == project.Team.Id);
+
+            this.teamUsersRepo.Delete(teamUsersToRemove);
+            await teamUsersRepo.SaveChangesAsync();
+
+            // Send email to user to inform them about being added to a project.
+            var user = await userManager.FindByIdAsync(userId.ToString());
+            var email = new Email(this.config["EmailSenderInformation:Email"],
+                user.Email,
+                EmailConstants.AddedToProject + project.Name,
+                EmailConstants.AddedToProjectSubject);
+
+            await this.emailSender.SendAsync(email, this.config["EmailSenderInformation:Password"],
+                        this.config["EmailSenderOptions:SmtpServer"], int.Parse(this.config["EmailSenderOptions:Port"]));
         }
     }
 }

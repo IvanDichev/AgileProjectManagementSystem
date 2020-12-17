@@ -20,7 +20,7 @@ using Services.BurndownDatas;
 using Services.Comments;
 using Services.Projects;
 using Services.Sprints;
-using Services.Users;
+using Services.TeamRoles;
 using Services.WorkItems;
 using Services.WorkItems.Bugs;
 using Services.WorkItems.Tasks;
@@ -29,7 +29,6 @@ using Services.WorkItems.UserStories;
 using System;
 using Utilities.Mailing;
 using Web.Hangfire.Filters;
-using Web.Hangfire.RecurringJobs;
 using Web.Middlewares;
 
 namespace Web
@@ -120,7 +119,7 @@ namespace Web
             services.AddScoped<ISprintsService, SprintsService>();
             services.AddScoped<IBoardsService, BoardsService>();
             services.AddScoped<IBurndownDataService, BurndownDataService>();
-            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<ITeamRolesService, TeamRolesService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 

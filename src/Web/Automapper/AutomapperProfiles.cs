@@ -11,6 +11,8 @@ using DataModels.Models.Projects.Dtos;
 using DataModels.Models.Severity;
 using DataModels.Models.Sprints;
 using DataModels.Models.Sprints.Dto;
+using DataModels.Models.TeamRoles;
+using DataModels.Models.TeamRoles.Dtos;
 using DataModels.Models.Users;
 using DataModels.Models.Users.Dtos;
 using DataModels.Models.WorkItems;
@@ -92,6 +94,10 @@ namespace Web.Automapper
             CreateMap<User, UsersDropdown>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<UsersDropdown, UserDto>().ReverseMap();
+
+            // Team roles
+            CreateMap<TeamRole, TeamRolesDto>().ReverseMap();
+            CreateMap<TeamRolesDropdown, TeamRolesDto>().ReverseMap();
         }
     }
 }

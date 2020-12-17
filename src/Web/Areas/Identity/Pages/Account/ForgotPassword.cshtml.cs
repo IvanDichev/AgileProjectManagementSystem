@@ -66,7 +66,7 @@ namespace Web.Areas.Identity.Pages.Account
 
                 var email = new Email(_config["EmailSenderInformation:Email"], user.Email,
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
-                    Constants.ResetPasswordSubject);
+                    EmailConstants.ResetPasswordSubject);
 
                 await _emailSender.SendAsync(email, _config["EmailSenderInformation:Password"],
                         _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));

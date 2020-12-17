@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using DataModels.Models.Error;
 using DataModels.Models.Projects;
+using DataModels.Models.TeamRoles;
 using DataModels.Models.Users;
 using DataModels.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Projects;
-using Services.Users;
+using Services.TeamRoles;
 using Shared.Constants;
 using System;
 using System.Collections.Generic;
@@ -22,15 +23,15 @@ namespace Web.Controllers
     {
         private readonly IProjectsService projectsService;
         private readonly IMapper mapper;
-        private readonly IUsersService usersService;
+        private readonly ITeamRolesService teamRolesService;
 
         public ProjectsController(IProjectsService projectsService,
             IMapper mapper,
-            IUsersService usersService) : base(projectsService)
+            ITeamRolesService teamRolesService) : base(projectsService)
         {
             this.projectsService = projectsService;
             this.mapper = mapper;
-            this.usersService = usersService;
+            this.teamRolesService = teamRolesService;
         }
 
         public async Task<IActionResult> Get(int projectId)
@@ -55,6 +56,7 @@ namespace Web.Controllers
             var AddUserToProjectInputModel = new AddUserToProjectInputModel
             {
                 UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.projectsService.GetUsersDropDown(projectId)),
+                RolesDropdown = this.mapper.Map<ICollection<TeamRolesDropdown>>(await this.teamRolesService.GetTeamRolesAsync()),
             };
 
             return View(AddUserToProjectInputModel);
@@ -73,6 +75,7 @@ namespace Web.Controllers
                 var AddUserToProjectInputModel = new AddUserToProjectInputModel
                 {
                     UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.projectsService.GetUsersDropDown(projectId)),
+                    RolesDropdown = this.mapper.Map<ICollection<TeamRolesDropdown>>(await this.teamRolesService.GetTeamRolesAsync()),
                 };
             }
 
