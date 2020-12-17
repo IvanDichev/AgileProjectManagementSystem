@@ -8,5 +8,6 @@ namespace Services.Notifications
     {
         Task<ICollection<NotificationDto>> GetNotificationsForUserAsync(int userId);
         Task<ICollection<NotificationDto>> GetLastFiveNotifications(int userId);
+        Task AddNotificationToUserAsync(int userId, string notificationMessage);
     }
 }

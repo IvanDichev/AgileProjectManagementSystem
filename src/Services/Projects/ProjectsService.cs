@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Repo;
+using Services.Notifications;
 using Shared.Constants;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Services.Projects
         private readonly IConfiguration config;
         private readonly UserManager<User> userManager;
         private readonly IRepository<TeamsUsers> teamUsersRepo;
+        private readonly INotificationsService notificationsService;
 
         public ProjectsService(IRepository<Project> projectRepo, 
             IMapper mapper, 
@@ -41,7 +43,8 @@ namespace Services.Projects
             IEmailSender emailSender,
             IConfiguration config,
             UserManager<User> userManager,
-            IRepository<TeamsUsers> teamUsersRepo)
+            IRepository<TeamsUsers> teamUsersRepo,
+            INotificationsService notificationsService)
         {
             this.projectRepo = projectRepo;
             this.mapper = mapper;
@@ -52,6 +55,7 @@ namespace Services.Projects
             this.config = config;
             this.userManager = userManager;
             this.teamUsersRepo = teamUsersRepo;
+            this.notificationsService = notificationsService;
         }
 
         public async Task<ProjectDto> GetAsync(int projectId)
@@ -250,14 +254,17 @@ namespace Services.Projects
                 .FirstOrDefaultAsync();
 
             project.Team.TeamsUsers.Add(new TeamsUsers { UserId = userId, TeamId = project.Team.Id });
-
             await this.projectRepo.SaveChangesAsync();
+
+            var message = EmailConstants.AddedToProject + project.Name;
+
+            await this.notificationsService.AddNotificationToUserAsync(userId, message);
 
             // Send email to user to inform them about being added to a project.
             var user = await userManager.FindByIdAsync(userId.ToString());
             var email = new Email(this.config["EmailSenderInformation:Email"], 
                 user.Email,
-                EmailConstants.AddedToProject + project.Name, 
+                message, 
                 EmailConstants.AddedToProjectSubject);
 
             await this.emailSender.SendAsync(email, this.config["EmailSenderInformation:Password"],
