@@ -14,5 +14,6 @@ namespace Services.Sprints
         Task DeleteAsync(int sprintId);
         Task<bool> AreUserStoriesInSprintAsync(int sprintId);
         Task UpdateSprintStatus();
+        Task<ICollection<OldSprintsBurndownData>> GetOldSprintBurndownData(int projectId);
     }
 }

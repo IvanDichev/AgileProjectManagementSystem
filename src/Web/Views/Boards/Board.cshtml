@@ -20,6 +20,7 @@
                 Sprints
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <p class="text-center text-primary" style="font-size:0.8rem;">Current sprints</p>
                 @foreach (var sprint in Model.SprintDropDown)
                 {
                     <a class="dropdown-item" asp-action="Board" asp-route-sprintId="@sprint.Id">@sprint.Name</a>
@@ -28,7 +29,18 @@
                        asp-route-sprintId="@sprint.Id">
                         @sprint.Name Burndown
                     </a>
-                    <hr />
+                    <div class="dropdown-divider"></div>
+                }
+                <p class="text-center text-primary" style="font-size:0.8rem;">Closed sprints</p>
+                @foreach (var oldData in Model.OldSprintBurnDownIds)
+                {
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" asp-action="Burndown"
+                       asp-route-projectId="@this.ViewContext.RouteData.Values["projectId"]"
+                       asp-route-sprintId="@oldData.Id">
+                        @oldData.Name Burndown
+                    </a>
+
                 }
             </div>
         </div>

@@ -64,6 +64,7 @@ namespace Web.Automapper
             // Sprints
             CreateMap<Sprint, SprintDto>().ReverseMap();
             CreateMap<Sprint, SprintDropDownModel>().ReverseMap();
+            CreateMap<Sprint, OldSprintsBurndownData>().ReverseMap();
             CreateMap<SprintAllViewModel, SprintDto>().ReverseMap();
             CreateMap<SprintInputModel, SprintInputDto>().ReverseMap();
 
@@ -104,7 +105,6 @@ namespace Web.Automapper
             // Notifications
             CreateMap<Notification, NotificationDto>().ReverseMap();
             CreateMap<NotificationViewModel, NotificationDto>().ReverseMap();
-                //.ForMember(x => x.AddedOn, opt => opt.MapFrom(x => x.AddedOn.ToString("dd/MM/yyyy HH:mm")));
         }
     }
 }

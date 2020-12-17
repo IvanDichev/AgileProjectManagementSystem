@@ -8,5 +8,6 @@ namespace DataModels.Models.Board
     {
         public ICollection<BoardColumnAllDto> BoardColumnAllDto { get; set; }
         public ICollection<SprintDropDownModel> SprintDropDown { get; set; }
+        public ICollection<OldSprintsBurndownData> OldSprintBurnDownIds { get; set; }
     }
 }

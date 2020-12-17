@@ -59,6 +59,7 @@ namespace Web.Controllers
             {
                 BoardColumnAllDto = await this.boardColumnsService.GetAllColumnsAsync(projectId, sprintId),
                 SprintDropDown = await this.sprintsService.GetSprintDropDownAsync(projectId),
+                OldSprintBurnDownIds = await this.sprintsService.GetOldSprintBurndownData(projectId),
             };
 
             return View(boardViewModel);

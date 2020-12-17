@@ -144,6 +144,17 @@ namespace Services.Sprints
             return sprintDropDown;
         }
 
+        public async Task<ICollection<OldSprintsBurndownData>> GetOldSprintBurndownData(int projectId)
+        {
+            var sprintDropDown = await this.sprintRepo.AllAsNoTracking()
+                .Where(x => x.ProjectId == projectId &&
+                    (x.Status.Status != SprintStatusConstants.Planning && x.Status.Status != SprintStatusConstants.Active))
+                .ProjectTo<OldSprintsBurndownData>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return sprintDropDown;
+        }
+
         public async Task UpdateSprintStatus()
         {
             var sprints = await this.sprintRepo.All()
