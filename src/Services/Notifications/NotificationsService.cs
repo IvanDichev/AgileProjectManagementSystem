@@ -4,6 +4,7 @@ using Data.Models;
 using DataModels.Models.Notifications.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Repo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,19 @@ namespace Services.Notifications
         {
             this.mapper = mapper;
             this.notificationsRepo = notificationsRepo;
+        }
+
+        public async Task AddNotificationToUserAsync (int userId, string notificationMessage)
+        {
+            var notificationToAdd = new Notification()
+            {
+                AddedOn = DateTime.UtcNow,
+                Message = notificationMessage,
+                UserId = userId,
+            };
+
+            await this.notificationsRepo.AddAsync(notificationToAdd);
+            await this.notificationsRepo.SaveChangesAsync();
         }
 
         public async Task<ICollection<NotificationDto>> GetNotificationsForUserAsync(int userId)
