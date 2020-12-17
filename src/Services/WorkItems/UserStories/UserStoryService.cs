@@ -309,6 +309,8 @@ namespace Services.WorkItems.UserStories
                 UserStorySortingConstants.StoryPointsDesc => query.OrderByDescending(x => x.StoryPoints),
                 UserStorySortingConstants.PriorityAsc => query.OrderBy(x => x.BacklogPriority.Weight),
                 UserStorySortingConstants.PriorityDesc => query.OrderByDescending(x => x.BacklogPriority.Weight),
+                UserStorySortingConstants.SprintAsc => query.OrderBy(x => x.Sprint.Name),
+                UserStorySortingConstants.SprintDesc => query.OrderByDescending(x => x.Sprint.Name),
                 _ => query,
             };
         }

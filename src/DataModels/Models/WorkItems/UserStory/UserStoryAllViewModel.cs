@@ -17,6 +17,10 @@ namespace DataModels.Models.WorkItems.UserStory
 
         public string BacklogPriorityPriority { get; set; }
 
+        public string SprintName { get; set; }
+
+        public string ShortSprintName => this.SprintName?.Length > 13 ? SprintName.Substring(0, 13) + "..." : SprintName;
+
         public ICollection<TaskAllDto> Tasks { get; set; }
 
         public ICollection<TestAllDto> Tests { get; set; }

@@ -54,22 +54,6 @@ namespace Services.Sprints
 
         }
 
-        private static void InitialSeedBurndownData(Sprint sprint)
-        {
-            var totalDaysInSprint = int.Parse(Math.Ceiling((sprint.DueDate - sprint.StartDate).TotalDays).ToString()) + 1;
-
-            for (int i = 0; i < totalDaysInSprint; i++)
-            {
-                sprint.BurndownData.Add(new BurndownData
-                {
-                    AddedOn = DateTime.UtcNow,
-                    DayOfSprint = sprint.StartDate.AddDays(i),
-                    TotalTasks = 0,
-                    FinishedTasks = 0,
-                });
-            }
-        }
-
         private async Task AddKanbanColumnsForSprint(SprintInputDto inputDto, Sprint sprint)
         {
             var boardOptionIdsForProject = await this.boardOptionsRepo.AllAsNoTracking()
@@ -195,6 +179,22 @@ namespace Services.Sprints
                     .Where(x => x.Status == SprintStatusConstants.Closed)
                     .FirstOrDefault().Id
             };
+        }
+
+        private static void InitialSeedBurndownData(Sprint sprint)
+        {
+            var totalDaysInSprint = int.Parse(Math.Ceiling((sprint.DueDate - sprint.StartDate).TotalDays).ToString()) + 1;
+
+            for (int i = 0; i < totalDaysInSprint; i++)
+            {
+                sprint.BurndownData.Add(new BurndownData
+                {
+                    AddedOn = DateTime.UtcNow,
+                    DayOfSprint = sprint.StartDate.AddDays(i),
+                    TotalTasks = 0,
+                    FinishedTasks = 0,
+                });
+            }
         }
     }
 }

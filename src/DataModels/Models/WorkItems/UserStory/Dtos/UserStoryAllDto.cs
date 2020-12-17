@@ -19,6 +19,8 @@ namespace DataModels.Models.WorkItems.UserStory.Dtos
 
         public int TasksCount { get; set; }
 
+        public string SprintName { get; set; }
+
         public ICollection<TaskAllDto> Tasks { get; set; }
 
         public ICollection<TestAllDto> Tests { get; set; }

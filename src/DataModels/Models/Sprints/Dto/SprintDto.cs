@@ -23,5 +23,7 @@ namespace DataModels.Models.Sprints.Dto
         public string ProjectName { get; set; }
 
         public string ProjectTeamName { get; set; }
+
+        public string SprintName { get; set; }
     }
 }

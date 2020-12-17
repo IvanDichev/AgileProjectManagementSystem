@@ -12,5 +12,7 @@
         public const string StoryPointsDesc = "StoryPointsDesc";
         public const string PriorityAsc = "PriorityAsc";
         public const string PriorityDesc = "PriorityDesc";
+        public const string SprintAsc = "SprintAsc";
+        public const string SprintDesc = "SprintDesc";
     }
 }
