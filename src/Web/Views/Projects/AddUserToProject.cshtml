@@ -3,9 +3,6 @@
 @{ 
     var usersDropdown = Model.UsersDropdown
         .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Email });
-    
-    var rolesDropdown = Model.RolesDropdown
-        .Select(x => new SelectListItem() { Value = x.Id.ToString(), Text = x.Role });
 }
 
 <h5>Users assigned to the project: </h5>
@@ -15,12 +12,6 @@
         <select asp-for="UserId" class="form-control"
                 asp-items="usersDropdown"></select>
         <span asp-validation-for="UserId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="RoleId" class="control-label"></label>
-        <select asp-for="RoleId" class="form-control"
-                asp-items="rolesDropdown"></select>
-        <span asp-validation-for="RoleId" class="text-danger"></span>
     </div>
 
     <input asp-for="ProjectId" hidden />

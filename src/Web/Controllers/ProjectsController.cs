@@ -56,7 +56,6 @@ namespace Web.Controllers
             var AddUserToProjectInputModel = new AddUserToProjectInputModel
             {
                 UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.projectsService.GetUsersDropDown(projectId)),
-                RolesDropdown = this.mapper.Map<ICollection<TeamRolesDropdown>>(await this.teamRolesService.GetTeamRolesAsync()),
             };
 
             return View(AddUserToProjectInputModel);
@@ -75,7 +74,6 @@ namespace Web.Controllers
                 var AddUserToProjectInputModel = new AddUserToProjectInputModel
                 {
                     UsersDropdown = this.mapper.Map<ICollection<UsersDropdown>>(await this.projectsService.GetUsersDropDown(projectId)),
-                    RolesDropdown = this.mapper.Map<ICollection<TeamRolesDropdown>>(await this.teamRolesService.GetTeamRolesAsync()),
                 };
             }
 

@@ -11,13 +11,8 @@ namespace DataModels.Models.Projects
         [Display(Name = "User")]
         public int UserId { get; set; }
 
-        [Display(Name = "Role")]
-        public int RoleId { get; set; }
-
         public int ProjectId { get; set; }
 
         public ICollection<UsersDropdown> UsersDropdown { get; set; }
-
-        public ICollection<TeamRolesDropdown> RolesDropdown { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Data.Models.Users
         public User()
         {
             this.TeamsUsers = new HashSet<TeamsUsers>();
+            this.Notifications = new HashSet<Notification>();
         }
 
         [MaxLength(25)]
@@ -29,5 +30,7 @@ namespace Data.Models.Users
         public virtual TeamRole TeamRole { get; set; }
 
         public bool IsPublic { get; set; }
+
+        public ICollection<Notification> Notifications { get; set; }
     }
 }
