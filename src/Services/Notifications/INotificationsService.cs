@@ -6,6 +6,7 @@ namespace Services.Notifications
 {
     public interface INotificationsService
     {
-        Task<ICollection<NotificationDto>> GetNotificationsForUser(int userId);
+        Task<ICollection<NotificationDto>> GetNotificationsForUserAsync(int userId);
+        Task<ICollection<NotificationDto>> GetLastFiveNotifications(int userId);
     }
 }

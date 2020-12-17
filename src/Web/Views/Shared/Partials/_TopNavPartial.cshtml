@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Data.Models.Users
 @using Shared.Constants;
+@using System.Security.Claims;
 @inject SignInManager<User> SignInManager
 
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
@@ -33,12 +34,11 @@
         </button>
         <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
             <partial name="_LoginPartial" />
-            <button type="button" class="btn btn-toolbar">
-                Notifications <span class="badge bg-light">4</span>
-            </button>
 
             @if (SignInManager.IsSignedIn(User))
             {
+                @await Component.InvokeAsync("Notifications", new { userId = int.Parse(SignInManager.UserManager.GetUserId(User)) })
+
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="GetAll">Projects</a>

@@ -6,6 +6,7 @@ using DataModels.Models.Board.Dtos;
 using DataModels.Models.Comments;
 using DataModels.Models.Comments.Dtos;
 using DataModels.Models.Mockups.Dtos;
+using DataModels.Models.Notifications;
 using DataModels.Models.Notifications.Dtos;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
@@ -102,6 +103,8 @@ namespace Web.Automapper
 
             // Notifications
             CreateMap<Notification, NotificationDto>().ReverseMap();
+            CreateMap<NotificationViewModel, NotificationDto>().ReverseMap()
+                .ForMember(x => x.AddedOn, opt => opt.MapFrom(x => x.AddedOn.ToString("dd/MM/yyyy HH:mm")));
         }
     }
 }

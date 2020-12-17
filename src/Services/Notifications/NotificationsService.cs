@@ -21,10 +21,22 @@ namespace Services.Notifications
             this.notificationsRepo = notificationsRepo;
         }
 
-        public async Task<ICollection<NotificationDto>> GetNotificationsForUser(int userId)
+        public async Task<ICollection<NotificationDto>> GetNotificationsForUserAsync(int userId)
         {
             var notifications = await this.notificationsRepo.AllAsNoTracking()
                 .Where(x => x.UserId == userId)
+                .ProjectTo<NotificationDto>(this.mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return notifications;
+        }
+
+        public async Task<ICollection<NotificationDto>> GetLastFiveNotifications(int userId)
+        {
+            var notifications = await this.notificationsRepo.AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.AddedOn)
+                .Take(5)
                 .ProjectTo<NotificationDto>(this.mapper.ConfigurationProvider)
                 .ToListAsync();
 
