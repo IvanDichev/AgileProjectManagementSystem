@@ -18,6 +18,7 @@ using Services.BacklogPriorities;
 using Services.BoardColumns;
 using Services.BurndownDatas;
 using Services.Comments;
+using Services.Notifications;
 using Services.Projects;
 using Services.Sprints;
 using Services.TeamRoles;
@@ -120,6 +121,7 @@ namespace Web
             services.AddScoped<IBoardsService, BoardsService>();
             services.AddScoped<IBurndownDataService, BurndownDataService>();
             services.AddScoped<ITeamRolesService, TeamRolesService>();
+            services.AddScoped<INotificationsService, NotificationsService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
