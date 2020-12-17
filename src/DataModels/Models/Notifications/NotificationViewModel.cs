@@ -6,6 +6,8 @@ namespace DataModels.Models.Notifications
     {
         public string Message { get; set; }
 
-        public string AddedOn { get; set; }
+        public DateTime AddedOn { get; set; }
+
+        public DateTime? ModifiedOn { get; set; }
     }
 }

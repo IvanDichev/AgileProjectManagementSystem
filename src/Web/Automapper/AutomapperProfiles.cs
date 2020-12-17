@@ -103,8 +103,8 @@ namespace Web.Automapper
 
             // Notifications
             CreateMap<Notification, NotificationDto>().ReverseMap();
-            CreateMap<NotificationViewModel, NotificationDto>().ReverseMap()
-                .ForMember(x => x.AddedOn, opt => opt.MapFrom(x => x.AddedOn.ToString("dd/MM/yyyy HH:mm")));
+            CreateMap<NotificationViewModel, NotificationDto>().ReverseMap();
+                //.ForMember(x => x.AddedOn, opt => opt.MapFrom(x => x.AddedOn.ToString("dd/MM/yyyy HH:mm")));
         }
     }
 }

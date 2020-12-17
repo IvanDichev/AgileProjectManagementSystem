@@ -9,5 +9,7 @@ namespace DataModels.Models.Notifications.Dtos
         public string Message { get; set; }
 
         public DateTime AddedOn { get; set; }
+
+        public DateTime? ModifiedOn { get; set; }
     }
 }
