@@ -3,7 +3,7 @@
 @model ICollection<NotificationViewModel>
 
 
-<div class="dropdown">
+<div class="dropdown" id="notifications">
     <button class="btn dropdown-toggle btn-toolbar" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Notifications <span class="badge bg-light">@Model.Count</span>
     </button>
@@ -23,10 +23,26 @@
                         <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z" />
                         <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z" />
                     </svg>
-                    @CalculateTimeAgo.Calculate(notification.ModifiedOn ?? notification.AddedOn)
+                    <span id="notification-time-ago">
+                        @CalculateTimeAgo.Calculate(notification.ModifiedOn ?? notification.AddedOn)
+                    </span>
                 </p>
                 <div class="dropdown-divider"></div>
             }
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var timeAgo = document.querySelectorAll("#notification-time-ago")
+            //timeAgo.forEach(x => console.log(x))
+            var striped = timeAgo[0].textContent.trim()
+            if (striped.includes("seconds")) {
+                $("#notifications").notify("New notification", "success");
+            }
+        });
+    </script>
+}

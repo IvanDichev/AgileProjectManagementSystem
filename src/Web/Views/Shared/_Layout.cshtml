@@ -21,7 +21,7 @@
         <main role="main" id="main-container" class="pb-3">
             @RenderBody()
         </main>
-    </div>   
+    </div>
 
     @* Modal element *@
     <div class="modal" tabindex="-1" role="dialog" id="form-modal"
@@ -47,6 +47,19 @@
 
     <partial name="~/Views/Shared/Partials/_CookieConsentPartial.cshtml" />
 
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                var timeAgo = document.querySelectorAll("#notification-time-ago")
+                //timeAgo.forEach(x => console.log(x))
+                var striped = timeAgo[0].textContent.trim()
+                if (striped.includes("seconds")) {
+                    $("#notifications").notify(striped, "success");
+                }
+                console.log(striped.includes("minutes"))
+            });
+        </script>
+    }
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-cookie/jquery.cookie.min.js" asp-append-version="true"></script>
