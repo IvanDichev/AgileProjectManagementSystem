@@ -19,17 +19,3 @@
     </div>
 </div>
 
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            var timeAgo = document.querySelectorAll("#notification-time-ago")
-            //timeAgo.forEach(x => console.log(x))
-            var striped = timeAgo[0].textContent.trim()
-            if (striped.includes("seconds")) {
-                $("#notifications").notify(striped, "success");
-            }
-            console.log(striped.includes("minutes"))
-        });
-    </script>
-}

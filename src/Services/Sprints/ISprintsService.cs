@@ -15,5 +15,6 @@ namespace Services.Sprints
         Task<bool> AreUserStoriesInSprintAsync(int sprintId);
         Task UpdateSprintStatus();
         Task<ICollection<OldSprintsBurndownData>> GetOldSprintBurndownData(int projectId);
+        Task<int> GetVelocityAsync(int projectId, int sprintId);
     }
 }

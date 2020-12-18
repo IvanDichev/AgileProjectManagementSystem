@@ -154,6 +154,23 @@ namespace Services.Sprints
             await this.sprintRepo.SaveChangesAsync();
         }
 
+        public async Task<int> GetVelocityAsync(int projectId, int sprintId)
+        {
+            var sprint = await this.sprintRepo.AllAsNoTracking()
+                .Where(x => x.Status.Status == SprintStatusConstants.Closed || x.Status.Status == SprintStatusConstants.Accepted &&
+                       x.Id == sprintId)
+                .FirstOrDefaultAsync();
+
+            var velocity = 0;
+
+            foreach (var userStory in sprint.UserStories)
+            {
+                velocity += int.Parse(userStory.StoryPoints.ToString());
+            }
+
+            return velocity;
+        }
+
         private int GetSprintStatus(DateTime startDate, DateTime dueDate)
         {
             var now = DateTime.Now.Date;

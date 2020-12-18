@@ -11,5 +11,6 @@ namespace DataModels.Models.Board
         public ICollection<int> TasksRemaining { get; set; }
 
         public ICollection<int> ScopeChanges { get; set; }
+        public int Velocity { get; set; }
     }
 }

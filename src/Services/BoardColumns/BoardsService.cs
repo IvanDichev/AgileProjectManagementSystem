@@ -111,6 +111,7 @@ namespace Services.BoardColumns
                 {
                     burndownData.ScopeChanges.Add(0);
                 }
+
                 if (burndown[i].DayOfSprint.Date <= DateTime.UtcNow.Date)
                 {
                     if (i == 0)

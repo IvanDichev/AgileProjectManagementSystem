@@ -125,9 +125,17 @@ namespace Web.Controllers
 
         public async Task<IActionResult> GetBurndownData(int projectId, int sprintId)
         {
-            var viewModel = await this.boardColumnsService.GetBurndownData(projectId, sprintId);
+            try
+            {
+                var viewModel = await this.boardColumnsService.GetBurndownData(projectId, sprintId);
+                viewModel.Velocity = await this.sprintsService.GetVelocityAsync(projectId, sprintId);
 
-            return Json( new { DaysInSprint = viewModel.DaysInSprint, ScopeChanges = viewModel.ScopeChanges, TasksRemaining = viewModel.TasksRemaining });
+                return Json(new { DaysInSprint = viewModel.DaysInSprint, ScopeChanges = viewModel.ScopeChanges, TasksRemaining = viewModel.TasksRemaining });
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Error");
+            }
         }
     }
 }
