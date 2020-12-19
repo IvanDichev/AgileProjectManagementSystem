@@ -271,7 +271,7 @@ namespace Services.Projects
                         this.config["EmailSenderOptions:SmtpServer"], int.Parse(this.config["EmailSenderOptions:Port"]));
         }
 
-        public async Task RemoveUserFromProject(int userId, int projectId)
+        public async Task RemoveUserFromProjectAsync(int userId, int projectId)
         {
             var project = await this.projectRepo.All()
                 .Where(x => x.Id == projectId)
@@ -297,6 +297,19 @@ namespace Services.Projects
 
             await this.emailSender.SendAsync(email, this.config["EmailSenderInformation:Password"],
                         this.config["EmailSenderOptions:SmtpServer"], int.Parse(this.config["EmailSenderOptions:Port"]));
+        }
+
+        public async Task<bool> IsLastUserInProjectAsync(int userId, int projectId)
+        {
+            var project = await this.projectRepo.All()
+               .Where(x => x.Id == projectId)
+               .Include(x => x.Team)
+               .ThenInclude(x => x.TeamsUsers)
+               .FirstOrDefaultAsync();
+
+            var isLast = project.Team.TeamsUsers.Count == 1;
+
+            return isLast;
         }
     }
 }

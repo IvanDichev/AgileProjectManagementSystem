@@ -211,14 +211,22 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveUserFromProject(int userId, int projectId)
         {
-            if(!this.IsCurrentUserInProject(projectId))
+            if (!this.IsCurrentUserInProject(projectId))
             {
                 return Unauthorized();
             }
 
+            if (await this.projectsService.IsLastUserInProjectAsync(userId, projectId))
+            {
+                TempData["RemoveError"] = "Last user in project cannot be removed!";
+
+                return RedirectToAction(nameof(Get), new { projectId = projectId });
+            }
+
             try
             {
-                await this.projectsService.RemoveUserFromProject(userId, projectId);
+                await this.projectsService.RemoveUserFromProjectAsync(userId, projectId);
+                TempData["RemoveSuccess"] = "You removed " + this.User.FindFirstValue(ClaimTypes.Email) + " from project";
 
                 return RedirectToAction(nameof(Get), new { projectId = projectId });
             }
