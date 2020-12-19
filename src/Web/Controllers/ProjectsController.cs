@@ -207,5 +207,25 @@ namespace Web.Controllers
                 return RedirectToAction("Error", "Error");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveUserFromProject(int userId, int projectId)
+        {
+            if(!this.IsCurrentUserInProject(projectId))
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                await this.projectsService.RemoveUserFromProject(userId, projectId);
+
+                return RedirectToAction(nameof(Get), new { projectId = projectId });
+            }
+            catch
+            {
+                return RedirectToAction("Error", "Error");
+            }
+        }
     }
 }

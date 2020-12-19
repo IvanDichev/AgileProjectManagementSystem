@@ -276,6 +276,7 @@ namespace Services.Projects
             var project = await this.projectRepo.All()
                 .Where(x => x.Id == projectId)
                 .Include(x => x.Team)
+                .ThenInclude(x => x.TeamsUsers)
                 .FirstOrDefaultAsync();
 
             var teamUsersToRemove = project.Team.TeamsUsers.FirstOrDefault(x => x.UserId == userId && x.TeamId == project.Team.Id);
@@ -283,12 +284,16 @@ namespace Services.Projects
             this.teamUsersRepo.Delete(teamUsersToRemove);
             await teamUsersRepo.SaveChangesAsync();
 
+            var message = EmailConstants.RemoveFromProject + project.Name;
+
+            await this.notificationsService.AddNotificationToUserAsync(userId, message);
+
             // Send email to user to inform them about being added to a project.
             var user = await userManager.FindByIdAsync(userId.ToString());
             var email = new Email(this.config["EmailSenderInformation:Email"],
                 user.Email,
-                EmailConstants.AddedToProject + project.Name,
-                EmailConstants.AddedToProjectSubject);
+                message,
+                EmailConstants.RemoveFromProjectSubject);
 
             await this.emailSender.SendAsync(email, this.config["EmailSenderInformation:Password"],
                         this.config["EmailSenderOptions:SmtpServer"], int.Parse(this.config["EmailSenderOptions:Port"]));

@@ -27,5 +27,6 @@ namespace Services.Projects
         public Task<ICollection<UserDto>> GetUsersDropDown(int projectId);
 
         public Task AddUserToProject(int userId, int projectId);
+        Task RemoveUserFromProject(int userId, int projectId);
     }
 }

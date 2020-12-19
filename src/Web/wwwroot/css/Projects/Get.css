@@ -2,3 +2,38 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+#user-in-project {
+    padding: 0.25rem !important;
+}
+
+#user-role {
+    display: inline-block;
+}
+
+#remove-user-from-project {
+    display: inline-block;
+}
+
+#edit-project-btn {
+    margin-left: auto;
+}
+
+#about-proj {
+    font-size: 1.6rem;
+}
+
+#proj-description {
+    font-size: 1.3rem;
+}
+
+#proj-badge {
+    font-size: 2rem;
+    margin-right: 3rem;
+}
+
+#project-name {
+    font-size: 2rem;
+    overflow: auto;
+}
+
