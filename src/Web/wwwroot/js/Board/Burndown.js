@@ -22,6 +22,8 @@ $(document).ready(function () {
                 scope,
                 days,
             );
+            var velocity = res.velocity
+            $('#velocity-data').text = velocity;
         }
     })
 });
