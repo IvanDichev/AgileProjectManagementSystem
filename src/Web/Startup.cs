@@ -128,19 +128,19 @@ namespace Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
             IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
         {
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                dbContext.Database.Migrate();
+                new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+
+                app.UseSeedAdminAndRolesMiddleware();
+            }
+
             if (env.IsDevelopment())
             {
-                using (var serviceScope = app.ApplicationServices.CreateScope())
-                {
-                    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    dbContext.Database.Migrate();
-                    new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
-                }
-
-                app.UseCookiePolicy();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseSeedAdminAndRolesMiddleware();
                 app.UseBrowserLink();
             }
             else
@@ -154,7 +154,7 @@ namespace Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseCookiePolicy();
             app.UseRouting();
 
             app.UseAuthentication();
