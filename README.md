@@ -1,5 +1,9 @@
 # AgileProjectManagementSystem
 
+## :pencil2: Overview
+
+**AgileMS** is a website that resembles Jira, it can hold projects with differant work items like user stories, bug, sub-tasks etc. The site has burndown charts that show the workflow of the sprints. The main idea is to help developers manage the work of a project. In order for user to be added to a project he/she needs to make his/hers profile public from the profile settings.
+
 ## **Technologies Used**
 
 This website is designed and runs using the **main** technologies below:
