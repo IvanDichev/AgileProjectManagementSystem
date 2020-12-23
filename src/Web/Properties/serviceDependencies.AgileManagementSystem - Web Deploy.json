@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "HangfireConnection",
+      "suggestion": "true",
+      "ignored": "true"
+    }
+  }
+}

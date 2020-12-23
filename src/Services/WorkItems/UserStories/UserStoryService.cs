@@ -158,10 +158,6 @@ namespace Services.WorkItems.UserStories
             // If sprint is set to null then userStory should be removed from table
             else if (updateModel.SprintId == null)
             {
-                if (toUpdate.SprintId != null)
-                {
-                    await RemoveFromBurndownData(toUpdate.SprintId, toUpdate.KanbanBoardColumnId);
-                }
                 // Remove from sprint and board.
                 toUpdate.SprintId = updateModel.SprintId;
                 toUpdate.KanbanBoardColumnId = null;
