@@ -2,6 +2,10 @@
   "dependencies": {
     "mssql1": {
       "type": "mssql",
+      "connectionId": "HangfireConnection"
+    },
+    "mssql2": {
+      "type": "mssql",
       "connectionId": "DefaultConnection"
     }
   }

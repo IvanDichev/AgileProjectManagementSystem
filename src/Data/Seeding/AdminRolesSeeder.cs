@@ -1,29 +1,24 @@
 ﻿using Data.Models.Users;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Shared.Constants;
+using System;
 using System.Threading.Tasks;
 
-namespace Web.Middlewares
+namespace Data.Seeding
 {
-    public class SeedAdminAndRoles
+    public class AdminRolesSeeder : ISeeder
     {
-        private readonly RequestDelegate next;
-
-        public SeedAdminAndRoles(RequestDelegate next)
+        public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
-            this.next = next;
-        }
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-        public async Task InvokeAsync(HttpContext httpContext, UserManager<User> userManager,
-            RoleManager<Role> roleManager, IConfiguration config)
-        {
-            await this.SeedRoles(roleManager);
-            await this.SeedAdmin(userManager, config);
-            await this.AddAdminToRoles(userManager, config);
-
-            await next(httpContext);
+            await AddAdminToRoles(userManager, configuration);
+            await SeedAdmin(userManager, configuration);
+            await SeedRoles(roleManager);
         }
 
         private async Task AddAdminToRoles(UserManager<User> userManager, IConfiguration config)

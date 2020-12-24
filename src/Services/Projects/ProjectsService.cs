@@ -26,7 +26,6 @@ namespace Services.Projects
     {
         private readonly IRepository<Project> projectRepo;
         private readonly IMapper mapper;
-        private readonly ILogger<ProjectsService> logger;
         private readonly IRepository<KanbanBoardColumn> boardRepo;
         private readonly IRepository<User> usersRepo;
         private readonly IEmailSender emailSender;
@@ -36,8 +35,7 @@ namespace Services.Projects
         private readonly INotificationsService notificationsService;
 
         public ProjectsService(IRepository<Project> projectRepo, 
-            IMapper mapper, 
-            ILogger<ProjectsService> logger,
+            IMapper mapper,
             IRepository<KanbanBoardColumn> boardRepo, 
             IRepository<User> usersRepo,
             IEmailSender emailSender,
@@ -48,7 +46,6 @@ namespace Services.Projects
         {
             this.projectRepo = projectRepo;
             this.mapper = mapper;
-            this.logger = logger;
             this.boardRepo = boardRepo;
             this.usersRepo = usersRepo;
             this.emailSender = emailSender;

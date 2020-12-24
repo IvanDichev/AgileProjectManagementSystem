@@ -13,21 +13,21 @@ namespace Services.WorkItems.Tests
 {
     public class TestsService : ITestsService
     {
-        private readonly IRepository<Test> repo;
+        private readonly IRepository<Test> testRepo;
         private readonly IProjectsService projectsService;
         private readonly IRepository<UserStory> userStoryRepo;
         private readonly IBoardsService boardService;
         private readonly IRepository<BurndownData> burndownRepo;
         private readonly IRepository<KanbanBoardColumn> boardRepo;
 
-        public TestsService(IRepository<Test> repo,
+        public TestsService(IRepository<Test> testRepo,
             IProjectsService projectsService,
             IRepository<UserStory> userStoryRepo,
             IBoardsService boardService,
             IRepository<BurndownData> burndownRepo,
             IRepository<KanbanBoardColumn> boardRepo)
         {
-            this.repo = repo;
+            this.testRepo = testRepo;
             this.projectsService = projectsService;
             this.userStoryRepo = userStoryRepo;
             this.boardService = boardService;
@@ -37,7 +37,7 @@ namespace Services.WorkItems.Tests
 
         public async Task ChangeColumnAsync(int itemId, int columnId)
         {
-            var testToMove = await this.repo.All()
+            var testToMove = await this.testRepo.All()
                .Where(x => x.Id == itemId)
                .Include(x => x.UserStory)
                .FirstOrDefaultAsync();
@@ -45,7 +45,7 @@ namespace Services.WorkItems.Tests
             await this.UpdateBurndownTsks(testToMove.UserStory.SprintId, columnId, oldColId: testToMove.KanbanBoardColumnId);
 
             testToMove.KanbanBoardColumnId = columnId;
-            await this.repo.SaveChangesAsync();
+            await this.testRepo.SaveChangesAsync();
         }
 
         public async Task CreateAsync(int projectId, TestInputModelDto inputModel)
@@ -71,8 +71,8 @@ namespace Services.WorkItems.Tests
 
             await this.UpdateBurndownTsks(sprintId, columnId, true);
 
-            await this.repo.AddAsync(testToCreate);
-            await this.repo.SaveChangesAsync();
+            await this.testRepo.AddAsync(testToCreate);
+            await this.testRepo.SaveChangesAsync();
         }
 
         private async Task UpdateBurndownTsks(int? sprintId, int? columnId, bool isNewlyAdded = false, int? oldColId = null)
@@ -144,15 +144,15 @@ namespace Services.WorkItems.Tests
 
         public async Task DeleteAsync(int testId)
         {
-            var toRemove = await this.repo.AllAsNoTracking()
+            var toRemove = await this.testRepo.AllAsNoTracking()
                 .Where(x => x.Id == testId)
                 .Include(x => x.UserStory.SprintId)
                 .FirstOrDefaultAsync();
 
             await this.RemoveFromBurndownData(toRemove.UserStory.SprintId, toRemove.KanbanBoardColumnId);
 
-            this.repo.Delete(toRemove);
-            await this.repo.SaveChangesAsync();
+            this.testRepo.Delete(toRemove);
+            await this.testRepo.SaveChangesAsync();
         }
     }
 }

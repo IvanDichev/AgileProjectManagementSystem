@@ -24,16 +24,13 @@ namespace Services.WorkItems.UserStories
         private readonly IMapper mapper;
         private readonly IProjectsService projectsService;
         private readonly IBoardsService boardService;
-        private readonly IRepository<UserStoryTask> taskRepo;
-        private readonly IRepository<Test> testRepo;
         private readonly IRepository<BurndownData> burndownRepo;
         private readonly IRepository<KanbanBoardColumn> boardRepo;
 
-        public UserStoryService(IRepository<UserStory> userStoryRepo, IMapper mapper,
+        public UserStoryService(IRepository<UserStory> userStoryRepo, 
+            IMapper mapper,
             IProjectsService projectsService,
             IBoardsService boardService,
-            IRepository<UserStoryTask> taskRepo,
-            IRepository<Test> testRepo,
             IRepository<BurndownData> burndownRepo,
             IRepository<KanbanBoardColumn> boardRepo)
         {
@@ -41,8 +38,6 @@ namespace Services.WorkItems.UserStories
             this.mapper = mapper;
             this.projectsService = projectsService;
             this.boardService = boardService;
-            this.taskRepo = taskRepo;
-            this.testRepo = testRepo;
             this.burndownRepo = burndownRepo;
             this.boardRepo = boardRepo;
         }
@@ -199,8 +194,6 @@ namespace Services.WorkItems.UserStories
 
             this.userStoryRepo.Update(toUpdate);
             await this.userStoryRepo.SaveChangesAsync();
-            await this.taskRepo.SaveChangesAsync();
-            await this.testRepo.SaveChangesAsync();
         }
 
         public async Task<ICollection<UserStoryDropDownModel>> GetUserStoryDropDownsAsync(int projectId)

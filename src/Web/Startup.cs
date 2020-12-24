@@ -134,7 +134,7 @@ namespace Web
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
 
-                app.UseSeedAdminAndRolesMiddleware();
+                //app.UseSeedAdminAndRolesMiddleware();
             }
 
             if (env.IsDevelopment())

@@ -9,6 +9,7 @@ namespace Tests
     [TestFixture]
     public class UserStoryServiceTests
     {
+        [Fact]
         public void CreateAsyncShouldCreateUserStory()
         {
 
