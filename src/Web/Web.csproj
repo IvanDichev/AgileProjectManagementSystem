@@ -42,7 +42,6 @@
     <Folder Include="Areas\Administration\Controllers\" />
     <Folder Include="Areas\Administration\Views\" />
     <Folder Include="Areas\Wiki\Views\Shared\" />
-    <Folder Include="Properties\ServiceDependencies\" />
     <Folder Include="wwwroot\lib\notify.js\" />
   </ItemGroup>
 
