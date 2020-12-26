@@ -9,11 +9,11 @@ $(document).ready(function () {
 })
 
 // Add loader to indicate loading for ajax call.
-//$(document).ready(function () {
-//    $("#loaderbody").addClass('hide');
-//    $(document).bind('ajaxStart', function () {
-//        $("#loaderbody").removeClass('hide');
-//    }).bind('ajaxStop', function () {
-//        $("#loaderbody").addClass('hide');
-//    });
-//});
+$(document).ready(function () {
+    $("#loaderbody").addClass('hide');
+    $(document).bind('ajaxStart', function () {
+        $("#loaderbody").removeClass('hide');
+    }).bind('ajaxStop', function () {
+        $("#loaderbody").addClass('hide');
+    });
+});

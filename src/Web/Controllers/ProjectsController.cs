@@ -91,7 +91,6 @@ namespace Web.Controllers
             return View(paginatedViewModel);
         }
 
-        [NoDirectAccess]
         public IActionResult Create()
         {
             return View();
@@ -139,7 +138,6 @@ namespace Web.Controllers
             return Json(new { isValid = isValid, html = responseHtml });
         }
 
-        [NoDirectAccess]
         public async Task<IActionResult> Edit(int projectId)
         {
             // If projectId does not exist or user has no ref to the project.
