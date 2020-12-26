@@ -85,11 +85,11 @@ namespace Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //services.AddAuthentication().AddGoogle(options =>
-            //{
-            //    options.ClientId = Configuration["GoogleAuth:ClientId"];
-            //    options.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
-            //});
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = Configuration["GoogleAuth:ClientId"];
+                options.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
+            });
 
             //services.AddHangfire(configuration => configuration
             //    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -105,7 +105,7 @@ namespace Web
             //    }));
 
             //services.AddHangfireServer();
-            // services.AddMvc();
+            //services.AddMvc();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
@@ -133,7 +133,7 @@ namespace Web
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
 
-                //app.UseSeedAdminAndRolesMiddleware();
+                app.UseSeedAdminAndRolesMiddleware();
             }
 
             if (env.IsDevelopment())
@@ -174,11 +174,11 @@ namespace Web
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{projectId?}/{id?}");
 
-                // endpoints.MapHangfireDashboard();
+                //endpoints.MapHangfireDashboard();
                 endpoints.MapRazorPages();
             });
 
-            // CallHangfireJobs(recurringJobManager, serviceProvider);
+            //CallHangfireJobs(recurringJobManager, serviceProvider);
         }
 
         private void CallHangfireJobs(IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)

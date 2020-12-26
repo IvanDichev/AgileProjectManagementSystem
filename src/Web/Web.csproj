@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-Web-32866580-EC1F-4DCD-81D8-C940205D601F</UserSecretsId>
+    <UserSecretsId>08c0bffc-2593-42cb-a1b2-997ee287857f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.0" />
+    <PackageReference Include="Azure.Identity" Version="1.2.2" />
     <PackageReference Include="CloudinaryDotNet" Version="1.14.0" />
     <PackageReference Include="Google.Apis.Core" Version="1.49.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.18" />
@@ -45,6 +47,6 @@
     <Folder Include="wwwroot\lib\notify.js\" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1relese_1json__JsonSchema="https://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>
 
 </Project>

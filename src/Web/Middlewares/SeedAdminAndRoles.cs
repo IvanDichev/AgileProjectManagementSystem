@@ -59,7 +59,9 @@ namespace Web.Middlewares
             {
                 return;
             }
+
             await userManager.CreateAsync(user, config["AdminAccountIformation:Password"]);
+            userInDb.EmailConfirmed = true;
         }
 
         private async Task SeedRoles(RoleManager<Role> roleManager)
