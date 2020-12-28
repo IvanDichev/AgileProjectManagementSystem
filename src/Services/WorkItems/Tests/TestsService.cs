@@ -146,7 +146,7 @@ namespace Services.WorkItems.Tests
         {
             var toRemove = await this.testRepo.AllAsNoTracking()
                 .Where(x => x.Id == testId)
-                .Include(x => x.UserStory.SprintId)
+                .Include(x => x.UserStory)
                 .FirstOrDefaultAsync();
 
             await this.RemoveFromBurndownData(toRemove.UserStory.SprintId, toRemove.KanbanBoardColumnId);

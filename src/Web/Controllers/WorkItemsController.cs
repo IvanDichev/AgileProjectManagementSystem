@@ -330,7 +330,7 @@ namespace Web.Controllers
 
                 return RedirectToAction(nameof(GetAll), new { projectId = projectId });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return RedirectToAction("Error", "Error");
             }

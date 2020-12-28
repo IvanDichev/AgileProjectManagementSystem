@@ -69,7 +69,7 @@ namespace Services.WorkItems.Bugs
             await this.bugsRepo.AddAsync(toCreate);
             await this.bugsRepo.SaveChangesAsync();
 
-            await this.UpdateBurndownTsks(sprintId, columnId, true);
+            await this.UpdateBurndownBugs(sprintId, columnId, true);
         }
 
         public async Task DeleteAsync(int bugId)
@@ -102,13 +102,13 @@ namespace Services.WorkItems.Bugs
                .Include(x => x.UserStory)
                .FirstOrDefaultAsync();
 
-            await this.UpdateBurndownTsks(bugToMove.UserStory.SprintId, columnId, oldColId: bugToMove.KanbanBoardColumnId);
+            await this.UpdateBurndownBugs(bugToMove.UserStory.SprintId, columnId, oldColId: bugToMove.KanbanBoardColumnId);
 
             bugToMove.KanbanBoardColumnId = columnId;
             await this.bugsRepo.SaveChangesAsync();
         }
 
-        private async Task UpdateBurndownTsks(int? sprintId, int? columnId, bool isNewlyAdded = false, int? oldColId = null)
+        private async Task UpdateBurndownBugs(int? sprintId, int? columnId, bool isNewlyAdded = false, int? oldColId = null)
         {
             if (sprintId != null && columnId != null)
             {

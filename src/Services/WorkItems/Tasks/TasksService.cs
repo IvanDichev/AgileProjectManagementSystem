@@ -55,7 +55,7 @@ namespace Services.WorkItems.Tasks
                 .Select(x => x.SprintId)
                 .FirstOrDefaultAsync() ?? default;
 
-            var columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault().Id;
+            int? columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault()?.Id;
 
             var taskToCreate = new UserStoryTask()
             {
@@ -79,7 +79,7 @@ namespace Services.WorkItems.Tasks
         {
             var toRemove = await this.taskRepo.All()
                 .Where(x => x.Id == taskId)
-                .Include(x => x.UserStory.SprintId)
+                .Include(x => x.UserStory)
                 .FirstOrDefaultAsync();
 
             this.taskRepo.Delete(toRemove);

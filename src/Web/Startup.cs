@@ -91,21 +91,21 @@ namespace Web
                 options.ClientSecret = Configuration["GoogleAuth:ClientSecret"];
             });
 
-            //services.AddHangfire(configuration => configuration
-            //    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            //    .UseSimpleAssemblyNameTypeSerializer()
-            //    .UseRecommendedSerializerSettings()
-            //    .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
-            //    {
-            //        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-            //        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-            //        QueuePollInterval = TimeSpan.Zero,
-            //        UseRecommendedIsolationLevel = true,
-            //        DisableGlobalLocks = true
-            //    }));
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
 
-            //services.AddHangfireServer();
-            //services.AddMvc();
+            services.AddHangfireServer();
+            services.AddMvc();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
@@ -125,7 +125,8 @@ namespace Web
             services.AddTransient<INotificationsService, NotificationsService>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRecurringJobManager recurringJobManager,
+            IServiceProvider serviceProvider)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
@@ -159,10 +160,10 @@ namespace Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            //{
-            //    Authorization = new[] { new HangfireAuthorizationFilter() }
-            //});
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorizationFilter() }
+            });
 
             app.UseEndpoints(endpoints =>
             {
@@ -174,11 +175,11 @@ namespace Web
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{projectId?}/{id?}");
 
-                //endpoints.MapHangfireDashboard();
+                endpoints.MapHangfireDashboard();
                 endpoints.MapRazorPages();
             });
 
-            //CallHangfireJobs(recurringJobManager, serviceProvider);
+            CallHangfireJobs(recurringJobManager, serviceProvider);
         }
 
         private void CallHangfireJobs(IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
