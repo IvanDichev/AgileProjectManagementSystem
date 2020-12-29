@@ -165,21 +165,23 @@ namespace Web.Controllers
                     config["Cloudinary:ApiKey"],
                     config["Cloudinary:ApiSecret"]
                     );
-
                 Cloudinary cloudinary = new Cloudinary(account);
 
                 foreach (var mockup in userstory.Mockups)
                 {
-                    // Get public name of the file.
-                    var deleteParams = new DeletionParams(mockup.MockUpPath.Split('/').Last().Split('.')[0]);
-                    var deleteresult = cloudinary.Destroy(deleteParams);
+                    if (!string.IsNullOrWhiteSpace(mockup.MockUpPath))
+                    {
+                        // Get public name of the file.
+                        var deleteParams = new DeletionParams(mockup.MockUpPath.Split('/').Last().Split('.')[0]);
+                        var deleteresult = cloudinary.Destroy(deleteParams);
+                    }
                 }
 
                 await this.userStoryService.DeleteAsync(userStoryId);
 
                 return RedirectToAction(nameof(GetAll), new { projectId = projectId });
             }
-            catch (Exception)
+            catch
             {
                 return RedirectToAction("Error", "Error");
             }
@@ -242,7 +244,7 @@ namespace Web.Controllers
             {
                 var savedFilepaths = new List<string>();
                 if (model.ViewModel.MockupFiles?.Count > 0)
-                {                   
+                {
                     Account account = new Account(
                         config["Cloudinary:CloudName"],
                         config["Cloudinary:ApiKey"],

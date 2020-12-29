@@ -76,7 +76,7 @@ namespace Services.WorkItems.Bugs
         {
             var toRemove = await this.bugsRepo.All()
                 .Where(x => x.Id == bugId)
-                .Include(x => x.UserStory.SprintId)
+                .Include(x => x.UserStory)
                 .FirstOrDefaultAsync();
 
             this.bugsRepo.Delete(toRemove);
