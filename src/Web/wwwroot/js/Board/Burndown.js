@@ -1,11 +1,8 @@
-﻿
-// Get burndown chard data.
+﻿// Get burndown chard data.
 var path = window.location.pathname.split('/')
 var projectId = path[path.length - 1]
 var url = window.location.origin + '/Boards/GetBurndownData/' + projectId + window.location.search
-console.log(projectId)
-console.log('https://localhost:5001/Boards/GetBurndownData/7?sprintId=11')
-console.log(url)
+
 $(document).ready(function () {
     $.ajax({
         type: 'GET',

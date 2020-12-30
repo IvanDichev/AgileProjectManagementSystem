@@ -4,13 +4,11 @@ using Data.Models;
 using Data.Models.Users;
 using DataModels.Models.Projects;
 using DataModels.Models.Projects.Dtos;
-using DataModels.Models.Users;
 using DataModels.Models.Users.Dtos;
 using DataModels.Pagination;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Repo;
 using Services.Notifications;
 using Shared.Constants;
@@ -18,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Utilities.Mailing;
+using Utilities.Mailing.SendGrid;
 
 namespace Services.Projects
 {
@@ -259,13 +257,10 @@ namespace Services.Projects
 
             // Send email to user to inform them about being added to a project.
             var user = await userManager.FindByIdAsync(userId.ToString());
-            var email = new Email(this.config["EmailSenderInformation:Email"], 
-                user.Email,
-                message, 
-                EmailConstants.AddedToProjectSubject);
 
-            await this.emailSender.SendAsync(email, this.config["EmailSenderInformation:Password"],
-                        this.config["EmailSenderOptions:SmtpServer"], int.Parse(this.config["EmailSenderOptions:Port"]));
+            var emailSender = new SendGridEmailSender(this.config["SendGrid:Key"]);
+            await emailSender.SendEmailAsync(this.config["SendGrid:Email"], EmailConstants.FromMailingName, 
+                user.Email, EmailConstants.AddedToProjectSubject, message);
         }
 
         public async Task RemoveUserFromProjectAsync(int userId, int projectId)
@@ -287,13 +282,10 @@ namespace Services.Projects
 
             // Send email to user to inform them about being added to a project.
             var user = await userManager.FindByIdAsync(userId.ToString());
-            var email = new Email(this.config["EmailSenderInformation:Email"],
-                user.Email,
-                message,
-                EmailConstants.RemoveFromProjectSubject);
 
-            await this.emailSender.SendAsync(email, this.config["EmailSenderInformation:Password"],
-                        this.config["EmailSenderOptions:SmtpServer"], int.Parse(this.config["EmailSenderOptions:Port"]));
+            var emailSender = new SendGridEmailSender(this.config["SendGrid:Key"]);
+            await emailSender.SendEmailAsync(this.config["SendGrid:Email"], EmailConstants.FromMailingName,
+                user.Email, EmailConstants.RemoveFromProjectSubject, message);
         }
 
         public async Task<bool> IsLastUserInProjectAsync(int userId, int projectId)

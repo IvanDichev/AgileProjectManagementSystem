@@ -1,11 +1,11 @@
 ﻿using MailKit.Net.Smtp;
 using System.Threading.Tasks;
 
-namespace Utilities.Mailing
+namespace Utilities.Mailing.SMTP
 {
-    public class EmailSender : IEmailSender
+    public class SMTPEmailSender : ISMTPEmailSender
     {
-        public async Task SendAsync(Email email, string password,
+        public async Task SendAsync(SMTPEmail email, string password,
             string smtpServer = "smtp.abv.bg", int port = 465)
         {
             using (var client = new SmtpClient())

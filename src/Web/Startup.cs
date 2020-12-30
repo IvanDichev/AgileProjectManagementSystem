@@ -28,7 +28,7 @@ using Services.WorkItems.Tasks;
 using Services.WorkItems.Tests;
 using Services.WorkItems.UserStories;
 using System;
-using Utilities.Mailing;
+using Utilities.Mailing.SendGrid;
 using Web.Hangfire.Filters;
 using Web.Middlewares;
 
@@ -109,7 +109,7 @@ namespace Web
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            services.AddTransient<Utilities.Mailing.IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, SendGridEmailSender>();
             services.AddTransient<IProjectsService, ProjectsService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
             services.AddTransient<IBacklogPrioritiesService, BacklogPrioritiesService>();

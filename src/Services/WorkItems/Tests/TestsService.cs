@@ -56,7 +56,7 @@ namespace Services.WorkItems.Tests
                 .Select(x => x.SprintId)
                 .FirstOrDefaultAsync() ?? default;
 
-            var columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault().Id;
+            var columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault()?.Id;
 
             var testToCreate = new Test()
             {

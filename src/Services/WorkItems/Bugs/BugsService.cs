@@ -52,7 +52,7 @@ namespace Services.WorkItems.Bugs
                 .Select(x => x.SprintId)
                 .FirstOrDefaultAsync() ?? default;
 
-            var columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault().Id;
+            var columnId = (await this.boardService.GetAllColumnsAsync(projectId, sprintId)).FirstOrDefault()?.Id;
 
             var toCreate = new Bug()
             {

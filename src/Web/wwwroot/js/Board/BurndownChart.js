@@ -16,7 +16,6 @@ function showBurnDown(elementId, burndownData, scopeChange = [], daysInSprint) {
     Chart.defaults.global.defaultFontFamily = "Arial";
     Chart.defaults.global.defaultFontSize = 14;
     const totalTasksInSprint = burndownData[0];
-    console.log(burndownData[0])
     const idealHoursPerDay = totalTasksInSprint / (daysInSprint.length - 1);
     var data = [];
     for (var i = 0; i < daysInSprint.length; i++) {
@@ -64,7 +63,6 @@ function showBurnDown(elementId, burndownData, scopeChange = [], daysInSprint) {
             }]
         }
     };
-    console.log(chartOptions)
 
     var lineChart = new Chart(speedCanvas, {
         type: 'line',

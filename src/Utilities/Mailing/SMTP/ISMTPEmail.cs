@@ -1,8 +1,8 @@
 ﻿using MimeKit;
 
-namespace Utilities.Mailing
+namespace Utilities.Mailing.SMTP
 {
-    public interface IEmail
+    public interface ISMTPEmail
     {
         public MimeMessage Message { get; set; }
     }

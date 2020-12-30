@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Utilities.Mailing
+namespace Utilities.Mailing.SMTP
 {
-    public class Email : IEmail
+    public class SMTPEmail : ISMTPEmail
     {
         private readonly BodyBuilder bodyBuilder;
         public MimeMessage Message { get; set; }
 
-        public Email(string from, string to, string message, string subject)
+        public SMTPEmail(string from, string to, string message, string subject)
         {
             this.bodyBuilder = new BodyBuilder();
             this.Message = new MimeMessage();
@@ -22,13 +22,13 @@ namespace Utilities.Mailing
             Message.Body = bodyBuilder.ToMessageBody();
         }
 
-        public Email(string from, string to, string message, string subject, List<string> Cc)
+        public SMTPEmail(string from, string to, string message, string subject, List<string> Cc)
             : this(from, to, message, subject)
         {
             this.Message.Cc.AddRange(Cc.Select(x => MailboxAddress.Parse(x)));
         }
 
-        public Email(string from, string to, string message, string subject, Dictionary<string, byte[]> attachments)
+        public SMTPEmail(string from, string to, string message, string subject, Dictionary<string, byte[]> attachments)
             : this(from, to, message, subject)
         {
             foreach (var attachment in attachments)
@@ -37,7 +37,7 @@ namespace Utilities.Mailing
             }
         }
 
-        public Email(string from, string to, string message, string subject,
+        public SMTPEmail(string from, string to, string message, string subject,
             List<string> Cc, Dictionary<string, byte[]> attachments)
             : this(from, to, message, subject, Cc)
         {

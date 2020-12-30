@@ -8,5 +8,6 @@
         public const string AddedToProjectSubject =  "Added to project.";
         public const string RemoveFromProject = "You have been removed from project: ";
         public const string RemoveFromProjectSubject = "Removed from project.";
+        public const string FromMailingName = "AgileMS";
     }
 }
