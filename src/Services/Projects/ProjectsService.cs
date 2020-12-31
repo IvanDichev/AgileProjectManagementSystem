@@ -271,7 +271,8 @@ namespace Services.Projects
                 .ThenInclude(x => x.TeamsUsers)
                 .FirstOrDefaultAsync();
 
-            var teamUsersToRemove = project.Team.TeamsUsers.FirstOrDefault(x => x.UserId == userId && x.TeamId == project.Team.Id);
+            var teamUsersToRemove = project.Team.TeamsUsers
+                .FirstOrDefault(x => x.UserId == userId && x.TeamId == project.Team.Id);
 
             this.teamUsersRepo.Delete(teamUsersToRemove);
             await teamUsersRepo.SaveChangesAsync();
@@ -288,6 +289,12 @@ namespace Services.Projects
                 user.Email, EmailConstants.RemoveFromProjectSubject, message);
         }
 
+        /// <summary>
+        /// Check if the user is the last user in project.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="projectId"></param>
+        /// <returns>True if the user is the last one in the project.</returns>
         public async Task<bool> IsLastUserInProjectAsync(int userId, int projectId)
         {
             var project = await this.projectRepo.All()
