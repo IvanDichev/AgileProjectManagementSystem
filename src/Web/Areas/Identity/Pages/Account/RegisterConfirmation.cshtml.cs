@@ -2,14 +2,13 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Data.Models.Users;
-using Utilities.Mailing;
 using Microsoft.Extensions.Configuration;
 using Shared;
+using Utilities.Mailing.SendGrid;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -17,10 +16,10 @@ namespace Web.Areas.Identity.Pages.Account
     public class RegisterConfirmationModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly Utilities.Mailing.IEmailSender _sender;
+        private readonly IEmailSender _sender;
         private readonly IConfiguration _config;
 
-        public RegisterConfirmationModel(UserManager<User> userManager, Utilities.Mailing.IEmailSender sender,
+        public RegisterConfirmationModel(UserManager<User> userManager, IEmailSender sender,
             IConfiguration config)
         {
             _userManager = userManager;

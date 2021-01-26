@@ -6,14 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Data.Models.Users;
-using Utilities.Mailing;
 using Microsoft.Extensions.Configuration;
 using Shared.Constants;
+using Utilities.Mailing.SendGrid;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -21,11 +20,11 @@ namespace Web.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly Utilities.Mailing.IEmailSender _emailSender;
+        private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
 
         public ForgotPasswordModel(UserManager<User> userManager,
-            Utilities.Mailing.IEmailSender emailSender,
+            IEmailSender emailSender,
             IConfiguration config)
         {
             _userManager = userManager;
@@ -64,12 +63,16 @@ namespace Web.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                var email = new Email(_config["EmailSenderInformation:Email"], user.Email,
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
-                    EmailConstants.ResetPasswordSubject);
+                await _emailSender.SendEmailAsync(_config["SendGrid:Email"], EmailConstants.FromMailingName, Input.Email,
+                        EmailConstants.ConfirmationEmailSubject,
+                        string.Format(EmailConstants.ConfirmResetPassword, HtmlEncoder.Default.Encode(callbackUrl)));
 
-                await _emailSender.SendAsync(email, _config["EmailSenderInformation:Password"],
-                        _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
+                //var email = new Email(_config["EmailSenderInformation:Email"], user.Email,
+                //    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
+                //    EmailConstants.ResetPasswordSubject);
+
+                //await _emailSender.SendAsync(email, _config["EmailSenderInformation:Password"],
+                //        _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

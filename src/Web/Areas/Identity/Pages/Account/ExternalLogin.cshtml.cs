@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Data.Models.Users;
+﻿using Data.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shared.Constants;
-using Utilities.Mailing;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
+using Utilities.Mailing.SendGrid;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -25,7 +21,7 @@ namespace Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-        private readonly Utilities.Mailing.IEmailSender _emailSender;
+        private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
         private readonly IConfiguration _config;
 
@@ -33,7 +29,7 @@ namespace Web.Areas.Identity.Pages.Account
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             ILogger<ExternalLoginModel> logger,
-            Utilities.Mailing.IEmailSender emailSender, 
+            IEmailSender emailSender, 
             IConfiguration config)
         {
             _signInManager = signInManager;
@@ -147,12 +143,16 @@ namespace Web.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        var emailToSend = new Email(_config["EmailSenderInformation:Email"], Input.Email,
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
-                        EmailConstants.ConfirmationEmailSubject);
+                        await _emailSender.SendEmailAsync(_config["SendGrid:Email"], EmailConstants.FromMailingName, Input.Email,
+                        EmailConstants.ConfirmationEmailSubject,
+                        string.Format(EmailConstants.ExternalLogin, HtmlEncoder.Default.Encode(callbackUrl)));
 
-                        await _emailSender.SendAsync(emailToSend, _config["EmailSenderInformation:Password"],
-                            _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
+                        //var emailToSend = new Email(_config["EmailSenderInformation:Email"], Input.Email,
+                        //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
+                        //EmailConstants.ConfirmationEmailSubject);
+
+                        //await _emailSender.SendAsync(emailToSend, _config["EmailSenderInformation:Password"],
+                        //    _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
 
                         // If account confirmation is required, we need to show the link if we don't have a real email sender
                         if (_userManager.Options.SignIn.RequireConfirmedAccount)
