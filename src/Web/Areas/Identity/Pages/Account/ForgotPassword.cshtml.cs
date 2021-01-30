@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Data.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Data.Models.Users;
 using Microsoft.Extensions.Configuration;
 using Shared.Constants;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using Utilities.Mailing.SendGrid;
 
 namespace Web.Areas.Identity.Pages.Account
@@ -20,15 +18,12 @@ namespace Web.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly IEmailSender _emailSender;
         private readonly IConfiguration _config;
 
         public ForgotPasswordModel(UserManager<User> userManager,
-            IEmailSender emailSender,
             IConfiguration config)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
             _config = config;
         }
 
