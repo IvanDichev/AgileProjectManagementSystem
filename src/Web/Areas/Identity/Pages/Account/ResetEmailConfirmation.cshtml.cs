@@ -68,7 +68,7 @@ namespace Web.Areas.Identity.Pages.Account
                     var emailSender = new SendGridEmailSender(this._config["SendGrid:Key"]);
                     await emailSender.SendEmailAsync(_config["SendGrid:Email"], EmailConstants.FromMailingName, Input.Email,
                        EmailConstants.ConfirmationEmailSubject,
-                       string.Format(EmailConstants.ConfirmEmail, HtmlEncoder.Default.Encode(callbackUrl)));
+                       string.Format(EmailConstants.ResetEmailConfirmation, HtmlEncoder.Default.Encode(callbackUrl)));
                 }
             }
             return RedirectToPage("./EmailConfirmationTokenReset");
