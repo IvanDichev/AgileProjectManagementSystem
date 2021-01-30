@@ -63,16 +63,10 @@ namespace Web.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(_config["SendGrid:Email"], EmailConstants.FromMailingName, Input.Email,
+                var emailSender = new SendGridEmailSender(this._config["SendGrid:Key"]);
+                await emailSender.SendEmailAsync(_config["SendGrid:Email"], EmailConstants.FromMailingName, Input.Email,
                         EmailConstants.ConfirmationEmailSubject,
                         string.Format(EmailConstants.ConfirmResetPassword, HtmlEncoder.Default.Encode(callbackUrl)));
-
-                //var email = new Email(_config["EmailSenderInformation:Email"], user.Email,
-                //    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.",
-                //    EmailConstants.ResetPasswordSubject);
-
-                //await _emailSender.SendAsync(email, _config["EmailSenderInformation:Password"],
-                //        _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

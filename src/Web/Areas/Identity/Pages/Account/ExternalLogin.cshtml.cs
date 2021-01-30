@@ -21,7 +21,6 @@ namespace Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-        private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
         private readonly IConfiguration _config;
 
@@ -29,13 +28,11 @@ namespace Web.Areas.Identity.Pages.Account
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender, 
             IConfiguration config)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
-            _emailSender = emailSender;
             _config = config;
         }
 
@@ -143,7 +140,8 @@ namespace Web.Areas.Identity.Pages.Account
                             values: new { area = "Identity", userId = userId, code = code },
                             protocol: Request.Scheme);
 
-                        await _emailSender.SendEmailAsync(_config["SendGrid:Email"], EmailConstants.FromMailingName, Input.Email,
+                        var emailSender = new SendGridEmailSender(this._config["SendGrid:Key"]);
+                        await emailSender.SendEmailAsync(_config["SendGrid:Email"], EmailConstants.FromMailingName, Input.Email,
                         EmailConstants.ConfirmationEmailSubject,
                         string.Format(EmailConstants.ExternalLogin, HtmlEncoder.Default.Encode(callbackUrl)));
 

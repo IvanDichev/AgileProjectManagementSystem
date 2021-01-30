@@ -9,6 +9,8 @@ using Data.Models.Users;
 using Microsoft.Extensions.Configuration;
 using Shared;
 using Utilities.Mailing.SendGrid;
+using Shared.Constants;
+using System.Text.Encodings.Web;
 
 namespace Web.Areas.Identity.Pages.Account
 {
@@ -16,14 +18,12 @@ namespace Web.Areas.Identity.Pages.Account
     public class RegisterConfirmationModel : PageModel
     {
         private readonly UserManager<User> _userManager;
-        private readonly IEmailSender _sender;
         private readonly IConfiguration _config;
 
-        public RegisterConfirmationModel(UserManager<User> userManager, IEmailSender sender,
+        public RegisterConfirmationModel(UserManager<User> userManager,
             IConfiguration config)
         {
             _userManager = userManager;
-            _sender = sender;
             _config = config;
         }
 
@@ -61,9 +61,9 @@ namespace Web.Areas.Identity.Pages.Account
                     protocol: Request.Scheme);
             }
 
-            //var emailToSend = new Email(_config["EmailSenderInformation:Email"], email, EmailConfirmationUrl, Constants.CONFIRMATOINEMAILSUBJECT);
-            //await _sender.SendAsync(emailToSend, _config["EmailSenderInformation:Password"],
-            //    _config["EmailSenderOptions:SmtpServer"], int.Parse(_config["EmailSenderOptions:Port"]));
+            var emailSender = new SendGridEmailSender(_config["SendGrid:Key"]);
+            await emailSender.SendEmailAsync(_config["SendGrid:Key"], EmailConstants.FromMailingName, user.Email,
+                EmailConstants.RegisterConfirmation, string.Format(EmailConstants.ConfirmEmail, HtmlEncoder.Default.Encode(EmailConfirmationUrl)));
 
             return Page();
         }

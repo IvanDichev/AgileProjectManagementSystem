@@ -109,20 +109,20 @@ namespace Web
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            services.AddTransient<IEmailSender, SendGridEmailSender>();
-            services.AddTransient<IProjectsService, ProjectsService>();
-            services.AddTransient<IWorkItemService, WorkItemService>();
-            services.AddTransient<IBacklogPrioritiesService, BacklogPrioritiesService>();
-            services.AddTransient<ICommentsService, CommentsService>();
-            services.AddTransient<IUserStoryService, UserStoryService>();
-            services.AddTransient<ITasksService, TasksService>();
-            services.AddTransient<ITestsService, TestsService>();
-            services.AddTransient<IBugsService, BugsService>();
-            services.AddTransient<ISprintsService, SprintsService>();
-            services.AddTransient<IBoardsService, BoardsService>();
-            services.AddTransient<IBurndownDataService, BurndownDataService>();
-            services.AddTransient<ITeamRolesService, TeamRolesService>();
-            services.AddTransient<INotificationsService, NotificationsService>();
+            services.AddScoped<IEmailSender, SendGridEmailSender>();
+            services.AddScoped<IProjectsService, ProjectsService>();
+            services.AddScoped<IWorkItemService, WorkItemService>();
+            services.AddScoped<IBacklogPrioritiesService, BacklogPrioritiesService>();
+            services.AddScoped<ICommentsService, CommentsService>();
+            services.AddScoped<IUserStoryService, UserStoryService>();
+            services.AddScoped<ITasksService, TasksService>();
+            services.AddScoped<ITestsService, TestsService>();
+            services.AddScoped<IBugsService, BugsService>();
+            services.AddScoped<ISprintsService, SprintsService>();
+            services.AddScoped<IBoardsService, BoardsService>();
+            services.AddScoped<IBurndownDataService, BurndownDataService>();
+            services.AddScoped<ITeamRolesService, TeamRolesService>();
+            services.AddScoped<INotificationsService, NotificationsService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRecurringJobManager recurringJobManager,

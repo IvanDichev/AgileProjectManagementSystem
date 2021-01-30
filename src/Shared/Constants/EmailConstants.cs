@@ -9,6 +9,7 @@
         public const string RemoveFromProject = "You have been removed from project: ";
         public const string RemoveFromProjectSubject = "Removed from project.";
         public const string FromMailingName = "AgileMS";
+        public const string RegisterConfirmation = "Register confirmatin.";
         public const string ConfirmEmail = "Please confirm your account by <a href='{0}'>clicking here</a>.";
         public const string ExternalLogin = "Please confirm your external login by <a href='{0}'>clicking here</a>.";
         public const string ConfirmResetPassword = "Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.";

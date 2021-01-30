@@ -26,7 +26,6 @@ namespace Services.Projects
         private readonly IMapper mapper;
         private readonly IRepository<KanbanBoardColumn> boardRepo;
         private readonly IRepository<User> usersRepo;
-        private readonly IEmailSender emailSender;
         private readonly IConfiguration config;
         private readonly UserManager<User> userManager;
         private readonly IRepository<TeamsUsers> teamUsersRepo;
@@ -36,7 +35,6 @@ namespace Services.Projects
             IMapper mapper,
             IRepository<KanbanBoardColumn> boardRepo, 
             IRepository<User> usersRepo,
-            IEmailSender emailSender,
             IConfiguration config,
             UserManager<User> userManager,
             IRepository<TeamsUsers> teamUsersRepo,
@@ -46,7 +44,6 @@ namespace Services.Projects
             this.mapper = mapper;
             this.boardRepo = boardRepo;
             this.usersRepo = usersRepo;
-            this.emailSender = emailSender;
             this.config = config;
             this.userManager = userManager;
             this.teamUsersRepo = teamUsersRepo;
