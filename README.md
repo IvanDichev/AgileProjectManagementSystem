@@ -14,7 +14,7 @@ After you log into a project you can see who participats in that project, add ne
 
 ![Project](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-45-38%20Project%20-%20Web.png)
 
-From the workitem page you can see all the current workitems that have been assigned to that project. You can sort them, add new ones or siply edit them. After workitems has been created you can leave a comment about it for your team. Also after work item has been created it can be assigned to a sprint that is currently active.
+From the workitem page you can see all the current workitems that have been assigned to that project. You can sort them, add new ones or simply edit them. After workitems has been created you can leave a comment at the bottom of edit workitem page. Also after work item has been created it can be assigned to a sprint that is currently active.
 
 ![Workitems table](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-47-27%20Wrok%20items%20overview%20-%20Web.png)
 ![Creating workitem](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-47-38%20Create%20-%20Web.png)
