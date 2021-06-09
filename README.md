@@ -38,7 +38,7 @@ After you have been invited to a project, removed from one or simply assigned to
 
 ## Databse diagram
 
-![Db diagram](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/AgileMSDbDiagram.png)
+![Db diagram](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/databseDiagram.png)
 
 
 ## **Technologies Used**
