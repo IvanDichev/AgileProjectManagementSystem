@@ -56,6 +56,7 @@ This website is designed and runs using the **main** technologies below:
    9) **[Hangfire API](https://api.hangfire.io/html/R_Project_Hangfire_Api.htm)**
    10) **[Cloudinary API](https://cloudinary.com/documentation/image_upload_api_reference)**
    11) **[MailKit API](https://github.com/jstedfast/MailKit)**
-   10) **[Chart.js](https://www.chartjs.org/samples/latest/)**
-   10) **[Ajax](https://en.wikipedia.org/wiki/Ajax_(programming))**
-   10) **[Jquery](https://jquery.com/)**
+   12) **[SendGrid](https://sendgrid.com/)
+   13) **[Chart.js](https://www.chartjs.org/samples/latest/)**
+   14) **[Ajax](https://en.wikipedia.org/wiki/Ajax_(programming))**
+   15) **[Jquery](https://jquery.com/)**
