@@ -12,20 +12,21 @@ Once logged in you can go to the projects page where you can see all projects th
 
 After you log into a project you can see who participats in that project, add new members or remove them. There is also a left nav-bar that shows current pages available to the project
 
-![Project] (https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-45-38%20Project%20-%20Web.png)
+![Project](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-45-38%20Project%20-%20Web.png)
 
 From the workitem page you can see all the current workitems that have been assigned to that project. You can sort them, add new ones or siply edit them. After workitems has been created you can leave a comment about it for your team. Also after work item has been created it can be assigned to a sprint that is currently active.
 
 ![Workitems table](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-47-27%20Wrok%20items%20overview%20-%20Web.png)
 ![Creating workitem](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-47-38%20Create%20-%20Web.png)
+![Comments](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-09%20at%2013-40-19%20Wrok%20items%20Details%20-%20Web.png)
 
 Once workitem has been assigned to a sprint you can open the board page to see the workflow of the sprint. Here you can see brief overview of the workitem and you can drag it between the columns to set it's status from backlog to in progress for example.
 
- ![Board page](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-52-35%20Board%20-%20Web.png)
+![Board page](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-08%20at%2022-52-35%20Board%20-%20Web.png)
 
 In the sprint page you can see all the sprints for the current project and create new ones.
 
-- sprint page
+![Sprint page](https://github.com/IvanDichev/AgileProjectManagementSystem/blob/main/images/Screenshot%202021-06-09%20at%2013-34-46%20Sprints%20overview%20-%20Web.png)
 
 In order for your profile to be visible for others to invite you for a given project you must check visability status from you profile settings 
 
